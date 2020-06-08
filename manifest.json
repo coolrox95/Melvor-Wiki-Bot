@@ -1,0 +1,28 @@
+{
+    "manifest_version": 2,
+    "name": "Melvor Wiki Extension",
+    "version": "0.1",
+
+    "description": "Assistant tool for editting the melvor wiki",
+
+    "icons": {
+        "48": "icons/melvorWiki-48.png"
+    },
+
+    "content_scripts": [
+        {
+            "matches": ["https://melvoridle.com/*","https://test.melvoridle.com/*"],
+            "js": ["sources/bulkOperations.js","sources/commonElements.js","sources/keyFormatters.js","sources/pageGenerators.js","sources/selectionFunctions.js","sources/sortFunctions.js","sources/tableMakers.js","sources/templateFillers.js","sources/uiCallbacks.js","sources/wikiAPI.js","sources/main.js"],
+            "css": ["styles/mainStyle.css"]
+        }
+    ],
+
+    "web_accessible_resources" : [
+        "sources/injectable/dataGrabber.js"
+    ],
+
+    "permissions" : [
+        "*://*.wiki.melvoridle.com/*",
+        "downloads"
+    ]
+}
