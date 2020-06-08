@@ -1,10 +1,10 @@
 // Grabs variables required and places them into a global object
-let wikiData;
+window.wikiData = undefined;
 const melvorWikiLoader = setInterval(() => {
   if (isLoaded) {
     clearInterval(melvorWikiLoader);
     // eslint-disable-next-line no-unused-vars
-    wikiData = {
+    window.wikiData = {
       items: items,
       MONSTERS: MONSTERS,
       DUNGEONS: DUNGEONS,

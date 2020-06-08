@@ -202,10 +202,59 @@ const oldVersionReview = {
   outputField: document.createElement('textarea'),
 };
 createVersionUpdateAssistScreen();
-let items; let MONSTERS; let DUNGEONS; let combatAreas; let SPELLS; let tiers; let cookingFireData; let itemUses; let masterTable; let numberMultiplier; let miningData; let smithingItems; let runecraftingItems; let axeLevels; let rodLevels; let pickaxeLevels; let gloveID; let skillcapeItems; let baseMiningInterval; let axeCost; let rodCost; let pickaxeCost; let glovesCost; let runecraftInterval; let axeBonusSpeed; let rodBonusSpeed; let pickaxeBonus;
-let pickaxeBonusSpeed; let logsData; let PRAYER; let slayerItems; let herbloreItemData; let skillName; let newFarmingAreas; let autoEatData; let smithInterval; let fletchInterval; let craftInterval; let herbloreInterval; let fishingItems; let junkItems; let specialItems; let fishingAreas; let enemySpecialAttacks;
+let items;
+let MONSTERS;
+let DUNGEONS;
+let combatAreas;
+let SPELLS;
+let tiers;
+let cookingFireData;
+let itemUses;
+let masterTable;
+let numberMultiplier;
+let miningData;
+let smithingItems;
+let runecraftingItems;
+let axeLevels;
+let rodLevels;
+let pickaxeLevels;
+let gloveID;
+let skillcapeItems;
+let baseMiningInterval;
+let axeCost;
+let rodCost;
+let pickaxeCost;
+let glovesCost;
+let runecraftInterval;
+let axeBonusSpeed;
+let rodBonusSpeed;
+let pickaxeBonus;
+let pickaxeBonusSpeed;
+let logsData;
+let PRAYER;
+let slayerItems;
+let herbloreItemData;
+let skillName;
+let newFarmingAreas;
+let autoEatData;
+let smithInterval;
+let fletchInterval;
+let craftInterval;
+let herbloreInterval;
+let fishingItems;
+let junkItems;
+let specialItems;
+let fishingAreas;
+let enemySpecialAttacks;
 const openableItems = [];
-let slayerRangedArmour; let slayerMeleeArmour; let slayerMagicArmour; let wikiPageNames; let disambiguationData; let slayerAreas; let godUpgradeData; let godDungeonID;
+let slayerRangedArmour;
+let slayerMeleeArmour;
+let slayerMagicArmour;
+let wikiPageNames;
+let disambiguationData;
+let slayerAreas;
+let godUpgradeData;
+let godDungeonID;
 const godUpgradeDescriptions = [
   '20% Decreased Base Crafting & Fletching Interval',
   '20% Decreased Base Herblore & Runecrafting Interval',
@@ -213,12 +262,16 @@ const godUpgradeDescriptions = [
   '20% Decreased Base Cooking, Firemaking & Smithing Interval',
 ];
 let wikiData;
-const wikiDataLoaded = false;
+let wikiDataLoaded = false;
 const wikiLoader = setInterval(() => {
-  wikiData = window.wrappedJSObject.wikiData;
-  if (wikiData != undefined) {
-    clearInterval(wikiLoader);
-    processWikiData();
+  try {
+    wikiData = window.wrappedJSObject.wikiData;
+    if (wikiData != undefined) {
+      clearInterval(wikiLoader);
+      processWikiData();
+    }
+  } catch (error) {
+    throw error;
   }
 }, 500);
 // eslint-disable-next-line prefer-const
@@ -388,7 +441,9 @@ function processWikiData() {
       }
       // Cookings Items, cookedItemID and burntItemID, game checks for type === 'Raw Fish' and cookingLevel
       if (items[i].cookingID !== undefined) {
-        items[items[i].cookedItemID].cookingReq = [{id: i, qty: 1}];
+        items[items[i].cookedItemID].cookingReq = [{
+          id: i,
+          qty: 1}];
         items[items[i].cookedItemID].cookingLevel = items[i].cookingLevel;
         items[items[i].cookedItemID].cookingXP = items[i].cookingXP;
         items[items[i].cookedItemID].creationSources.push({
