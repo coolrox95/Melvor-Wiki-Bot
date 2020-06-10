@@ -1042,13 +1042,13 @@ function formatMonsterAttacks(monsterID) {
     outStr += `* ${normalAttackChance}% ${formatAttackTypeIcon(MONSTERS[monsterID].attackType)} 1-${getMonsterMaxHit(monsterID)} ${formatAttackTypeName(MONSTERS[monsterID].attackType)} Damage\n`;
     for (let i = 0; i < MONSTERS[monsterID].specialAttackID.length; i++) {
       const specialID = MONSTERS[monsterID].specialAttackID[i];
-      outStr += `* ${attackChances[i]}% ${enemySpecialAttacks[specialID].name}\n`;
+      outStr += `* ${attackChances[i]}% ${formatAttackTypeIcon(MONSTERS[monsterID].attackType)} ${enemySpecialAttacks[specialID].name}\n`;
       outStr += `** ${enemySpecialAttacks[specialID].description}\n`;
     }
   } else {
     for (let i = 0; i < MONSTERS[monsterID].specialAttackID.length; i++) {
       const specialID = MONSTERS[monsterID].specialAttackID[i];
-      outStr += `* ${attackChances[i]}% ${enemySpecialAttacks[specialID].name}\n`;
+      outStr += `* ${attackChances[i]}% ${formatAttackTypeIcon(MONSTERS[monsterID].attackType)} ${enemySpecialAttacks[specialID].name}\n`;
       outStr += `** ${enemySpecialAttacks[specialID].description}\n`;
     }
   }
