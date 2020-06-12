@@ -296,11 +296,11 @@ function createMonsterTable() {
   }, (x)=>{
     return (x[0]+x[1])/2;
   });
-  tabSpec.appendColumn('Bones', 'right', 'bones', 0, (id) => {
-    if (id == 0) {
-      return 'None';
+  tabSpec.appendColumn('Bones', 'right', ['bones', 'canDropBones'], [0, false], (boneData) => {
+    if (boneData[1]) {
+      return formatItemIDAsImageLink(boneData[0], 25, 'middle');
     } else {
-      return formatItemIDAsImageLink(id, 25, 'middle');
+      return 'None';
     }
   });
   tabSpec.appendColumn('Locations', 'right;white-space: nowrap', 'parentIndex', 0, (id) => formatArrayAsNewlines(getMonsterLocationArray(id)));

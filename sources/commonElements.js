@@ -17,6 +17,7 @@ class TableMaker {
    */
   startTable() {
     this.outputStr += '{| class="' + this.tableClass + '"';
+    this.headerRows = 0;
   }
   /**
    * @description Ends the table
@@ -36,6 +37,13 @@ class TableMaker {
    */
   nextRow() {
     this.outputStr += '\n|-';
+  }
+  /**
+   * Starts the next header row for a table
+   */
+  nextHeaderRow() {
+    this.outputStr += `\n|- class="headerRow-${this.headerRows}"`;
+    this.headerRows++;
   }
   /**
    * @description Starts a new column with the specified cell alignment
@@ -127,8 +135,9 @@ function createImageLink(linkImage, linkPage, imageSize, imageAlignment) {
  * @return {string}
  */
 function formatObjectArrayAsTable(objectArray, tableSpec) {
-  const tableGen = new TableMaker('wikitable sortable');
+  const tableGen = new TableMaker('wikitable sortable stickyHeader');
   tableGen.startTable();
+  tableGen.nextHeaderRow(); // New Code
   // Add headers
   for (let i = 0; i < tableSpec.length; i++) {
     tableGen.addHeader(tableSpec[i].header);
@@ -168,7 +177,7 @@ function formatObjectArrayAsTable(objectArray, tableSpec) {
 }
 
 /**
- * @description Formats an array of objects into a wikimedia table
+ * @description Formats an array of objects into a wikimedia table with a second header
  * @param {Object[]} objectArray Array to format as a table
  * @param {Object[]} tableSpec Specification of what keys to format and how:
  * @param {Object[]} spanSpec Specification for span headers
@@ -181,15 +190,15 @@ function formatObjectArrayAsTable(objectArray, tableSpec) {
  * @return {string}
  */
 function formatObjectArrayAsTableWSH(objectArray, tableSpec, spanSpec) {
-  const tableGen = new TableMaker('wikitable sortable');
+  const tableGen = new TableMaker('wikitable sortable stickyHeader');
   tableGen.startTable();
-  // Add span header
+  // Add first header row
+  tableGen.nextHeaderRow(); // New Code
   for (let i = 0; i < spanSpec.length; i++) {
     tableGen.addSpanHeader(spanSpec[i].spanText, spanSpec[i].spanLength);
   }
-  tableGen.nextRow();
-
-  // Add headers
+  // Add second header row
+  tableGen.nextHeaderRow(); // New Code, replace nextRow()
   for (let i = 0; i < tableSpec.length; i++) {
     tableGen.addHeader(tableSpec[i].header);
   }

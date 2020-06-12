@@ -599,6 +599,7 @@ function processWikiData() {
     // Add totalWeight and id to arrays that need it
     for (let i = 0; i < MONSTERS.length; i++) {
       MONSTERS[i].id = i;
+      MONSTERS[i].canDropBones = false;
       MONSTERS[i].totalWeight = 0;
       if (MONSTERS[i].lootTable != undefined) {
         for (let j = 0; j < MONSTERS[i].lootTable.length; j++) {
@@ -644,6 +645,7 @@ function processWikiData() {
       combatAreas[i].id = i;
       for (let j = 0; j < combatAreas[i].monsters.length; j++) {
         const monID = combatAreas[i].monsters[j];
+        MONSTERS[monID].canDropBones = true;
         if (MONSTERS[monID].lootTable != undefined) {
           for (let k = 0; k < MONSTERS[monID].lootTable.length; k++) {
             items[MONSTERS[monID].lootTable[k][0]].monsterSources.push(
@@ -661,6 +663,7 @@ function processWikiData() {
       slayerAreas[i].id = i;
       for (let j = 0; j < slayerAreas[i].monsters.length; j++) {
         const monID = slayerAreas[i].monsters[j];
+        MONSTERS[monID].canDropBones = true;
         if (MONSTERS[monID].lootTable != undefined) {
           for (let k = 0; k < MONSTERS[monID].lootTable.length; k++) {
             items[MONSTERS[monID].lootTable[k][0]].monsterSources.push(
@@ -725,6 +728,7 @@ function processWikiData() {
                 minQty: (MONSTERS[monster.id].boneQty) ? MONSTERS[monster.id].boneQty : 1,
               },
           );
+          MONSTERS[monster.id].canDropBones = true;
           MONSTERS[monster.id].isGodMonster = true;
         });
       }
@@ -1344,12 +1348,13 @@ function processWikiData() {
       },
       // Monster Loot Tables Page
       {
+        name: 'MonsterLootTables',
         page: 'Monster Loot Tables',
         section: '',
         subsection: '',
         subsubsection: '',
         generate: createMonsterLootTablePage,
-        isPageContent: true,
+        isPageContent: false,
       },
       // Chest Drop Tables Page
       {
