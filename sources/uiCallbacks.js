@@ -40,10 +40,8 @@ function loginButton() {
 async function buttonRequestPage() {
   // let pageContent = getFullWikiPage('Chest of Witwix');
   try {
-    const pageContent = await getFullWikiPage('Chest of Witwix');
+    const pageContent = await getFullWikiPage('Special:AllPages');
     console.log(pageContent);
-    const itemTemplate = pageContent.match(ITEMTEMPLATEREGEX);
-    console.log(itemTemplate);
     wikiTableOutput.textContent = pageContent;
     /*
         let pageSectionID = await getSectionID('Chest of Witwix', 'Loot Table');
@@ -462,7 +460,7 @@ function uploadUpgradeImages() {
 async function updateItemPages() {
   if (wikiDataLoaded) {
     const pagesToEdit = [];
-    for (let i = 803; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
       let updateSuccess = true;
       let dataChanged = false;
       const pageName = wikiPageNames.items[i];
@@ -921,14 +919,14 @@ async function fixBadItemPageEdits() {
 }
 
 /**
- * Updates item source templates for fishing special item pages
+ * Updates item source templates for shop items
  */
 async function updateSpecificSourceTemplates() {
   if (wikiDataLoaded) {
     const pagesToEdit = [];
     let numChanged = 0;
     for (let i = 0; i < items.length; i++) {
-      if (items[i].isFishingSpecial || items[i].isJunk > 0) {
+      if (items[i].shopSources.length>0) {
         const pageName = `Template:${items[i].name} Sources`;
         pagesToEdit.push({name: pageName, content: createItemSourceTemplatePage(i)});
         numChanged++;

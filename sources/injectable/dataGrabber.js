@@ -55,6 +55,7 @@ const melvorWikiLoader = setInterval(() => {
       playerSpecialAttacks: playerSpecialAttacks,
       godDungeonID: godDungeonID,
       godUpgradeData: godUpgradeData,
+      glovesActions: glovesActions,
     };
     console.log('Melvor Wiki Data Loaded');
     return;

@@ -931,8 +931,6 @@ function getMonsterCombatLevel(monsterID) {
  * @return {Number}
  */
 function getMonsterMaxHit(monsterID) {
-  let maxHit = 0;
-  let normalChance = 100;
   let maximumStrengthRoll;
   if (MONSTERS[monsterID].attackType === CONSTANTS.attackType.Melee) {
     const effectiveStrengthLevel = Math.floor(MONSTERS[monsterID].strengthLevel + 8 + 1);
@@ -944,7 +942,18 @@ function getMonsterMaxHit(monsterID) {
     if (MONSTERS[monsterID].selectedSpell === null || MONSTERS[monsterID].selectedSpell === undefined) maximumStrengthRoll = Math.floor(numberMultiplier * (MONSTERS[monsterID].setMaxHit + MONSTERS[monsterID].setMaxHit * (MONSTERS[monsterID].damageBonusMagic / 100)));
     else maximumStrengthRoll = Math.floor(numberMultiplier * (SPELLS[MONSTERS[monsterID].selectedSpell].maxHit + SPELLS[MONSTERS[monsterID].selectedSpell].maxHit * (MONSTERS[monsterID].damageBonusMagic / 100)));
   }
+  return maximumStrengthRoll;
+}
 
+/**
+ * Gets the True max hit of a monster
+ * @param {Number} monsterID
+ * @return {Number}
+ */
+function getMonsterTrueMaxHit(monsterID) {
+  let maxHit = 0;
+  let normalChance = 100;
+  const normalMaxHit = getMonsterMaxHit(monsterID);
   if (MONSTERS[monsterID].hasSpecialAttack) {
     let specialMax;
     for (let i = 0; i < MONSTERS[monsterID].specialAttackID.length; i++) {
@@ -957,13 +966,13 @@ function getMonsterMaxHit(monsterID) {
       if (specialAttack.setDamage !== null) {
         specialMax = specialAttack.setDamage * numberMultiplier;
       } else {
-        specialMax = maximumStrengthRoll;
+        specialMax = normalMaxHit;
       }
       specialMax *= specialAttack.stunDamageMultiplier;
       if (specialMax > maxHit) maxHit = specialMax;
     }
   }
-  if (normalChance > 0 && (maximumStrengthRoll > maxHit)) maxHit = maximumStrengthRoll;
+  if (normalChance > 0 && (normalMaxHit > maxHit)) maxHit = normalMaxHit;
   // Special Attack Max Hit
   return maxHit;
 }

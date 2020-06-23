@@ -274,7 +274,7 @@ function createMonsterTable() {
   tabSpec.appendSpan('|Offensive Stats', 4);
   tabSpec.appendColumn('Attack Type', 'right;white-space: nowrap', 'attackType', CONSTANTS.attackType.Melee, formatAttackType);
   tabSpec.appendColumn('Attack Speed (s)', 'right', 'attackSpeed', 3000, (t) => formatNumberDec(t / 1000, 1));
-  tabSpec.appendColumn('Max Hit', 'right', 'parentIndex', 0, (x) => formatAsInt(getMonsterMaxHit(x)));
+  tabSpec.appendColumn('Max Hit', 'right', 'parentIndex', 0, (x) => formatAsInt(getMonsterTrueMaxHit(x)));
   tabSpec.appendColumn('Accuracy', 'right', 'parentIndex', 0, (x) => formatAsInt(getMonsterAccuracy(x)));
 
   tabSpec.appendSpan('|Evasion Rating', 3);
@@ -829,7 +829,7 @@ function createShopGloveTable() {
     gloveData.push({
       cost: glovesCost[i],
       itemID: gloveID[i],
-      charges: (gloveID[i] != CONSTANTS.item.Gem_Gloves) ? 500 : 2000,
+      charges: glovesActions[i],
     });
   }
   const tabSpec = new TableSpecMaker();
@@ -848,9 +848,8 @@ function createShopGloveTable() {
  * @return {String}
  */
 function createShopMaterialTable() {
-  const materialIDs = [CONSTANTS.item.Compost, CONSTANTS.item.Weird_Gloop, CONSTANTS.item.Bowstring, CONSTANTS.item.Leather, CONSTANTS.item.Green_Dragonhide, CONSTANTS.item.Blue_Dragonhide, CONSTANTS.item.Red_Dragonhide];
   const itemSubset = [];
-  materialIDs.forEach((x) => {
+  shopMaterials.forEach((x) => {
     itemSubset.push(items[x]); itemSubset[itemSubset.length - 1].itemID = x;
   });
 
@@ -1122,7 +1121,7 @@ function createMasteryXPTable() {
     xp += Math.floor(i + 300 * Math.pow(2, i / 7));
     xpTable.push({
       level: i + 1,
-      xp: Math.floor(xp / 48),
+      xp: Math.floor(xp / 48)+1,
       xpToNext: 0,
     });
   }

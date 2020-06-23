@@ -119,7 +119,9 @@ menuDivD.appendChild(createButton('Update Armour Stat Templates', updateArmourPa
 menuDivD.appendChild(createButton('Update Item Page Item Templates', updateItemPageItemTemplates));
 menuDivD.appendChild(createButton('Update Source Template Subset', updateSpecificSourceTemplates));
 
-menuDivD.appendChild(createButton('Manually Review Previous Version', () => manualVersionReview('v0.15.1')));
+menuDivD.appendChild(createButton('Manually Review Previous Version', () => manualVersionReview('v0.15.2')));
+
+menuDivD.appendChild(createButton('Log Empty Sources', showEmptySourceTemplates));
 
 // menuDivD.appendChild(createButton('Change Chest Templates', changeChestTablesToTemplates));
 // menuDivD.appendChild(createButton('Change Knife and Javelin Templates', changeKnifeJavelinTemplates));
@@ -202,6 +204,7 @@ const oldVersionReview = {
   outputField: document.createElement('textarea'),
 };
 createVersionUpdateAssistScreen();
+// Game Variables
 let items;
 let MONSTERS;
 let DUNGEONS;
@@ -225,6 +228,7 @@ let axeCost;
 let rodCost;
 let pickaxeCost;
 let glovesCost;
+let glovesActions;
 let runecraftInterval;
 let axeBonusSpeed;
 let rodBonusSpeed;
@@ -246,7 +250,6 @@ let junkItems;
 let specialItems;
 let fishingAreas;
 let enemySpecialAttacks;
-const openableItems = [];
 let slayerRangedArmour;
 let slayerMeleeArmour;
 let slayerMagicArmour;
@@ -255,6 +258,12 @@ let disambiguationData;
 let slayerAreas;
 let godUpgradeData;
 let godDungeonID;
+
+// My Variables
+/** @type {Array<Number>} */
+let shopMaterials;
+/** @type {Array<Number} */
+const openableItems = [];
 const godUpgradeDescriptions = [
   '20% Decreased Base Crafting & Fletching Interval',
   '20% Decreased Base Herblore & Runecrafting Interval',
@@ -278,8 +287,8 @@ const wikiLoader = setInterval(() => {
 let imageUploadInProgress = false;
 const WIKURL = 'https://wiki.melvoridle.com/api.php';
 const GAMEURL = 'https://melvoridle.com/';
-const VERSIONTEMPLATE = '{{V0.15.2}}';
-const VERSIONCATEGORY = '[[Category:v0.15.2]]';
+const VERSIONTEMPLATE = '{{V0.15.3}}';
+const VERSIONCATEGORY = '[[Category:v0.15.3]]';
 const BOTCATEGORY = '[[Category:Bot Templates]]';
 const TABLEREGEX = /{\| class="wikitable sortable"(.|\n)*?\|}/g;
 const ITEMTEMPLATEREGEX = /{{Item\|name=(.|\n)*?\|description=(.|\n)*?\|id=(.|\n)*?\|category=(.|\n)*?\|type=(.|\n)*?\|sellsfor=(.|\n)*?\|customData=(.|\n)*?\|itemSources=(.|\n)*?\|itemUses=(.|\n)*?}}/;
@@ -298,8 +307,8 @@ const THIEVINGTARGETREGEX = /{{ThievingTarget\|name=(.|\n)*?\|level=(.|\n)*?\|xp
 const UPGRADETEMPLATEREGEX = /{{Upgrade\|name=(.|\n)*?\|upgradeEffect=(.|\n)*?\|upgradeRequirements=(.|\n)*?\|upgradeCost(.|\n)*?}}/;
 const EXTENSIONREGEX = /\..*$/;
 const EXTENSIONREGEX2 = /\?\d*$/;
-const OLDVERSIONREGEX = /{{V0\.15\.1}}/;
-const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.15\.1\]\]/;
+const OLDVERSIONREGEX = /{{V0\.15\.2}}/;
+const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.15\.2\]\]/;
 /**
  * Processes game data and compiles information from different game objects
  */
@@ -357,7 +366,9 @@ function processWikiData() {
       playerSpecialAttacks = wikiData.playerSpecialAttacks;
       godDungeonID = wikiData.godDungeonID;
       godUpgradeData = wikiData.godUpgradeData;
+      glovesActions = wikiData.glovesActions;
     }
+    shopMaterials = [CONSTANTS.item.Compost, CONSTANTS.item.Weird_Gloop, CONSTANTS.item.Bowstring, CONSTANTS.item.Leather, CONSTANTS.item.Green_Dragonhide, CONSTANTS.item.Blue_Dragonhide, CONSTANTS.item.Red_Dragonhide];
     // Data Processing
     // Sanatize all names and descriptions:
     for (let i = 0; i < items.length; i++) {
@@ -421,7 +432,7 @@ function processWikiData() {
     // Parse Array and initialize arrays
     for (let i = 0; i < items.length; i++) {
       items[i].id = i;
-      // Set up loot sources array
+      // Initialize Source Arrays
       items[i].monsterSources = []; // Monster IDs
       items[i].thievingSources = []; // Thieving Target IDs
       items[i].chestSources = []; // Chest Item IDs
@@ -429,6 +440,7 @@ function processWikiData() {
       // Set up creation sources array
       items[i].creationSources = []; // Skills/references to generation template
       items[i].upgradesFrom = [];
+      items[i].shopSources = [];
     }
     playerSpecialAttacks.forEach((specialAttack) => {
       specialAttack.weaponsWithAttack = [];
@@ -443,7 +455,8 @@ function processWikiData() {
       if (items[i].cookingID !== undefined) {
         items[items[i].cookedItemID].cookingReq = [{
           id: i,
-          qty: 1}];
+          qty: 1,
+        }];
         items[items[i].cookedItemID].cookingLevel = items[i].cookingLevel;
         items[items[i].cookedItemID].cookingXP = items[i].cookingXP;
         items[items[i].cookedItemID].creationSources.push({
@@ -639,6 +652,73 @@ function processWikiData() {
       });
       dungeon.condensedMonsters = condensedArray;
     });
+    // Add Shop sources to items
+    // gpCost, scCost, itemCost, requirements as a string, quantity as 1, or +500/2000 charges for gloves
+    // Capes
+    for (let i=0; i<skillcapeItems.length; i++) {
+      if (skillcapeItems[i] == CONSTANTS.item.Max_Skillcape) {
+        items[skillcapeItems[i]].shopSources.push({
+          gpCost: items[skillcapeItems[i]].buysFor,
+          scCost: 0,
+          itemCost: [],
+          requirements: 'Level 99 in All [[Skills]]',
+          quantity: '1',
+        });
+      } else {
+        items[skillcapeItems[i]].shopSources.push({
+          gpCost: items[skillcapeItems[i]].buysFor,
+          scCost: 0,
+          itemCost: [],
+          requirements: formatSkillRequirement(skillName[i], 99),
+          quantity: '1',
+        });
+      }
+    }
+    // Gloves
+    for (let i=0; i<gloveID.length; i++) {
+      items[gloveID[i]].shopSources.push({
+        gpCost: glovesCost[i],
+        scCost: 0,
+        itemCost: [],
+        requirements: 'None',
+        quantity: `+${glovesActions[i]} charges`,
+      });
+    }
+    // Slayer Items
+    slayerItems.forEach((itemID)=>{
+      items[itemID].shopSources.push({
+        gpCost: 0,
+        scCost: items[itemID].slayerCost,
+        itemCost: [],
+        requirements: 'None',
+        quantity: '1',
+      });
+    });
+    // Materials
+    shopMaterials.forEach((itemID)=>{
+      const materialCost = [];
+      if (items[itemID].buysForLeather != undefined) {
+        materialCost.push({
+          itemID: CONSTANTS.item.Leather,
+          quantity: items[itemID].buysForLeather,
+        });
+      }
+      if (items[itemID].buysForItems != undefined) {
+        items[itemID].buysForItems.forEach((buyItem)=>{
+          materialCost.push({
+            itemID: buyItem[0],
+            quantity: buyItem[1],
+          });
+        });
+      }
+      items[itemID].shopSources.push({
+        gpCost: (items[itemID].buysFor !== undefined) ? items[itemID].buysFor : 0,
+        scCost: 0,
+        itemCost: materialCost,
+        requirements: 'None',
+        quantity: '1',
+      });
+    });
     // Fill loot sources arrays
     // Monsters
     for (let i = 0; i < combatAreas.length; i++) {
@@ -677,7 +757,7 @@ function processWikiData() {
         }
       }
     }
-    // Thieving
+    // Thieving Item Loot sources
     for (let i = 0; i < thievingNPC.length; i++) {
       for (let j = 0; j < thievingNPC[i].lootTable.length; j++) {
         items[thievingNPC[i].lootTable[j][0]].thievingSources.push({
@@ -687,7 +767,7 @@ function processWikiData() {
         });
       }
     }
-    // Chests
+    // Chest Item Loot Sources
     for (let i = 0; i < openableItems.length; i++) {
       for (let j = 0; j < items[openableItems[i]].dropTable.length; j++) {
         items[items[openableItems[i]].dropTable[j][0]].chestSources.push({
@@ -697,7 +777,7 @@ function processWikiData() {
         });
       }
     }
-    // Dungeons
+    // Dungeon Item Loot Sources
     for (let i = 0; i < DUNGEONS.length; i++) {
       DUNGEONS[i].id = i;
       monID = DUNGEONS[i].monsters[DUNGEONS[i].monsters.length - 1];
@@ -1599,15 +1679,15 @@ function processWikiData() {
                 generate: createXPTable,
                 isPageContent: false
             },
-            {
-                page: 'Mastery',
-                section: 'Table of Experience',
-                subsection: '',
-                subsubsection: '',
-                generate: createMasteryXPTable,
-                isPageContent: false
-            },
-                        */
+            */
+      {
+        page: 'Mastery',
+        section: 'Table of Experience',
+        subsection: '',
+        subsubsection: '',
+        generate: createMasteryXPTable,
+        isPageContent: true,
+      },
       {
         name: 'HerbloreSkillPotionTable',
         page: 'Herblore',

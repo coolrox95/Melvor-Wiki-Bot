@@ -585,3 +585,29 @@ function fillThievingTemplate(targetInd) {
   template += '}}';
   return template;
 }
+
+/**
+ * Fills the ItemShopPurchase Template for an item
+ * @param {*} shopSource Element of items shopSources
+ * @return {String}
+ */
+function fillItemShopPurchaseTemplate(shopSource) {
+  let template = '{{ItemShopSource';
+  const costArray = [];
+  if (shopSource.gpCost != 0) {
+    costArray.push(`${formatAsShopCost(shopSource.gpCost)}`);
+  }
+  if (shopSource.scCost != 0) {
+    costArray.push(`${formatAsSlayerCost(shopSource.scCost)}`);
+  }
+  if (shopSource.itemCost.length > 0) {
+    shopSource.itemCost.forEach((cost)=>{
+      costArray.push(`${formatItemIDAsImageLink(cost.itemID, 25, 'middle')} ${cost.quantity} ${formatItemIDAsLink(cost.itemID)}`);
+    });
+  }
+  template += `|materials=${formatArrayAsNewlines(costArray)}`;
+  template += `|requirements=${shopSource.requirements}`;
+  template += `|quantity=${shopSource.quantity}`;
+  template += '}}';
+  return template;
+}
