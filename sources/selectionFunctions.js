@@ -1,12 +1,11 @@
 // Contains a number of functions used to select items from Object arrays
-
 /**
  * @description Selects items that can be cooked
  * @param {Object} item
  * @return {Boolean}
  */
 function selectCookable(item) {
-  return (item.cookedItemID != undefined);
+  return (item.cookedItemID !== undefined);
 }
 /**
  * @description Selects if item is allotment seed
@@ -14,7 +13,7 @@ function selectCookable(item) {
  * @return {Boolean}
  */
 function selectAllotmentSeed(item) {
-  return (item.category === 'Farming' & item.type === 'Seeds' & item.tier === 'Allotment');
+  return (item.category === 'Farming' && item.type === 'Seeds' && item.tier === 'Allotment');
 }
 /**
 * @description Selects if item is tree seed
@@ -22,7 +21,7 @@ function selectAllotmentSeed(item) {
 * @return {Boolean}
 */
 function selectTreeseed(item) {
-  return (item.category === 'Farming' & item.type === 'Seeds' & item.tier === 'Tree');
+  return (item.category === 'Farming' && item.type === 'Seeds' && item.tier === 'Tree');
 }
 
 /**
@@ -31,7 +30,7 @@ function selectTreeseed(item) {
 * @return {Boolean}
 */
 function selectHerbSeed(item) {
-  return (item.category === 'Farming' & item.type === 'Seeds' & item.tier === 'Herb');
+  return (item.category === 'Farming' && item.type === 'Seeds' && item.tier === 'Herb');
 }
 /**
  * @description Selects item if it has matching equipment slot and can be upgraded
@@ -40,17 +39,16 @@ function selectHerbSeed(item) {
  * @return {Boolean}
  */
 function selectGearUpgradeable(item, equipmentSlot) {
-  return (item.trimmedItemID != undefined && items[item.trimmedItemID].equipmentSlot == equipmentSlot);
+  return (item.trimmedItemID !== undefined && items[item.trimmedItemID].equipmentSlot === equipmentSlot);
 }
 
 /**
  * @description Selects item if it has no equipment slot and can be upgraded
  * @param {Object} item Item array object
- * @param {number} equipmentSlot Equipment slot index
  * @return {boolean}
  */
 function selectNonGearUpgradeable(item) {
-  return (item.trimmedItemID != undefined && items[item.trimmedItemID].equipmentSlot == undefined);
+  return (item.trimmedItemID !== undefined && items[item.trimmedItemID].equipmentSlot === undefined);
 }
 
 /**
@@ -61,21 +59,21 @@ function selectNonGearUpgradeable(item) {
 function selectMonsters(monster) {
   for (let i = 0; i < combatAreas.length; i++) {
     for (let j = 0; j < combatAreas[i].monsters.length; j++) {
-      if (combatAreas[i].monsters[j] == monster.id) {
+      if (combatAreas[i].monsters[j] === monster.id) {
         return true;
       }
     }
   }
   for (let i = 0; i < slayerAreas.length; i++) {
     for (let j = 0; j < slayerAreas[i].monsters.length; j++) {
-      if (slayerAreas[i].monsters[j] == monster.id) {
+      if (slayerAreas[i].monsters[j] === monster.id) {
         return true;
       }
     }
   }
   for (let i = 0; i < DUNGEONS.length; i++) {
     for (let j = 0; j < DUNGEONS[i].monsters.length; j++) {
-      if (DUNGEONS[i].monsters[j] == monster.id) {
+      if (DUNGEONS[i].monsters[j] === monster.id) {
         return true;
       }
     }
@@ -90,10 +88,10 @@ function selectMonsters(monster) {
  * @return {Boolean}
  */
 function selectSmithingItem(smithItem, type) {
-  if (type == 'Iron' && smithItem.name.includes('Bolts')) {
+  if (type === 'Iron' && smithItem.name.includes('Bolts')) {
     return true;
   }
-  return ((type == 'Bar' & smithItem.name.includes(type)) | (smithItem.name.includes(type) & !(smithItem.name.includes('Bar'))));
+  return ((type === 'Bar' && smithItem.name.includes(type)) || (smithItem.name.includes(type) && !(smithItem.name.includes('Bar'))));
 }
 
 /**
@@ -106,20 +104,20 @@ function selectSmithingItem(smithItem, type) {
  */
 function selectArmourItem(item, equipmentSlot, type, ammoType) {
   let match = false;
-  if (item.equipmentSlot == equipmentSlot) {
-    if (type == 'Melee') {
-      match = (item.defenceLevelRequired != undefined || isItemOnArray(item.id, slayerMeleeArmour));
-    } else if (type == 'Ranged') {
-      match = (item.rangedLevelRequired != undefined || isItemOnArray(item.id, slayerRangedArmour));
-    } else if (type == 'Magic') {
-      match = (item.magicLevelRequired != undefined || isItemOnArray(item.id, slayerMagicArmour));
-    } else if (type == 'All') {
+  if (item.equipmentSlot === equipmentSlot) {
+    if (type === 'Melee') {
+      match = (item.defenceLevelRequired !== undefined || isItemOnArray(item.id, slayerMeleeArmour));
+    } else if (type === 'Ranged') {
+      match = (item.rangedLevelRequired !== undefined || isItemOnArray(item.id, slayerRangedArmour));
+    } else if (type === 'Magic') {
+      match = (item.magicLevelRequired !== undefined || isItemOnArray(item.id, slayerMagicArmour));
+    } else if (type === 'All') {
       match = true;
-    } else if (type == 'None') {
-      match = (item.defenceLevelRequired == undefined) & (item.rangedLevelRequired == undefined) & (item.magicLevelRequired == undefined);
+    } else if (type === 'None') {
+      match = (item.defenceLevelRequired === undefined) && (item.rangedLevelRequired === undefined) && (item.magicLevelRequired === undefined);
     }
   }
-  if (ammoType != -1) {// Arrows: 0, Bolts: 1, Javelins: 2, Knives: 3
+  if (ammoType !== -1) {// Arrows: 0, Bolts: 1, Javelins: 2, Knives: 3
     match = (item.ammoType === ammoType);
   }
   return match;
@@ -133,36 +131,24 @@ function selectArmourItem(item, equipmentSlot, type, ammoType) {
  * @return {boolean}
  */
 function selectWeaponItem(item, type, ammoTypeRequired) {
-  if (item.equipmentSlot == CONSTANTS.equipmentSlot.Weapon) {
-    if (type == 'Melee') {
-      return (item.attackLevelRequired != undefined && item.magicLevelRequired == undefined);
-    } else if (type == 'Ranged') {
-      if (ammoTypeRequired == -1) {
-        return (item.rangedLevelRequired != undefined);
-      } else {
-        return (item.rangedLevelRequired != undefined && item.ammoTypeRequired == ammoTypeRequired);
+  if (item.equipmentSlot === CONSTANTS.equipmentSlot.Weapon) {
+    if (type === 'Melee') {
+      return (item.attackLevelRequired !== undefined && item.magicLevelRequired === undefined);
+    } else if (type === 'Ranged') {
+      if (ammoTypeRequired === -1) {
+        return (item.rangedLevelRequired !== undefined);
       }
-    } else if (type == 'Magic') {
-      return (item.magicLevelRequired != undefined);
-    } else if (type == 'All') {
+      return (item.rangedLevelRequired !== undefined && item.ammoTypeRequired === ammoTypeRequired);
+    } else if (type === 'Magic') {
+      return (item.magicLevelRequired !== undefined);
+    } else if (type === 'All') {
       return true;
-    } else if (type == 'None') {
-      return (item.attackLevelRequired == undefined) & (item.rangedLevelRequired == undefined) & (item.magicLevelRequired == undefined);
+    } else if (type === 'None') {
+      return (item.attackLevelRequired === undefined) && (item.rangedLevelRequired === undefined) && (item.magicLevelRequired === undefined);
     }
   } else {
     return false;
   }
-  end;
-}
-
-/**
- * @description Determines if an item is for crafting
- * @param {Object} item Element of items array
- * @param {string} type Category of crafting menu
- * @return {Boolean}
- */
-function selectCraftingItem(item, type) {
-  return (item.craftingID != undefined) && selectItemFromName(item, type);
 }
 
 /**
@@ -176,13 +162,23 @@ function selectItemFromName(item, includedString) {
 }
 
 /**
+ * @description Determines if an item is for crafting
+ * @param {Object} item Element of items array
+ * @param {string} type Category of crafting menu
+ * @return {Boolean}
+ */
+function selectCraftingItem(item, type) {
+  return (item.craftingID !== undefined) && selectItemFromName(item, type);
+}
+
+/**
  * @description Determines if an item is for fletching
  * @param {Object} item Element of items array
  * @param {*} type Category of fletching menu
  * @return {Boolean}
  */
 function selectFletchingItem(item, type) {
-  return (item.fletchingID != undefined) && selectItemFromName(item, type);
+  return (item.fletchingID !== undefined) && selectItemFromName(item, type);
 }
 
 /**
@@ -199,9 +195,8 @@ function selectAll() {
  * @return {Boolean}
  */
 function selectIfHasKey(element, key) {
-  if (element[key] != undefined) {
+  if (element[key] !== undefined) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 }

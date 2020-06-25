@@ -36,22 +36,22 @@ function fillArmourStatsTemplate(itemID) {
   let template = '{{ArmourStats';
   for (let i = 0; i < statKeys.length; i++) {
     let statValue = 0;
-    if (statKeys[i] == 'stabAttackBonus') {
+    if (statKeys[i] === 'stabAttackBonus') {
       if (items[itemID].attackBonus) {
         statValue = items[itemID].attackBonus[0];
-      };
-    } else if (statKeys[i] == 'slashAttackBonus') {
+      }
+    } else if (statKeys[i] === 'slashAttackBonus') {
       if (items[itemID].attackBonus) {
         statValue = items[itemID].attackBonus[1];
-      };
-    } else if (statKeys[i] == 'blockAttackBonus') {
+      }
+    } else if (statKeys[i] === 'blockAttackBonus') {
       if (items[itemID].attackBonus) {
         statValue = items[itemID].attackBonus[2];
-      };
+      }
     } else {
       if (items[itemID][statKeys[i]]) {
         statValue = items[itemID][statKeys[i]];
-      };
+      }
     }
     template += `|${statKeys[i]}=${statValue}`;
   }
@@ -69,29 +69,29 @@ function fillWeaponStatsTemplate(itemID) {
   let template = '{{WeaponStats';
   for (let i = 0; i < statKeys.length; i++) {
     let statValue = 0;
-    if (statKeys[i] == 'stabAttackBonus') {
+    if (statKeys[i] === 'stabAttackBonus') {
       if (items[itemID].attackBonus) {
         statValue = items[itemID].attackBonus[0];
-      };
-    } else if (statKeys[i] == 'slashAttackBonus') {
+      }
+    } else if (statKeys[i] === 'slashAttackBonus') {
       if (items[itemID].attackBonus) {
         statValue = items[itemID].attackBonus[1];
-      };
-    } else if (statKeys[i] == 'blockAttackBonus') {
+      }
+    } else if (statKeys[i] === 'blockAttackBonus') {
       if (items[itemID].attackBonus) {
         statValue = items[itemID].attackBonus[2];
-      };
-    } else if (statKeys[i] == 'attackType') {
-      if (items[itemID].type == 'Ranged Weapon' || items[itemID].isRanged) {
+      }
+    } else if (statKeys[i] === 'attackType') {
+      if (items[itemID].type === 'Ranged Weapon' || items[itemID].isRanged) {
         statValue = '[[File:Ranged (skill).svg|25px|middle|link=Ranged]] Ranged';
       } else if (items[itemID].isMagic) {
         statValue = '[[File:Magic (skill).svg|25px|middle|link=Magic]] Magic';
       } else {
         statValue = '[[File:Combat.svg|25px|middle]] Melee';
       }
-    } else if (statKeys[i] == 'isTwoHanded') {
+    } else if (statKeys[i] === 'isTwoHanded') {
       statValue = (items[itemID].isTwoHanded ? 'Yes' : 'No');
-    } else if (statKeys[i] == 'specialAttack') {
+    } else if (statKeys[i] === 'specialAttack') {
       if (items[itemID].hasSpecialAttack) {
         statValue = playerSpecialAttacks[items[itemID].specialAttackID].name;
       } else {
@@ -100,7 +100,7 @@ function fillWeaponStatsTemplate(itemID) {
     } else {
       if (items[itemID][statKeys[i]]) {
         statValue = items[itemID][statKeys[i]];
-      };
+      }
     }
     template += `|${statKeys[i]}=${statValue}`;
   }
@@ -131,8 +131,8 @@ function fillSlayerAreaTemplate(areaID) {
   let template = '{{SlayerArea';
   template += `|name=${slayerAreas[areaID].areaName}`;
   template += `|id=${areaID}`;
-  template += `|slayerLevel=${(slayerAreas[areaID].slayerLevel != undefined) ? slayerAreas[areaID].slayerLevel : 1}`;
-  template += `|slayerItem=${(slayerAreas[areaID].slayerItem != 0) ? `${formatItemIDAsImageLink(slayerAreas[areaID].slayerItem, 25, 'middle')} ${formatItemIDAsLink(slayerAreas[areaID].slayerItem)}` : 'None'}`;
+  template += `|slayerLevel=${(slayerAreas[areaID].slayerLevel !== undefined) ? slayerAreas[areaID].slayerLevel : 1}`;
+  template += `|slayerItem=${(slayerAreas[areaID].slayerItem !== 0) ? `${formatItemIDAsImageLink(slayerAreas[areaID].slayerItem, 25, 'middle')} ${formatItemIDAsLink(slayerAreas[areaID].slayerItem)}` : 'None'}`;
   template += `|monsterList=${formatArrayAsNewlines(getMonsterArray(slayerAreas[areaID]))}`;
   template += '}}';
   return template;
@@ -197,7 +197,7 @@ function fillAxeUpgradeTemplate(axeID) {
   if (axeID <= 1) {
     template += `|upgradeRequirements=${formatSkillRequirement('Woodcutting', axeLevels[axeID])}`;
   } else {
-    template += `|upgradeRequirements=${formatSkillRequirement('Woodcutting', axeLevels[axeID])}<br>Purchased ${formatAxeIDAsImageLink(axeID-1, 25, 'middle')} ${formatAxeIDAsLink(axeID-1)}`;
+    template += `|upgradeRequirements=${formatSkillRequirement('Woodcutting', axeLevels[axeID])}<br>Purchased ${formatAxeIDAsImageLink(axeID - 1, 25, 'middle')} ${formatAxeIDAsLink(axeID - 1)}`;
   }
   template += `|upgradeCost=${formatAsShopCost(axeCost[axeID])}`;
   template += '}}';
@@ -216,7 +216,7 @@ function fillRodUpgradeTemplate(rodID) {
   if (rodID <= 1) {
     template += `|upgradeRequirements=${formatSkillRequirement('Fishing', rodLevels[rodID])}`;
   } else {
-    template += `|upgradeRequirements=${formatSkillRequirement('Fishing', rodLevels[rodID])}<br>Purchased ${formatRodIDAsImageLink(rodID-1, 25, 'middle')} ${formatRodIDAsLink(rodID-1)}`;
+    template += `|upgradeRequirements=${formatSkillRequirement('Fishing', rodLevels[rodID])}<br>Purchased ${formatRodIDAsImageLink(rodID - 1, 25, 'middle')} ${formatRodIDAsLink(rodID - 1)}`;
   }
   template += `|upgradeCost=${formatAsShopCost(rodCost[rodID])}`;
   template += '}}';
@@ -235,7 +235,7 @@ function fillPickUpgradeTemplate(pickID) {
   if (pickID <= 1) {
     template += `|upgradeRequirements=${formatSkillRequirement('Mining', pickaxeLevels[pickID])}`;
   } else {
-    template += `|upgradeRequirements=${formatSkillRequirement('Mining', pickaxeLevels[pickID])}<br>Purchased ${formatPickIDAsImageLink(pickID-1, 25, 'middle')} ${formatPickIDAsLink(pickID-1)}`;
+    template += `|upgradeRequirements=${formatSkillRequirement('Mining', pickaxeLevels[pickID])}<br>Purchased ${formatPickIDAsImageLink(pickID - 1, 25, 'middle')} ${formatPickIDAsLink(pickID - 1)}`;
   }
   template += `|upgradeCost=${formatAsShopCost(pickaxeCost[pickID])}`;
   template += '}}';
@@ -254,7 +254,7 @@ function fillEatUpgradeTemplate(eatID) {
   if (eatID <= 0) {
     template += `|upgradeRequirements=None`;
   } else {
-    template += `|upgradeRequirements=Purchased ${formatEatIDAsImageLink(eatID-1, 25, 'middle')} ${formatEatIDAsLink(eatID-1)}`;
+    template += `|upgradeRequirements=Purchased ${formatEatIDAsImageLink(eatID - 1, 25, 'middle')} ${formatEatIDAsLink(eatID - 1)}`;
   }
   template += `|upgradeCost=${formatAsShopCost(autoEatData[eatID].cost)}`;
   template += '}}';
@@ -272,7 +272,7 @@ function fillFireUpgradeTemplate(fireID) {
   if (fireID <= 0) {
     template += `|upgradeRequirements=${formatSkillRequirement('Firemaking', cookingFireData[fireID].fmLevel)}`;
   } else {
-    template += `|upgradeRequirements=${formatSkillRequirement('Firemaking', cookingFireData[fireID].fmLevel)}<br>Purchased ${formatFireIDAsImageLink(fireID-1, 25, 'middle')} ${formatFireIDAsLink(fireID-1)}`;
+    template += `|upgradeRequirements=${formatSkillRequirement('Firemaking', cookingFireData[fireID].fmLevel)}<br>Purchased ${formatFireIDAsImageLink(fireID - 1, 25, 'middle')} ${formatFireIDAsLink(fireID - 1)}`;
   }
   template += `|upgradeCost=${`${formatItemIDAsImageLink(cookingFireData[fireID].costLogs[0], 25, 'middle')} ${cookingFireData[fireID].costLogs[1]}<br>${formatAsShopCost(cookingFireData[fireID].costGP)}`}`;
   template += '}}';
@@ -304,7 +304,7 @@ function fillItemProductionTemplateForWoodcutting(itemID) {
   template += `|requirements=${formatSkillRequirement('Woodcutting', items[itemID].woodcuttingLevel)}`;
   template += `|quantity=${1}`;
   template += `|experience=${items[itemID].woodcuttingXP}`;
-  template += `|creationTime=${(items[itemID].woodcuttingInterval/1000).toFixed(1)}`;
+  template += `|creationTime=${(items[itemID].woodcuttingInterval / 1000).toFixed(1)}`;
   template += '}}';
   return template;
 }
@@ -321,7 +321,7 @@ function fillItemProductionTemplateForFishing(itemID) {
   if (items[itemID].isJunk || items[itemID].isFishTreasure) {
     template += `|creationTime=Variable `;
   } else {
-    template += `|creationTime=${(items[itemID].minFishingInterval/1000).toFixed(1)}-${(items[itemID].maxFishingInterval/1000).toFixed(1)}`;
+    template += `|creationTime=${(items[itemID].minFishingInterval / 1000).toFixed(1)}-${(items[itemID].maxFishingInterval / 1000).toFixed(1)}`;
   }
   template += '}}';
   return template;
@@ -334,12 +334,12 @@ function fillItemProductionTemplateForFishing(itemID) {
 function fillItemProductionTemplateForMining(itemID) {
   let template = '{{ItemProduction';
   template += `|requirements=${formatSkillRequirement('Mining', items[itemID].miningLevel)}`;
-  if (itemID == CONSTANTS.item.Dragonite_Ore) {
+  if (itemID === CONSTANTS.item.Dragonite_Ore) {
     template += `<br>${formatMasteryImageLink(25, 'middle')} 271 total [[Mining]] ${formatPageLink('Mastery')}`;
   }
   template += `|quantity=${items[itemID].miningQty}`;
   template += `|experience=${items[itemID].miningXP}`;
-  template += `|creationTime=${(baseMiningInterval/1000).toFixed(1)}`;
+  template += `|creationTime=${(baseMiningInterval / 1000).toFixed(1)}`;
   template += '}}';
   return template;
 }
@@ -367,9 +367,9 @@ function fillItemCreationTemplateForSmithing(itemID) {
   let template = '{{ItemCreation';
   template += `|requirements=${formatSkillRequirement('Smithing', items[itemID].smithingLevel)}`;
   template += `|materials=${formatItemCreationCost(items[itemID].smithReq)}`;
-  template += `|quantity=${(items[itemID].smithingQty != undefined)?items[itemID].smithingQty:1}`;
+  template += `|quantity=${(items[itemID].smithingQty !== undefined) ? items[itemID].smithingQty : 1}`;
   template += `|experience=${items[itemID].smithingXP}`;
-  template += `|creationTime=${(smithInterval/1000).toFixed(1)}`;
+  template += `|creationTime=${(smithInterval / 1000).toFixed(1)}`;
   template += '}}';
   return template;
 }
@@ -396,15 +396,15 @@ function fillItemCreationTemplateForFarming(itemID) {
 function fillItemCreationTemplateForFletching(itemID) {
   let template = '{{ItemCreation';
   template += `|requirements=${formatSkillRequirement('Fletching', items[itemID].fletchingLevel)}`;
-  if (itemID == CONSTANTS.item.Arrow_Shafts) {
+  if (itemID === CONSTANTS.item.Arrow_Shafts) {
     template += `|materials=${formatItemIDAsImageLink(0, 25, 'middle')} ${1} Any [[Log]]`;
-    template += `|quantity=${items[itemID].fletchQty}-${items[itemID].fletchQty*9}`;
+    template += `|quantity=${items[itemID].fletchQty}-${items[itemID].fletchQty * 9}`;
   } else {
     template += `|materials=${formatItemCreationCost(items[itemID].fletchReq)}`;
     template += `|quantity=${items[itemID].fletchQty}`;
   }
   template += `|experience=${items[itemID].fletchingXP}`;
-  template += `|creationTime=${(fletchInterval/1000).toFixed(1)}`;
+  template += `|creationTime=${(fletchInterval / 1000).toFixed(1)}`;
   template += '}}';
   return template;
 }
@@ -419,7 +419,7 @@ function fillItemCreationTemplateForCrafting(itemID) {
   template += `|materials=${formatItemCreationCost(items[itemID].craftReq)}`;
   template += `|quantity=${items[itemID].craftQty}`;
   template += `|experience=${items[itemID].craftingXP}`;
-  template += `|creationTime=${(craftInterval/1000).toFixed(1)}`;
+  template += `|creationTime=${(craftInterval / 1000).toFixed(1)}`;
   template += '}}';
   return template;
 }
@@ -434,7 +434,7 @@ function fillItemCreationTemplateForRunecrafting(itemID) {
   template += `|materials=${formatItemCreationCost(items[itemID].runecraftReq)}`;
   template += `|quantity=${items[itemID].runecraftQty}`;
   template += `|experience=${items[itemID].runecraftingXP}`;
-  template += `|creationTime=${(runecraftInterval/1000).toFixed(1)}`;
+  template += `|creationTime=${(runecraftInterval / 1000).toFixed(1)}`;
   template += '}}';
   return template;
 }
@@ -460,7 +460,7 @@ function fillItemCreationTemplateForHerblore(itemID) {
   template += `|materials=${formatItemCreationCost(items[itemID].herbloreReq)}`;
   template += `|quantity=${1}`;
   template += `|experience=${items[itemID].herbloreXP}`;
-  template += `|creationTime=${(herbloreInterval/1000).toFixed(1)}`;
+  template += `|creationTime=${(herbloreInterval / 1000).toFixed(1)}`;
   template += '}}';
   return template;
 }
@@ -474,7 +474,7 @@ function fillFishingSpecialTemplate(itemID) {
   template += `|requirements=${formatSkillRequirement('Fishing', 1)}`;
   template += `|quantity=1`;
   template += `|chanceRatio=${items[itemID].specialWeight}/${specialItems.totalWeight}`;
-  template += `|chancePercent=${(100*items[itemID].specialWeight/specialItems.totalWeight).toFixed(3)}`;
+  template += `|chancePercent=${(100 * items[itemID].specialWeight / specialItems.totalWeight).toFixed(3)}`;
   template += '}}';
   return template;
 }
@@ -488,7 +488,7 @@ function fillFishingJunkTemplate(itemID) {
   template += `|requirements=${formatSkillRequirement('Fishing', 1)}`;
   template += `|quantity=1`;
   template += `|chanceRatio=${items[itemID].junkWeight}/${junkItems.length}`;
-  template += `|chancePercent=${(100*items[itemID].junkWeight/junkItems.length).toFixed(2)}`;
+  template += `|chancePercent=${(100 * items[itemID].junkWeight / junkItems.length).toFixed(2)}`;
   template += '}}';
   return template;
 }
@@ -514,7 +514,7 @@ function fillItemTemplate(itemID) {
   let template = '{{Item';
   template += `|name=${items[itemID].name}`;
   let itemDescription = 'No Description';
-  if (items[itemID].description != undefined) {
+  if (items[itemID].description !== undefined) {
     itemDescription = items[itemID].description;
   }
   template += `|imagefile=${items[itemID].name} (item)${getFileExtension(items[itemID].media)}`;
@@ -523,14 +523,14 @@ function fillItemTemplate(itemID) {
   template += `|category=${items[itemID].category}`;
   template += `|type=${items[itemID].type}`;
   template += `|sellsfor=${items[itemID].sellsFor}`;
-  customData = '';
+  let customData = '';
   if (items[itemID].healsFor) {
     customData += `{{ItemHealsFor|healsFor=${items[itemID].healsFor * numberMultiplier}}}`;
   }
-  if (items[itemID].equipmentSlot != undefined) {
-    slotKeys = Object.keys(CONSTANTS.equipmentSlot);
+  if (items[itemID].equipmentSlot !== undefined) {
+    const slotKeys = Object.keys(CONSTANTS.equipmentSlot);
     for (let i = 0; i < slotKeys.length; i++) {
-      if (CONSTANTS.equipmentSlot[slotKeys[i]] == items[itemID].equipmentSlot) {
+      if (CONSTANTS.equipmentSlot[slotKeys[i]] === items[itemID].equipmentSlot) {
         customData += `{{ItemEquipSlot|equipmentSlot=${slotKeys[i]}}}`;
         break;
       }
@@ -540,7 +540,7 @@ function fillItemTemplate(itemID) {
     const specialID = items[itemID].specialAttackID;
     customData += `{{ItemSpecialAttack|specialChance=${playerSpecialAttacks[specialID].chance}|specialName=${playerSpecialAttacks[specialID].name}|specialEffect=${playerSpecialAttacks[specialID].description}}}`;
   }
-  if (items[itemID].potionCharges != undefined) {
+  if (items[itemID].potionCharges !== undefined) {
     customData += `{{ItemCharges|charges=${items[itemID].potionCharges}}}`;
   }
   template += `|customData=${customData}`;
@@ -564,15 +564,15 @@ function fillThievingTemplate(targetInd) {
   // Add loot table to drops
   if (thievingNPC[targetInd].lootTable.length > 0) {
     template += '75% chance for:\n';
-    totalWeight = 0;
+    let totalWeight = 0;
     for (let lootInd = 0; lootInd < thievingNPC[targetInd].lootTable.length; lootInd++) {
       totalWeight += thievingNPC[targetInd].lootTable[lootInd][1];
     }
     for (let lootInd = 0; lootInd < thievingNPC[targetInd].lootTable.length; lootInd++) {
-      lootChance = 100 * thievingNPC[targetInd].lootTable[lootInd][1] / totalWeight;
-      percStr = formatNumberPerc(lootChance, 2);
+      const lootChance = 100 * thievingNPC[targetInd].lootTable[lootInd][1] / totalWeight;
+      let percStr = formatNumberPerc(lootChance, 2);
       if (percStr.length < 6) {
-        percStr = '&nbsp;&nbsp;' + percStr;
+        percStr = `&nbsp;&nbsp;${percStr}`;
       }
       template += `*${percStr} ${formatItemIDAsImageLink(thievingNPC[targetInd].lootTable[lootInd][0], 25, 'middle')} ${formatItemIDAsLink(thievingNPC[targetInd].lootTable[lootInd][0])}\n`;
     }
@@ -594,10 +594,10 @@ function fillThievingTemplate(targetInd) {
 function fillItemShopPurchaseTemplate(shopSource) {
   let template = '{{ItemShopSource';
   const costArray = [];
-  if (shopSource.gpCost != 0) {
+  if (shopSource.gpCost !== 0) {
     costArray.push(`${formatAsShopCost(shopSource.gpCost)}`);
   }
-  if (shopSource.scCost != 0) {
+  if (shopSource.scCost !== 0) {
     costArray.push(`${formatAsSlayerCost(shopSource.scCost)}`);
   }
   if (shopSource.itemCost.length > 0) {

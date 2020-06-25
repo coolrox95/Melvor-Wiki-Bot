@@ -1,3 +1,134 @@
+// User Interface Generating Functions
+/**
+ * Creates a button
+ * @param {String} text Text on button
+ * @param {Function} funOnClick callback function when button is clicked
+ * @return {HTMLButtonElement}
+ */
+function createButton(text, funOnClick) {
+  // Create a newButton
+  const newButton = document.createElement('button');
+  newButton.setAttribute('type', 'button');
+  newButton.className = 'mweButton';
+  newButton.onclick = funOnClick;
+  newButton.textContent = text;
+  return newButton;
+}
+
+/**
+ * Creates a dropdown element
+ * @param {Array<String>} optionText Text of options
+ * @param {Array} optionValues Values of options
+ * @param {String} dropDownID DOM ID string
+ * @param {Function} onChangeCallback Callback when option changes
+ * @param {*} width Style width
+ * @return {HTMLSelectElement}
+ */
+function createDropdown(optionText, optionValues, dropDownID, onChangeCallback, width) {
+  const newDropdown = document.createElement('select');
+  newDropdown.className = 'mweDropdown';
+  newDropdown.style.width = width;
+  newDropdown.id = dropDownID;
+  for (let i = 0; i < optionText.length; i++) {
+    const newOption = document.createElement('option');
+    newOption.text = optionText[i];
+    newOption.value = optionValues[i];
+    newOption.className = 'mweOption';
+    newDropdown.add(newOption);
+  }
+  newDropdown.addEventListener('change', onChangeCallback);
+  return newDropdown;
+}
+
+/**
+ * Creates the login screen and appends it to the document body
+ */
+function createLoginScreen() {
+  const loginPanel = document.createElement('div');
+  loginPanel.className = 'mweLogin mweFlexCol';
+  loginPanel.id = 'wikiLogin';
+  document.body.appendChild(loginPanel);
+
+  const loginForm = document.createElement('form');
+  loginForm.className = 'mweFlexCol';
+  loginPanel.appendChild(loginForm);
+
+  const userNameLabel = document.createElement('label');
+  userNameLabel.textContent = 'Username';
+  userNameLabel.setAttribute('for', 'wikiUsername');
+  loginForm.appendChild(userNameLabel);
+  const userNameInput = document.createElement('input');
+  userNameInput.setAttribute('type', 'text');
+  userNameInput.setAttribute('placeHolder', 'Enter Username');
+  userNameInput.setAttribute('name', 'wikiUsername');
+  userNameInput.className = 'mweInput';
+  userNameInput.id = 'wikiUserInput';
+  loginForm.appendChild(userNameInput);
+
+  const passLabel = document.createElement('label');
+  passLabel.textContent = 'Password';
+  passLabel.setAttribute('for', 'wikiPassword');
+  loginForm.appendChild(passLabel);
+  const passInput = document.createElement('input');
+  passInput.setAttribute('type', 'password');
+  passInput.setAttribute('placeHolder', 'Enter Password');
+  passInput.setAttribute('name', 'wikiPassword');
+  passInput.className = 'mweInput';
+  passInput.id = 'wikiPassInput';
+  loginForm.appendChild(passInput);
+
+  const submitButton = document.createElement('button');
+  submitButton.setAttribute('type', 'button');
+  submitButton.textContent = 'Login';
+  submitButton.className = 'mweButton';
+  submitButton.onclick = trueLogin;
+  loginForm.appendChild(submitButton);
+
+  const cancelButton = document.createElement('button');
+  cancelButton.setAttribute('type', 'button');
+  cancelButton.textContent = 'Cancel';
+  cancelButton.className = 'mweButton';
+  cancelButton.onclick = loginCancel;
+  loginPanel.appendChild(cancelButton);
+
+  loginPanel.style.display = 'none';
+}
+const oldVersionReview = {
+  pages: [],
+  currentPage: 0,
+  currentPageContent: '',
+  updatePages: [],
+  panel: document.createElement('div'),
+  titleElement: document.createElement('h1'),
+  outputField: document.createElement('textarea'),
+};
+/**
+ * Creates the version update assist screen and appends it to the document body
+ */
+function createVersionUpdateAssistScreen() {
+  oldVersionReview.panel.className = 'mweVerAssist mweFlexCol';
+  document.body.appendChild(oldVersionReview.panel);
+  oldVersionReview.panel.appendChild(oldVersionReview.titleElement);
+  oldVersionReview.outputField.className = 'mweTextOutput';
+  oldVersionReview.panel.appendChild(oldVersionReview.outputField);
+
+  const submitButton = document.createElement('button');
+  submitButton.setAttribute('type', 'button');
+  submitButton.textContent = 'Update Version';
+  submitButton.className = 'mweButton';
+  submitButton.onclick = updateVersion;
+  oldVersionReview.panel.appendChild(submitButton);
+
+  const cancelButton = document.createElement('button');
+  cancelButton.setAttribute('type', 'button');
+  cancelButton.textContent = 'Don\'t Update';
+  cancelButton.className = 'mweButton';
+  cancelButton.onclick = proceedToNextPage;
+  oldVersionReview.panel.appendChild(cancelButton);
+
+  oldVersionReview.panel.style.display = 'none';
+}
+
 // Add user interface
 const wikiMenu = document.createElement('div');
 wikiMenu.className = 'mweMenu';
@@ -61,44 +192,7 @@ menuDivA.appendChild(createButton('Show Dupe Pages', () => {
   }
 }));
 
-menuDivA.appendChild(createButton('Test Generators', () => {
-  if (wikiDataLoaded) {
-    console.log('Testing Table Generators');
-    for (let i = 0; i < masterTable.length; i++) {
-      try {
-        masterTable[i].generate();
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    console.log('Testing Item Page Generators');
-    for (let i = 0; i < items.length; i++) {
-      try {
-        createItemPageContent(i);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    console.log('Testing Monster Page Generators');
-    for (let i = 0; i < MONSTERS.length; i++) {
-      try {
-        createMonsterPageContent(i);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    console.log('Testing Item Source Template Generators');
-    for (let i = 0; i < items.length; i++) {
-      try {
-        createItemSourceTemplatePage(i);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  } else {
-    console.log('Wikidata has not loaded');
-  }
-}));
+menuDivA.appendChild(createButton('Test Generators', testGenerators));
 
 // Divider for Update Functions
 const menuDivD = document.createElement('div');
@@ -139,24 +233,23 @@ const menuDivC = document.createElement('div');
 menuDivC.className = 'mweMenuDiv';
 wikiMenuContent.appendChild(menuDivC);
 
-wikiTableOutput = document.createElement('textarea');
+const wikiTableOutput = document.createElement('textarea');
 wikiTableOutput.className = 'mweTextOutput';
 menuDivC.appendChild(wikiTableOutput);
 
 document.getElementById('page-container').appendChild(wikiMenu);
 
 createLoginScreen();
+createVersionUpdateAssistScreen();
 
-
-// Inject Scripts
-// injectableNames = ['commonElements', 'dataGrabber', 'keyFormatters', 'selectionFunctions', 'sortFunctions', 'tableMakers'];
-injectableNames = ['dataGrabber'];
-for (i = 0; i < injectableNames.length; i++) {
+// Inject Scripts into page scope
+const injectableNames = ['dataGrabber'];
+for (let i = 0; i < injectableNames.length; i++) {
   const newScript = document.createElement('script');
   newScript.src = browser.runtime.getURL(`sources/injectable/${injectableNames[i]}.js`);
   document.body.appendChild(newScript);
 }
-// Generate the tooltip contents
+/** Maps prayer bonus key name to description */
 const prayerBonusDictionary = {
   prayerBonusAttack: 'Melee Accuracy',
   prayerBonusStrength: 'Melee Strength',
@@ -175,6 +268,7 @@ const prayerBonusDictionary = {
   prayerBonusHitpointHeal: 'Heal +20% HP when HP falls below 10%',
   prayerBonusDamageReduction: 'Damage Reduction',
 };
+/** Does a prayer bonus description have a numberic component that should be added */
 const prayerBonusNumeric = {
   prayerBonusAttack: true,
   prayerBonusStrength: true,
@@ -194,17 +288,7 @@ const prayerBonusNumeric = {
   prayerBonusDamageReduction: true,
 };
 
-const oldVersionReview = {
-  pages: [],
-  currentPage: 0,
-  currentPageContent: '',
-  updatePages: [],
-  panel: document.createElement('div'),
-  titleElement: document.createElement('h1'),
-  outputField: document.createElement('textarea'),
-};
-createVersionUpdateAssistScreen();
-// Game Variables
+// Define Game Variables
 let items;
 let MONSTERS;
 let DUNGEONS;
@@ -212,6 +296,8 @@ let combatAreas;
 let SPELLS;
 let tiers;
 let cookingFireData;
+let thievingNPC;
+let trees;
 let itemUses;
 let masterTable;
 let numberMultiplier;
@@ -223,6 +309,7 @@ let rodLevels;
 let pickaxeLevels;
 let gloveID;
 let skillcapeItems;
+let CONSTANTS;
 let baseMiningInterval;
 let axeCost;
 let rodCost;
@@ -250,6 +337,7 @@ let junkItems;
 let specialItems;
 let fishingAreas;
 let enemySpecialAttacks;
+let playerSpecialAttacks;
 let slayerRangedArmour;
 let slayerMeleeArmour;
 let slayerMagicArmour;
@@ -272,17 +360,6 @@ const godUpgradeDescriptions = [
 ];
 let wikiData;
 let wikiDataLoaded = false;
-const wikiLoader = setInterval(() => {
-  try {
-    wikiData = window.wrappedJSObject.wikiData;
-    if (wikiData != undefined) {
-      clearInterval(wikiLoader);
-      processWikiData();
-    }
-  } catch (error) {
-    throw error;
-  }
-}, 500);
 // eslint-disable-next-line prefer-const
 let imageUploadInProgress = false;
 const WIKURL = 'https://wiki.melvoridle.com/api.php';
@@ -309,6 +386,276 @@ const EXTENSIONREGEX = /\..*$/;
 const EXTENSIONREGEX2 = /\?\d*$/;
 const OLDVERSIONREGEX = /{{V0\.15\.2}}/;
 const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.15\.2\]\]/;
+
+/**
+ * Removes HTML from a string (currently only removes &apos; and replaces with ')
+ * @param {String} stringToClean The dirty string
+ * @return {String}
+ */
+function sanatizeString(stringToClean) {
+  return stringToClean.replace(/&apos;/g, '\'');
+}
+
+/**
+ * Populates an object with arrays that correspond to the uses an item has
+ * @return {Object}
+ */
+function createItemUses() {
+  // Potential Uses:
+  // Combat (Equipable)
+  // Consumable (Food Item)
+  // Ingredient in a skill (Firemaking,Cooking,Smithing,Farming,Fletching,Crafting,Runecrafting,Magic)
+  // Equipment bonus to a skill (All skills since skill capes) Skillcapes, Gloves, Some Amulets
+  // Loot Source (Item can be opened)
+  // Upgrade Ingredient (Item is used to upgrade other items)
+  const itemUses = {
+    Combat: {
+      items: [],
+      format: `[[File:Combat.svg|25px|middle|link=Combat]] ${formatPageLink('Combat')}`,
+    },
+    Mastery: {
+      items: [],
+      format: `[[File:Mastery.svg|25px|middle|link=Mastery]] ${formatPageLink('Mastery')}`,
+    },
+    Food: {
+      items: [],
+      format: formatPageLink('Food'),
+    },
+    Chest: {
+      items: [],
+      format: createPageLink('Can be Opened', 'Chest Drop Tables'),
+    },
+    Upgrading: {
+      items: [],
+      format: formatPageLink('Upgrading Items'),
+    },
+    Woodcutting: {
+      items: [],
+      format: `${formatSkillImageLink('Woodcutting', 25, 'middle')} ${formatPageLink('Woodcutting')}`,
+    },
+    Fishing: {
+      items: [],
+      format: `${formatSkillImageLink('Fishing', 25, 'middle')} ${formatPageLink('Fishing')}`,
+    },
+    Firemaking: {
+      items: [],
+      format: `${formatSkillImageLink('Firemaking', 25, 'middle')} ${formatPageLink('Firemaking')}`,
+    },
+    Cooking: {
+      items: [],
+      format: `${formatSkillImageLink('Cooking', 25, 'middle')} ${formatPageLink('Cooking')}`,
+    },
+    Mining: {
+      items: [],
+      format: `${formatSkillImageLink('Mining', 25, 'middle')} ${formatPageLink('Mining')}`,
+    },
+    Smithing: {
+      items: [],
+      format: `${formatSkillImageLink('Smithing', 25, 'middle')} ${formatPageLink('Smithing')}`,
+    },
+    Thieving: {
+      items: [],
+      format: `${formatSkillImageLink('Thieving', 25, 'middle')} ${formatPageLink('Thieving')}`,
+    },
+    Farming: {
+      items: [],
+      format: `${formatSkillImageLink('Farming', 25, 'middle')} ${formatPageLink('Farming')}`,
+    },
+    Fletching: {
+      items: [],
+      format: `${formatSkillImageLink('Fletching', 25, 'middle')} ${formatPageLink('Fletching')}`,
+    },
+    Crafting: {
+      items: [],
+      format: `${formatSkillImageLink('Crafting', 25, 'middle')} ${formatPageLink('Crafting')}`,
+    },
+    Runecrafting: {
+      items: [],
+      format: `${formatSkillImageLink('Runecrafting', 25, 'middle')} ${formatPageLink('Runecrafting')}`,
+    },
+    Prayer: {
+      items: [],
+      format: `${formatSkillImageLink('Prayer', 25, 'middle')} ${formatPageLink('Prayer')}`,
+    },
+    Slayer: {
+      items: [],
+      format: `${formatSkillImageLink('Slayer', 25, 'middle')} ${formatPageLink('Slayer')}`,
+    },
+    Herblore: {
+      items: [],
+      format: `${formatSkillImageLink('Herblore', 25, 'middle')} ${formatPageLink('Herblore')}`,
+    },
+
+  };
+  // Add Hard-Coded items
+  itemUses.Woodcutting.items.push(CONSTANTS.item.Woodcutting_Skillcape);
+  itemUses.Fishing.items.push(CONSTANTS.item.Fishing_Skillcape);
+  itemUses.Fishing.items.push(CONSTANTS.item.Amulet_of_Fishing);
+  itemUses.Fishing.items.push(CONSTANTS.item.Message_In_A_Bottle);
+  itemUses.Firemaking.items.push(CONSTANTS.item.Firemaking_Skillcape);
+  itemUses.Cooking.items.push(CONSTANTS.item.Cooking_Skillcape);
+  itemUses.Cooking.items.push(CONSTANTS.item.Cooking_Gloves);
+  itemUses.Mining.items.push(CONSTANTS.item.Mining_Gloves);
+  itemUses.Mining.items.push(CONSTANTS.item.Mining_Skillcape);
+  itemUses.Mining.items.push(CONSTANTS.item.Gem_Gloves);
+  itemUses.Smithing.items.push(CONSTANTS.item.Smithing_Gloves);
+  itemUses.Smithing.items.push(CONSTANTS.item.Smithing_Skillcape);
+  itemUses.Thieving.items.push(CONSTANTS.item.Thieving_Gloves);
+  itemUses.Thieving.items.push(CONSTANTS.item.Thieving_Skillcape);
+  itemUses.Thieving.items.push(CONSTANTS.item.Chapeau_Noir);
+  itemUses.Farming.items.push(CONSTANTS.item.Farming_Skillcape);
+  itemUses.Farming.items.push(CONSTANTS.item.Compost);
+  itemUses.Farming.items.push(CONSTANTS.item.Weird_Gloop);
+  itemUses.Fletching.items.push(CONSTANTS.item.Fletching_Skillcape);
+  itemUses.Crafting.items.push(CONSTANTS.item.Crafting_Skillcape);
+  itemUses.Runecrafting.items.push(CONSTANTS.item.Runecrafting_Skillcape);
+  itemUses.Prayer.items.push(CONSTANTS.item.Prayer_Skillcape);
+  itemUses.Slayer.items.push(CONSTANTS.item.Slayer_Skillcape);
+  // Parse item array for potential uses
+  for (let i = 0; i < items.length; i++) {
+    // Combat Items
+    if (items[i].equipmentSlot !== undefined && !isItemOnArray(i, itemUses.Combat.items)) {
+      itemUses.Combat.items.push(i);
+    }
+    // Food Items
+    if (items[i].healsFor !== undefined) {
+      itemUses.Food.items.push(i);
+    }
+    // Chest Items
+    if (items[i].canOpen) {
+      itemUses.Chest.items.push(i);
+    }
+    // Upgrading Items
+    if (items[i].trimmedItemID !== undefined && !isItemOnArray(i, itemUses.Upgrading.items)) {
+      itemUses.Upgrading.items.push(i);
+    }
+    if (items[i].itemsRequired !== undefined) {
+      for (let j = 0; j < items[i].itemsRequired.length; j++) {
+        if (!isItemOnArray(items[i].itemsRequired[j][0], itemUses.Upgrading.items)) {
+          itemUses.Upgrading.items.push(items[i].itemsRequired[j][0]);
+        }
+      }
+    }
+    // Firemaking Items
+    if (items[i].firemakingID !== undefined) {
+      itemUses.Firemaking.items.push(i);
+    }
+    // Cooking Items
+    if (items[i].cookedItemID !== undefined) {
+      itemUses.Cooking.items.push(i);
+    }
+    // Smithing Items
+    if (items[i].smithReq !== undefined) {
+      for (let j = 0; j < items[i].smithReq.length; j++) {
+        if (!isItemOnArray(items[i].smithReq[j].id, itemUses.Smithing.items)) {
+          itemUses.Smithing.items.push(items[i].smithReq[j].id);
+        }
+      }
+    }
+    // Farming Items
+    if (items[i].grownItemID !== undefined) {
+      itemUses.Farming.items.push(i);
+    }
+    // Fletching Items
+    if (items[i].fletchReq !== undefined) {
+      for (let j = 0; j < items[i].fletchReq.length; j++) {
+        if (!isItemOnArray(items[i].fletchReq[j].id, itemUses.Fletching.items)) {
+          itemUses.Fletching.items.push(items[i].fletchReq[j].id);
+        }
+      }
+    }
+    // Crafting Items
+    if (items[i].craftReq !== undefined) {
+      for (let j = 0; j < items[i].craftReq.length; j++) {
+        if (!isItemOnArray(items[i].craftReq[j].id, itemUses.Crafting.items)) {
+          itemUses.Crafting.items.push(items[i].craftReq[j].id);
+        }
+      }
+    }
+    // Runecrafting Items
+    if (items[i].runecraftReq !== undefined) {
+      for (let j = 0; j < items[i].runecraftReq.length; j++) {
+        if (!isItemOnArray(items[i].runecraftReq[j].id, itemUses.Runecrafting.items)) {
+          itemUses.Runecrafting.items.push(items[i].runecraftReq[j].id);
+        }
+      }
+    }
+    // Herblore Items
+    if (items[i].herbloreReq !== undefined) {
+      for (let j = 0; j < items[i].herbloreReq.length; j++) {
+        if (!isItemOnArray(items[i].herbloreReq[j].id, itemUses.Herblore.items)) {
+          itemUses.Herblore.items.push(items[i].herbloreReq[j].id);
+        }
+      }
+    }
+    // Prayer Items
+    if (items[i].prayerPoints !== undefined) {
+      itemUses.Prayer.items.push(i);
+    }
+    // Slayer Items
+    if (items[i].slayerCost !== undefined) {
+      itemUses.Slayer.items.push(i);
+    }
+    // Mastery Tokens
+    if (items[i].category === 'Mastery') {
+      itemUses.Mastery.items.push(i);
+    }
+    // Potions
+    if (items[i].isPotion) {
+      switch (items[i].potionPage) {
+        case 0: // Woodcutting
+          itemUses.Woodcutting.items.push(i);
+          break;
+        case 7: // Fishing
+          itemUses.Fishing.items.push(i);
+          break;
+        case 8: // Firemaking
+          itemUses.Firemaking.items.push(i);
+          break;
+        case 9: // Cooking
+          itemUses.Cooking.items.push(i);
+          break;
+        case 10: // Mining
+          itemUses.Mining.items.push(i);
+          break;
+        case 11: // Smithing
+          itemUses.Smithing.items.push(i);
+          break;
+        case 13: // Combat
+          itemUses.Combat.items.push(i);
+          break;
+        case 14: // Thieving
+          itemUses.Thieving.items.push(i);
+          break;
+        case 15: // Farming
+          itemUses.Farming.items.push(i);
+          break;
+        case 16: // Fletching
+          itemUses.Fletching.items.push(i);
+          break;
+        case 17: // Crafting
+          itemUses.Crafting.items.push(i);
+          break;
+        case 18: // Runecrafting
+          itemUses.Runecrafting.items.push(i);
+          break;
+        case 19: // Herblore
+          itemUses.Herblore.items.push(i);
+          break;
+      }
+    }
+  }
+  // Parse spell array for potential uses
+  for (let i = 0; i < SPELLS.length; i++) {
+    for (let j = 0; j < SPELLS[i].runesRequired.length; j++) {
+      if (!isItemOnArray(SPELLS[i].runesRequired[j].id, itemUses.Combat.items)) {
+        itemUses.Combat.items.push(SPELLS[i].runesRequired[j].id);
+      }
+    }
+  }
+  return itemUses;
+}
+
 /**
  * Processes game data and compiles information from different game objects
  */
@@ -316,57 +663,59 @@ function processWikiData() {
   try {
     {
       wikiData = JSON.parse(JSON.stringify(wikiData));
-      items = wikiData.items;
-      MONSTERS = wikiData.MONSTERS;
-      DUNGEONS = wikiData.DUNGEONS;
-      combatAreas = wikiData.combatAreas;
-      SPELLS = wikiData.SPELLS;
-      tiers = wikiData.tiers;
-      cookingFireData = wikiData.cookingFireData;
-      thievingNPC = wikiData.thievingNPC;
-      trees = wikiData.trees;
-      skillcapeItems = wikiData.skillcapeItems;
-      CONSTANTS = wikiData.CONSTANTS;
-      numberMultiplier = wikiData.numberMultiplier;
-      miningData = wikiData.miningData;
-      smithingItems = wikiData.smithingItems;
-      runecraftingItems = wikiData.runecraftingItems;
-      axeLevels = wikiData.axeLevels;
-      rodLevels = wikiData.rodLevels;
-      pickaxeLevels = wikiData.pickaxeLevels;
-      gloveID = wikiData.gloveID;
-      skillcapeItems = wikiData.skillcapeItems;
-      baseMiningInterval = wikiData.baseMiningInterval;
-      axeCost = wikiData.axeCost;
-      rodCost = wikiData.rodCost;
-      pickaxeCost = wikiData.pickaxeCost;
-      glovesCost = wikiData.glovesCost;
-      runecraftInterval = wikiData.runecraftInterval;
-      axeBonusSpeed = wikiData.axeBonusSpeed;
-      rodBonusSpeed = wikiData.rodBonusSpeed;
-      pickaxeBonus = wikiData.pickaxeBonus;
-      pickaxeBonusSpeed = wikiData.pickaxeBonusSpeed;
-      logsData = wikiData.logsData;
-      PRAYER = wikiData.PRAYER;
-      slayerItems = wikiData.slayerItems;
-      herbloreItemData = wikiData.herbloreItemData;
-      skillName = wikiData.skillName;
-      newFarmingAreas = wikiData.newFarmingAreas;
-      autoEatData = wikiData.autoEatData;
-      slayerAreas = wikiData.slayerAreas;
-      smithInterval = wikiData.smithInterval;
-      fletchInterval = wikiData.fletchInterval;
-      craftInterval = wikiData.craftInterval;
-      herbloreInterval = wikiData.herbloreInterval;
-      fishingItems = wikiData.fishingItems;
-      junkItems = wikiData.junkItems;
-      specialItems = wikiData.specialItems;
-      fishingAreas = wikiData.fishingAreas;
-      enemySpecialAttacks = wikiData.enemySpecialAttacks;
-      playerSpecialAttacks = wikiData.playerSpecialAttacks;
-      godDungeonID = wikiData.godDungeonID;
-      godUpgradeData = wikiData.godUpgradeData;
-      glovesActions = wikiData.glovesActions;
+      ({
+        items,
+        MONSTERS,
+        DUNGEONS,
+        combatAreas,
+        SPELLS,
+        tiers,
+        cookingFireData,
+        thievingNPC,
+        trees,
+        skillcapeItems,
+        CONSTANTS,
+        numberMultiplier,
+        miningData,
+        smithingItems,
+        runecraftingItems,
+        axeLevels,
+        rodLevels,
+        pickaxeLevels,
+        gloveID,
+        skillcapeItems,
+        baseMiningInterval,
+        axeCost,
+        rodCost,
+        pickaxeCost,
+        glovesCost,
+        runecraftInterval,
+        axeBonusSpeed,
+        rodBonusSpeed,
+        pickaxeBonus,
+        pickaxeBonusSpeed,
+        logsData,
+        PRAYER,
+        slayerItems,
+        herbloreItemData,
+        skillName,
+        newFarmingAreas,
+        autoEatData,
+        slayerAreas,
+        smithInterval,
+        fletchInterval,
+        craftInterval,
+        herbloreInterval,
+        fishingItems,
+        junkItems,
+        specialItems,
+        fishingAreas,
+        enemySpecialAttacks,
+        playerSpecialAttacks,
+        godDungeonID,
+        godUpgradeData,
+        glovesActions,
+      } = wikiData);
     }
     shopMaterials = [CONSTANTS.item.Compost, CONSTANTS.item.Weird_Gloop, CONSTANTS.item.Bowstring, CONSTANTS.item.Leather, CONSTANTS.item.Green_Dragonhide, CONSTANTS.item.Blue_Dragonhide, CONSTANTS.item.Red_Dragonhide];
     // Data Processing
@@ -503,28 +852,28 @@ function processWikiData() {
         });
       }
       // Smithing Items
-      if (items[i].smithingID != undefined) {
+      if (items[i].smithingID !== undefined) {
         items[i].creationSources.push({
           skill: 'Smithing',
           fillTemplate: fillItemCreationTemplateForSmithing,
         });
       }
       // Fletching Items
-      if (items[i].fletchingID != undefined) {
+      if (items[i].fletchingID !== undefined) {
         items[i].creationSources.push({
           skill: 'Fletching',
           fillTemplate: fillItemCreationTemplateForFletching,
         });
       }
       // Crafting Items
-      if (items[i].craftingID != undefined) {
+      if (items[i].craftingID !== undefined) {
         items[i].creationSources.push({
           skill: 'Crafting',
           fillTemplate: fillItemCreationTemplateForCrafting,
         });
       }
       // Runecrafting Items
-      if (items[i].runecraftingID != undefined) {
+      if (items[i].runecraftingID !== undefined) {
         items[i].creationSources.push({
           skill: 'Runecrafting',
           fillTemplate: fillItemCreationTemplateForRunecrafting,
@@ -534,7 +883,7 @@ function processWikiData() {
       if (items[i].hasSpecialAttack) {
         playerSpecialAttacks[items[i].specialAttackID].weaponsWithAttack.push(i);
       }
-      if (items[i].trimmedItemID != undefined) {
+      if (items[i].trimmedItemID !== undefined) {
         items[items[i].trimmedItemID].upgradesFrom.push(i);
       }
     }
@@ -567,7 +916,7 @@ function processWikiData() {
     for (let i = 0; i < miningData.length; i++) {
       const itemID = miningData[i].ore;
       items[itemID].miningLevel = miningData[i].level;
-      if (i == 10) {
+      if (i === 10) {
         items[itemID].miningQty = 2;
       } else {
         items[itemID].miningQty = 1;
@@ -614,7 +963,7 @@ function processWikiData() {
       MONSTERS[i].id = i;
       MONSTERS[i].canDropBones = false;
       MONSTERS[i].totalWeight = 0;
-      if (MONSTERS[i].lootTable != undefined) {
+      if (MONSTERS[i].lootTable !== undefined) {
         for (let j = 0; j < MONSTERS[i].lootTable.length; j++) {
           MONSTERS[i].totalWeight += MONSTERS[i].lootTable[j][1];
         }
@@ -639,7 +988,7 @@ function processWikiData() {
       let currentIndex = -1;
       const condensedArray = [];
       dungeon.monsters.forEach((monster) => {
-        if (monster == lastMonster) {
+        if (monster === lastMonster) {
           condensedArray[currentIndex].quantity++;
         } else {
           lastMonster = monster;
@@ -655,8 +1004,8 @@ function processWikiData() {
     // Add Shop sources to items
     // gpCost, scCost, itemCost, requirements as a string, quantity as 1, or +500/2000 charges for gloves
     // Capes
-    for (let i=0; i<skillcapeItems.length; i++) {
-      if (skillcapeItems[i] == CONSTANTS.item.Max_Skillcape) {
+    for (let i = 0; i < skillcapeItems.length; i++) {
+      if (skillcapeItems[i] === CONSTANTS.item.Max_Skillcape) {
         items[skillcapeItems[i]].shopSources.push({
           gpCost: items[skillcapeItems[i]].buysFor,
           scCost: 0,
@@ -675,7 +1024,7 @@ function processWikiData() {
       }
     }
     // Gloves
-    for (let i=0; i<gloveID.length; i++) {
+    for (let i = 0; i < gloveID.length; i++) {
       items[gloveID[i]].shopSources.push({
         gpCost: glovesCost[i],
         scCost: 0,
@@ -697,13 +1046,13 @@ function processWikiData() {
     // Materials
     shopMaterials.forEach((itemID)=>{
       const materialCost = [];
-      if (items[itemID].buysForLeather != undefined) {
+      if (items[itemID].buysForLeather !== undefined) {
         materialCost.push({
           itemID: CONSTANTS.item.Leather,
           quantity: items[itemID].buysForLeather,
         });
       }
-      if (items[itemID].buysForItems != undefined) {
+      if (items[itemID].buysForItems !== undefined) {
         items[itemID].buysForItems.forEach((buyItem)=>{
           materialCost.push({
             itemID: buyItem[0],
@@ -726,7 +1075,7 @@ function processWikiData() {
       for (let j = 0; j < combatAreas[i].monsters.length; j++) {
         const monID = combatAreas[i].monsters[j];
         MONSTERS[monID].canDropBones = true;
-        if (MONSTERS[monID].lootTable != undefined) {
+        if (MONSTERS[monID].lootTable !== undefined) {
           for (let k = 0; k < MONSTERS[monID].lootTable.length; k++) {
             items[MONSTERS[monID].lootTable[k][0]].monsterSources.push(
                 {
@@ -744,7 +1093,7 @@ function processWikiData() {
       for (let j = 0; j < slayerAreas[i].monsters.length; j++) {
         const monID = slayerAreas[i].monsters[j];
         MONSTERS[monID].canDropBones = true;
-        if (MONSTERS[monID].lootTable != undefined) {
+        if (MONSTERS[monID].lootTable !== undefined) {
           for (let k = 0; k < MONSTERS[monID].lootTable.length; k++) {
             items[MONSTERS[monID].lootTable[k][0]].monsterSources.push(
                 {
@@ -773,14 +1122,14 @@ function processWikiData() {
         items[items[openableItems[i]].dropTable[j][0]].chestSources.push({
           id: openableItems[i],
           chance: 100 * items[openableItems[i]].dropTable[j][1] / items[openableItems[i]].totalWeight,
-          maxQty: (items[openableItems[i]].dropQty != undefined) ? (items[openableItems[i]].dropQty[j]) : 1,
+          maxQty: (items[openableItems[i]].dropQty !== undefined) ? (items[openableItems[i]].dropQty[j]) : 1,
         });
       }
     }
     // Dungeon Item Loot Sources
     for (let i = 0; i < DUNGEONS.length; i++) {
       DUNGEONS[i].id = i;
-      monID = DUNGEONS[i].monsters[DUNGEONS[i].monsters.length - 1];
+      const monID = DUNGEONS[i].monsters[DUNGEONS[i].monsters.length - 1];
       for (let k = 0; k < MONSTERS[monID].lootTable.length; k++) {
         items[MONSTERS[monID].lootTable[k][0]].dungeonSources.push(
             {
@@ -790,7 +1139,7 @@ function processWikiData() {
             },
         );
       }
-      if (i == CONSTANTS.dungeon.Volcanic_Cave) {
+      if (i === CONSTANTS.dungeon.Volcanic_Cave) {
         items[CONSTANTS.item.Fire_Cape].dungeonSources.push({
           id: i,
           chance: 100,
@@ -1750,393 +2099,15 @@ function processWikiData() {
   }
 }
 
-/**
- * Creates a dropdown element
- * @param {Array<String>} optionText Text of options
- * @param {Array} optionValues Values of options
- * @param {String} dropDownID DOM ID string
- * @param {Function} onChangeCallback Callback when option changes
- * @param {*} width Style width
- * @return {HTMLSelectElement}
- */
-function createDropdown(optionText, optionValues, dropDownID, onChangeCallback, width) {
-  const newDropdown = document.createElement('select');
-  newDropdown.className = 'mweDropdown';
-  newDropdown.style.width = width;
-  newDropdown.id = dropDownID;
-  for (let i = 0; i < optionText.length; i++) {
-    const newOption = document.createElement('option');
-    newOption.text = optionText[i];
-    newOption.value = optionValues[i];
-    newOption.className = 'mweOption';
-    newDropdown.add(newOption);
+// Wait for game data to be ready to be set in content script scope
+const wikiLoader = setInterval(() => {
+  try {
+    wikiData = window.wrappedJSObject.wikiData;
+    if (wikiData !== undefined) {
+      clearInterval(wikiLoader);
+      processWikiData();
+    }
+  } catch (error) {
+    throw error;
   }
-  newDropdown.addEventListener('change', onChangeCallback);
-  return newDropdown;
-}
-
-/**
- * Creates a button
- * @param {String} text Text on button
- * @param {Function} funOnClick callback function when button is clicked
- * @return {HTMLButtonElement}
- */
-function createButton(text, funOnClick) {
-  // Create a newButton
-  const newButton = document.createElement('button');
-  newButton.setAttribute('type', 'button');
-  newButton.className = 'mweButton';
-  newButton.onclick = funOnClick;
-  newButton.textContent = text;
-  return newButton;
-}
-
-/**
- * Creates the login screen and appends it to the document body
- */
-function createLoginScreen() {
-  const loginPanel = document.createElement('div');
-  loginPanel.className = 'mweLogin mweFlexCol';
-  loginPanel.id = 'wikiLogin';
-  document.body.appendChild(loginPanel);
-
-  const loginForm = document.createElement('form');
-  loginForm.className = 'mweFlexCol';
-  loginPanel.appendChild(loginForm);
-
-  const userNameLabel = document.createElement('label');
-  userNameLabel.textContent = 'Username';
-  userNameLabel.setAttribute('for', 'wikiUsername');
-  loginForm.appendChild(userNameLabel);
-  const userNameInput = document.createElement('input');
-  userNameInput.setAttribute('type', 'text');
-  userNameInput.setAttribute('placeHolder', 'Enter Username');
-  userNameInput.setAttribute('name', 'wikiUsername');
-  userNameInput.className = 'mweInput';
-  userNameInput.id = 'wikiUserInput';
-  loginForm.appendChild(userNameInput);
-
-  const passLabel = document.createElement('label');
-  passLabel.textContent = 'Password';
-  passLabel.setAttribute('for', 'wikiPassword');
-  loginForm.appendChild(passLabel);
-  const passInput = document.createElement('input');
-  passInput.setAttribute('type', 'password');
-  passInput.setAttribute('placeHolder', 'Enter Password');
-  passInput.setAttribute('name', 'wikiPassword');
-  passInput.className = 'mweInput';
-  passInput.id = 'wikiPassInput';
-  loginForm.appendChild(passInput);
-
-  const submitButton = document.createElement('button');
-  submitButton.setAttribute('type', 'button');
-  submitButton.textContent = 'Login';
-  submitButton.className = 'mweButton';
-  submitButton.onclick = trueLogin;
-  loginForm.appendChild(submitButton);
-
-  const cancelButton = document.createElement('button');
-  cancelButton.setAttribute('type', 'button');
-  cancelButton.textContent = 'Cancel';
-  cancelButton.className = 'mweButton';
-  cancelButton.onclick = loginCancel;
-  loginPanel.appendChild(cancelButton);
-
-  loginPanel.style.display = 'none';
-}
-
-/**
- * Creates the version update assist screen and appends it to the document body
- */
-function createVersionUpdateAssistScreen() {
-  oldVersionReview.panel.className = 'mweVerAssist mweFlexCol';
-  document.body.appendChild(oldVersionReview.panel);
-  oldVersionReview.panel.appendChild(oldVersionReview.titleElement);
-  oldVersionReview.outputField.className = 'mweTextOutput';
-  oldVersionReview.panel.appendChild(oldVersionReview.outputField);
-
-  const submitButton = document.createElement('button');
-  submitButton.setAttribute('type', 'button');
-  submitButton.textContent = 'Update Version';
-  submitButton.className = 'mweButton';
-  submitButton.onclick = updateVersion;
-  oldVersionReview.panel.appendChild(submitButton);
-
-  const cancelButton = document.createElement('button');
-  cancelButton.setAttribute('type', 'button');
-  cancelButton.textContent = 'Don\'t Update';
-  cancelButton.className = 'mweButton';
-  cancelButton.onclick = proceedToNextPage;
-  oldVersionReview.panel.appendChild(cancelButton);
-
-  oldVersionReview.panel.style.display = 'none';
-}
-
-/**
- * Populates an object with arrays that correspond to the uses an item has
- * @return {Object}
- */
-function createItemUses() {
-  // Potential Uses:
-  // Combat (Equipable)
-  // Consumable (Food Item)
-  // Ingredient in a skill (Firemaking,Cooking,Smithing,Farming,Fletching,Crafting,Runecrafting,Magic)
-  // Equipment bonus to a skill (All skills since skill capes) Skillcapes, Gloves, Some Amulets
-  // Loot Source (Item can be opened)
-  // Upgrade Ingredient (Item is used to upgrade other items)
-  const itemUses = {
-    Combat: {
-      items: [],
-      format: `[[File:Combat.svg|25px|middle|link=Combat]] ${formatPageLink('Combat')}`,
-    },
-    Mastery: {
-      items: [],
-      format: `[[File:Mastery.svg|25px|middle|link=Mastery]] ${formatPageLink('Mastery')}`,
-    },
-    Food: {
-      items: [],
-      format: formatPageLink('Food'),
-    },
-    Chest: {
-      items: [],
-      format: createPageLink('Can be Opened', 'Chest Drop Tables'),
-    },
-    Upgrading: {
-      items: [],
-      format: formatPageLink('Upgrading Items'),
-    },
-    Woodcutting: {
-      items: [],
-      format: `${formatSkillImageLink('Woodcutting', 25, 'middle')} ${formatPageLink('Woodcutting')}`,
-    },
-    Fishing: {
-      items: [],
-      format: `${formatSkillImageLink('Fishing', 25, 'middle')} ${formatPageLink('Fishing')}`,
-    },
-    Firemaking: {
-      items: [],
-      format: `${formatSkillImageLink('Firemaking', 25, 'middle')} ${formatPageLink('Firemaking')}`,
-    },
-    Cooking: {
-      items: [],
-      format: `${formatSkillImageLink('Cooking', 25, 'middle')} ${formatPageLink('Cooking')}`,
-    },
-    Mining: {
-      items: [],
-      format: `${formatSkillImageLink('Mining', 25, 'middle')} ${formatPageLink('Mining')}`,
-    },
-    Smithing: {
-      items: [],
-      format: `${formatSkillImageLink('Smithing', 25, 'middle')} ${formatPageLink('Smithing')}`,
-    },
-    Thieving: {
-      items: [],
-      format: `${formatSkillImageLink('Thieving', 25, 'middle')} ${formatPageLink('Thieving')}`,
-    },
-    Farming: {
-      items: [],
-      format: `${formatSkillImageLink('Farming', 25, 'middle')} ${formatPageLink('Farming')}`,
-    },
-    Fletching: {
-      items: [],
-      format: `${formatSkillImageLink('Fletching', 25, 'middle')} ${formatPageLink('Fletching')}`,
-    },
-    Crafting: {
-      items: [],
-      format: `${formatSkillImageLink('Crafting', 25, 'middle')} ${formatPageLink('Crafting')}`,
-    },
-    Runecrafting: {
-      items: [],
-      format: `${formatSkillImageLink('Runecrafting', 25, 'middle')} ${formatPageLink('Runecrafting')}`,
-    },
-    Prayer: {
-      items: [],
-      format: `${formatSkillImageLink('Prayer', 25, 'middle')} ${formatPageLink('Prayer')}`,
-    },
-    Slayer: {
-      items: [],
-      format: `${formatSkillImageLink('Slayer', 25, 'middle')} ${formatPageLink('Slayer')}`,
-    },
-    Herblore: {
-      items: [],
-      format: `${formatSkillImageLink('Herblore', 25, 'middle')} ${formatPageLink('Herblore')}`,
-    },
-
-  };
-  // Add Hard-Coded items
-  itemUses.Woodcutting.items.push(CONSTANTS.item.Woodcutting_Skillcape);
-  itemUses.Fishing.items.push(CONSTANTS.item.Fishing_Skillcape);
-  itemUses.Fishing.items.push(CONSTANTS.item.Amulet_of_Fishing);
-  itemUses.Fishing.items.push(CONSTANTS.item.Message_In_A_Bottle);
-  itemUses.Firemaking.items.push(CONSTANTS.item.Firemaking_Skillcape);
-  itemUses.Cooking.items.push(CONSTANTS.item.Cooking_Skillcape);
-  itemUses.Cooking.items.push(CONSTANTS.item.Cooking_Gloves);
-  itemUses.Mining.items.push(CONSTANTS.item.Mining_Gloves);
-  itemUses.Mining.items.push(CONSTANTS.item.Mining_Skillcape);
-  itemUses.Mining.items.push(CONSTANTS.item.Gem_Gloves);
-  itemUses.Smithing.items.push(CONSTANTS.item.Smithing_Gloves);
-  itemUses.Smithing.items.push(CONSTANTS.item.Smithing_Skillcape);
-  itemUses.Thieving.items.push(CONSTANTS.item.Thieving_Gloves);
-  itemUses.Thieving.items.push(CONSTANTS.item.Thieving_Skillcape);
-  itemUses.Thieving.items.push(CONSTANTS.item.Chapeau_Noir);
-  itemUses.Farming.items.push(CONSTANTS.item.Farming_Skillcape);
-  itemUses.Farming.items.push(CONSTANTS.item.Compost);
-  itemUses.Farming.items.push(CONSTANTS.item.Weird_Gloop);
-  itemUses.Fletching.items.push(CONSTANTS.item.Fletching_Skillcape);
-  itemUses.Crafting.items.push(CONSTANTS.item.Crafting_Skillcape);
-  itemUses.Runecrafting.items.push(CONSTANTS.item.Runecrafting_Skillcape);
-  itemUses.Prayer.items.push(CONSTANTS.item.Prayer_Skillcape);
-  itemUses.Slayer.items.push(CONSTANTS.item.Slayer_Skillcape);
-  // Parse item array for potential uses
-  for (let i = 0; i < items.length; i++) {
-    // Combat Items
-    if (items[i].equipmentSlot != undefined && !isItemOnArray(i, itemUses.Combat.items)) {
-      itemUses.Combat.items.push(i);
-    }
-    // Food Items
-    if (items[i].healsFor != undefined) {
-      itemUses.Food.items.push(i);
-    }
-    // Chest Items
-    if (items[i].canOpen) {
-      itemUses.Chest.items.push(i);
-    }
-    // Upgrading Items
-    if (items[i].trimmedItemID != undefined && !isItemOnArray(i, itemUses.Upgrading.items)) {
-      itemUses.Upgrading.items.push(i);
-    }
-    if (items[i].itemsRequired != undefined) {
-      for (let j = 0; j < items[i].itemsRequired.length; j++) {
-        if (!isItemOnArray(items[i].itemsRequired[j][0], itemUses.Upgrading.items)) {
-          itemUses.Upgrading.items.push(items[i].itemsRequired[j][0]);
-        }
-      }
-    }
-    // Firemaking Items
-    if (items[i].firemakingID != undefined) {
-      itemUses.Firemaking.items.push(i);
-    }
-    // Cooking Items
-    if (items[i].cookedItemID != undefined) {
-      itemUses.Cooking.items.push(i);
-    }
-    // Smithing Items
-    if (items[i].smithReq != undefined) {
-      for (let j = 0; j < items[i].smithReq.length; j++) {
-        if (!isItemOnArray(items[i].smithReq[j].id, itemUses.Smithing.items)) {
-          itemUses.Smithing.items.push(items[i].smithReq[j].id);
-        }
-      }
-    }
-    // Farming Items
-    if (items[i].grownItemID != undefined) {
-      itemUses.Farming.items.push(i);
-    }
-    // Fletching Items
-    if (items[i].fletchReq != undefined) {
-      for (let j = 0; j < items[i].fletchReq.length; j++) {
-        if (!isItemOnArray(items[i].fletchReq[j].id, itemUses.Fletching.items)) {
-          itemUses.Fletching.items.push(items[i].fletchReq[j].id);
-        }
-      }
-    }
-    // Crafting Items
-    if (items[i].craftReq != undefined) {
-      for (let j = 0; j < items[i].craftReq.length; j++) {
-        if (!isItemOnArray(items[i].craftReq[j].id, itemUses.Crafting.items)) {
-          itemUses.Crafting.items.push(items[i].craftReq[j].id);
-        }
-      }
-    }
-    // Runecrafting Items
-    if (items[i].runecraftReq != undefined) {
-      for (let j = 0; j < items[i].runecraftReq.length; j++) {
-        if (!isItemOnArray(items[i].runecraftReq[j].id, itemUses.Runecrafting.items)) {
-          itemUses.Runecrafting.items.push(items[i].runecraftReq[j].id);
-        }
-      }
-    }
-    // Herblore Items
-    if (items[i].herbloreReq != undefined) {
-      for (let j = 0; j < items[i].herbloreReq.length; j++) {
-        if (!isItemOnArray(items[i].herbloreReq[j].id, itemUses.Herblore.items)) {
-          itemUses.Herblore.items.push(items[i].herbloreReq[j].id);
-        }
-      }
-    }
-    // Prayer Items
-    if (items[i].prayerPoints != undefined) {
-      itemUses.Prayer.items.push(i);
-    }
-    // Slayer Items
-    if (items[i].slayerCost != undefined) {
-      itemUses.Slayer.items.push(i);
-    }
-    // Mastery Tokens
-    if (items[i].category == 'Mastery') {
-      itemUses.Mastery.items.push(i);
-    }
-    // Potions
-    if (items[i].isPotion) {
-      switch (items[i].potionPage) {
-        case 0: // Woodcutting
-          itemUses.Woodcutting.items.push(i);
-          break;
-        case 7: // Fishing
-          itemUses.Fishing.items.push(i);
-          break;
-        case 8: // Firemaking
-          itemUses.Firemaking.items.push(i);
-          break;
-        case 9: // Cooking
-          itemUses.Cooking.items.push(i);
-          break;
-        case 10: // Mining
-          itemUses.Mining.items.push(i);
-          break;
-        case 11: // Smithing
-          itemUses.Smithing.items.push(i);
-          break;
-        case 13: // Combat
-          itemUses.Combat.items.push(i);
-          break;
-        case 14: // Thieving
-          itemUses.Thieving.items.push(i);
-          break;
-        case 15: // Farming
-          itemUses.Farming.items.push(i);
-          break;
-        case 16: // Fletching
-          itemUses.Fletching.items.push(i);
-          break;
-        case 17: // Crafting
-          itemUses.Crafting.items.push(i);
-          break;
-        case 18: // Runecrafting
-          itemUses.Runecrafting.items.push(i);
-          break;
-        case 19: // Herblore
-          itemUses.Herblore.items.push(i);
-          break;
-      }
-    }
-  }
-  // Parse spell array for potential uses
-  for (let i = 0; i < SPELLS.length; i++) {
-    for (let j = 0; j < SPELLS[i].runesRequired.length; j++) {
-      if (!isItemOnArray(SPELLS[i].runesRequired[j].id, itemUses.Combat.items)) {
-        itemUses.Combat.items.push(SPELLS[i].runesRequired[j].id);
-      }
-    }
-  }
-  return itemUses;
-}
-
-/**
- * Removes HTML from a string (currently only removes &apos; and replaces with ')
- * @param {String} stringToClean The dirty string
- * @return {String}
- */
-function sanatizeString(stringToClean) {
-  return stringToClean.replace(/&apos;/g, '\'');
-}
+}, 500);

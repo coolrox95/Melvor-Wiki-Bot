@@ -8,9 +8,9 @@
 function formatNumberDec(number, numDecimals) {
   let outStr = number.toString(10);
   const lengthFront = Math.trunc(number).toString(10).length;
-  const lengthEnd = outStr.length - lengthFront - ((outStr.length == lengthFront) ? 1 : 0);
-  let expectedLength = lengthFront + numDecimals + ((numDecimals == 0) ? 0 : 1);
-  if (outStr.length == lengthFront && numDecimals > 0) {
+  const lengthEnd = outStr.length - lengthFront - ((outStr.length === lengthFront) ? 1 : 0);
+  let expectedLength = lengthFront + numDecimals + ((numDecimals === 0) ? 0 : 1);
+  if (outStr.length === lengthFront && numDecimals > 0) {
     // String has no decimal and is expected to
     outStr += '.';
   } else if (lengthEnd > numDecimals) {
@@ -22,14 +22,14 @@ function formatNumberDec(number, numDecimals) {
       let isRounded = false;
       while (!isRounded) {
         // Hit the decimal decrease round position
-        if (outStr.charCodeAt(roundPos) == 46) {
+        if (outStr.charCodeAt(roundPos) === 46) {
           roundPos--;
         }
-        if (outStr.charCodeAt(roundPos) == 57) {
+        if (outStr.charCodeAt(roundPos) === 57) {
           // Case for rounding up a 9
-          outStr = outStr.substring(0, roundPos) + '0' + outStr.substring(roundPos + 1);
-          if (roundPos == 0) {
-            outStr = '1' + outStr;
+          outStr = `${outStr.substring(0, roundPos)}0${outStr.substring(roundPos + 1)}`;
+          if (roundPos === 0) {
+            outStr = `1${outStr}`;
             expectedLength++;
             isRounded = true;
           }
@@ -53,8 +53,18 @@ function formatNumberDec(number, numDecimals) {
  * @return {string}
  */
 function formatNumberPerc(percent, numDecimals) {
-  return formatNumberDec(percent, numDecimals) + '%';
+  return `${formatNumberDec(percent, numDecimals)}%`;
 }
+
+/**
+ * @description Formats a value as an integer in base 10
+ * @param {number} value
+ * @return {string}
+ */
+function formatAsInt(value) {
+  return value.toString(10);
+}
+
 /**
  * @description Formats a string into a link to a wiki page
  * @param {string} pageTitle Title of page
@@ -63,7 +73,39 @@ function formatNumberPerc(percent, numDecimals) {
 function formatPageLink(pageTitle) {
   return `[[${pageTitle}]]`;
 }
-
+// Functions for getting upgrade names
+/**
+ * Gets the name of an axe upgrade
+ * @param {Number} tier The tier of axe upgrade
+ * @return {String}
+ */
+function getAxeUpgradeName(tier) {
+  return `${setToUppercase(tiers[tier])} Axe`;
+}
+/**
+ * Gets the name of a fishing rod upgrade
+ * @param {Number} tier The tier of rod upgrade
+ * @return {String}
+ */
+function getRodUpgradeName(tier) {
+  return `${setToUppercase(tiers[tier])} Fishing Rod`;
+}
+/**
+ * Gets the name of a pickaxe upgrade
+ * @param {Number} tier The tier of pick upgrade
+ * @return {String}
+ */
+function getPickUpgradeName(tier) {
+  return `${setToUppercase(tiers[tier])} Pickaxe`;
+}
+/**
+ * Gets the name of a cooking fire upgrade
+ * @param {Number} tier The tier of fire upgrade
+ * @return {String}
+ */
+function getFireUpgradeName(tier) {
+  return `${setToUppercase(cookingFireData[tier].tier)} Cooking Fire`;
+}
 // ID To Image
 /**
  * @param {Number} id Index of Items
@@ -183,9 +225,8 @@ function formatEatIDAsImageLink(id, size, alignment) {
 function formatItemIDAsLink(id) {
   if (wikiPageNames.items[id] === items[id].name) {
     return formatPageLink(items[id].name);
-  } else {
-    return createPageLink(items[id].name, wikiPageNames.items[id]);
   }
+  return createPageLink(items[id].name, wikiPageNames.items[id]);
 }
 /**
 * @description Formats a monsterID as a page link
@@ -195,9 +236,8 @@ function formatItemIDAsLink(id) {
 function formatMonsterIDAsLink(id) {
   if (wikiPageNames.monsters[id] === MONSTERS[id].name) {
     return formatPageLink(MONSTERS[id].name);
-  } else {
-    return createPageLink(MONSTERS[id].name, wikiPageNames.monsters[id]);
   }
+  return createPageLink(MONSTERS[id].name, wikiPageNames.monsters[id]);
 }
 /**
 * @description Formats a thieving ID as a page link
@@ -207,9 +247,8 @@ function formatMonsterIDAsLink(id) {
 function formatThievingIDAsLink(id) {
   if (wikiPageNames.thievingTarget[id] === thievingNPC[id].name) {
     return formatPageLink(thievingNPC[id].name);
-  } else {
-    return createPageLink(thievingNPC[id].name, wikiPageNames.thievingTarget[id]);
   }
+  return createPageLink(thievingNPC[id].name, wikiPageNames.thievingTarget[id]);
 }
 /**
 * @description Formats a combat area as a page link
@@ -219,9 +258,8 @@ function formatThievingIDAsLink(id) {
 function formatCombatAreaIDAsLink(id) {
   if (wikiPageNames.combatAreas[id] === combatAreas[id].areaName) {
     return formatPageLink(combatAreas[id].areaName);
-  } else {
-    return createPageLink(combatAreas[id].areaName, wikiPageNames.combatAreas[id]);
   }
+  return createPageLink(combatAreas[id].areaName, wikiPageNames.combatAreas[id]);
 }
 /**
 * @description Formats a slayer area as a page link
@@ -231,9 +269,8 @@ function formatCombatAreaIDAsLink(id) {
 function formatSlayerAreaIDAsLink(id) {
   if (wikiPageNames.slayerAreas[id] === slayerAreas[id].areaName) {
     return formatPageLink(slayerAreas[id].areaName);
-  } else {
-    return createPageLink(slayerAreas[id].areaName, wikiPageNames.slayerAreas[id]);
   }
+  return createPageLink(slayerAreas[id].areaName, wikiPageNames.slayerAreas[id]);
 }
 /**
 * @description Formats a dungeon as a page link
@@ -243,9 +280,8 @@ function formatSlayerAreaIDAsLink(id) {
 function formatDungeonIDAsLink(id) {
   if (wikiPageNames.dungeons[id] === DUNGEONS[id].name) {
     return formatPageLink(DUNGEONS[id].name);
-  } else {
-    return createPageLink(DUNGEONS[id].name, wikiPageNames.dungeons[id]);
   }
+  return createPageLink(DUNGEONS[id].name, wikiPageNames.dungeons[id]);
 }
 /**
 * @description Formats a spell as a page link
@@ -255,9 +291,8 @@ function formatDungeonIDAsLink(id) {
 function formatSpellIDAsLink(id) {
   if (wikiPageNames.spells[id] === SPELLS[id].name) {
     return formatPageLink(SPELLS[id].name);
-  } else {
-    return createPageLink(SPELLS[id].name, wikiPageNames.spells[id]);
   }
+  return createPageLink(SPELLS[id].name, wikiPageNames.spells[id]);
 }
 /**
 * @description Formats an axe upgrade as a page link
@@ -267,9 +302,8 @@ function formatSpellIDAsLink(id) {
 function formatAxeIDAsLink(id) {
   if (wikiPageNames.axeUpgrades[id] === getAxeUpgradeName(id)) {
     return formatPageLink(getAxeUpgradeName(id));
-  } else {
-    return createPageLink(getAxeUpgradeName(id), wikiPageNames.axeUpgrades[id]);
   }
+  return createPageLink(getAxeUpgradeName(id), wikiPageNames.axeUpgrades[id]);
 }
 /**
 * @description Formats a rod upgrade as a page link
@@ -279,9 +313,8 @@ function formatAxeIDAsLink(id) {
 function formatRodIDAsLink(id) {
   if (wikiPageNames.rodUpgrades[id] === getRodUpgradeName(id)) {
     return formatPageLink(getRodUpgradeName(id));
-  } else {
-    return createPageLink(getRodUpgradeName(id), wikiPageNames.rodUpgrades[id]);
   }
+  return createPageLink(getRodUpgradeName(id), wikiPageNames.rodUpgrades[id]);
 }
 /**
 * @description Formats a pick upgrade as a page link
@@ -291,9 +324,8 @@ function formatRodIDAsLink(id) {
 function formatPickIDAsLink(id) {
   if (wikiPageNames.pickUpgrades[id] === getPickUpgradeName(id)) {
     return formatPageLink(getPickUpgradeName(id));
-  } else {
-    return createPageLink(getPickUpgradeName(id), wikiPageNames.pickUpgrades[id]);
   }
+  return createPageLink(getPickUpgradeName(id), wikiPageNames.pickUpgrades[id]);
 }
 /**
 * @description Formats a cooking fire upgrade as a page link
@@ -303,9 +335,8 @@ function formatPickIDAsLink(id) {
 function formatFireIDAsLink(id) {
   if (wikiPageNames.fireUpgrades[id] === getFireUpgradeName(id)) {
     return formatPageLink(getFireUpgradeName(id));
-  } else {
-    return createPageLink(getFireUpgradeName(id), wikiPageNames.fireUpgrades[id]);
   }
+  return createPageLink(getFireUpgradeName(id), wikiPageNames.fireUpgrades[id]);
 }
 /**
 * @description Formats an auto-eat upgrade as a page link
@@ -315,9 +346,8 @@ function formatFireIDAsLink(id) {
 function formatEatIDAsLink(id) {
   if (wikiPageNames.eatUpgrades[id] === autoEatData[id].title) {
     return formatPageLink(autoEatData[id].title);
-  } else {
-    return createPageLink(autoEatData[id].title, wikiPageNames.eatUpgrades[id]);
   }
+  return createPageLink(autoEatData[id].title, wikiPageNames.eatUpgrades[id]);
 }
 
 /**
@@ -423,6 +453,15 @@ function formatAsShopCost(cost) {
 }
 
 /**
+ * @description Formats barsRequired as ingredients list
+ * @param {Array<Number>} ingArray
+ * @return {string}
+ */
+function formatIngredientsRequired(ingArray) {
+  return `${formatItemIDAsImageLink(ingArray[0], 25, 'middle')} ${formatAsInt(ingArray[1])}`;
+}
+
+/**
  * @description formats an itemID as the bars and gp cost
  * @param {number} itemID
  * @return {String}
@@ -461,14 +500,6 @@ function formatItemCreationCost(costArray) {
 function formatAsSlayerCost(cost) {
   return `[[File:Slayer_Coins.svg|25px|middle]] ${cost}`;
 }
-/**
- * @description Formats a value as an integer in base 10
- * @param {number} value
- * @return {string}
- */
-function formatAsInt(value) {
-  return value.toString(10);
-}
 
 /**
 * @description Formats an itemID as its sale price
@@ -497,14 +528,6 @@ function formatAsRate(rateArray) {
   return formatNumberDec(rateArray[0] / rateArray[1] * 1000, 2);
 }
 
-/**
- * @description Formats barsRequired as ingredients list
- * @param {Array<Number>} ingArray
- * @return {string}
- */
-function formatIngredientsRequired(ingArray) {
-  return `${formatItemIDAsImageLink(ingArray[0], 25, 'middle')} ${formatAsInt(ingArray[1])}`;
-}
 /**
 * @description Formats the stat change between an item and its trimmed version
 * @param {number} itemID
@@ -553,13 +576,13 @@ function formatUpgradeChange(itemID) {
   let statVal1 = 0; let statVal2 = 0;
   // Go through each available stat and add to string if there's a difference
   Object.keys(statsToCheck).forEach((key) => {
-    if (key == 'attackBonus') {
+    if (key === 'attackBonus') {
       let attBon1 = statsToCheck[key];
       let attBon2 = statsToCheck[key];
-      if (items[itemID][key] != undefined) {
+      if (items[itemID][key] !== undefined) {
         attBon1 = items[itemID][key];
       }
-      if (items[trimmedID][key] != undefined) {
+      if (items[trimmedID][key] !== undefined) {
         attBon2 = items[trimmedID][key];
       }
 
@@ -571,12 +594,12 @@ function formatUpgradeChange(itemID) {
         }
       }
     } else {
-      if (items[itemID][key] != undefined) {
+      if (items[itemID][key] !== undefined) {
         statVal1 = items[itemID][key];
       } else {
         statVal1 = statsToCheck[key];
       }
-      if (items[trimmedID][key] != undefined) {
+      if (items[trimmedID][key] !== undefined) {
         statVal2 = items[trimmedID][key];
       } else {
         statVal2 = statsToCheck[key];
@@ -592,27 +615,17 @@ function formatUpgradeChange(itemID) {
 }
 
 /**
- * @description Formats a monsters attack type
- * @param {number} type
- * @return {String}
- */
-function formatAttackType(type) {
-  return `${formatAttackTypeIcon(type)} ${formatAttackTypeName(type)}`;
-}
-
-/**
  * Formats an attack type as an image icon with no link
  * @param {Number} type Attack type ID
  * @return {String}
  */
 function formatAttackTypeIcon(type) {
-  if (type == CONSTANTS.attackType.Melee) {
+  if (type === CONSTANTS.attackType.Melee) {
     return `${formatCombatImage(25, 'middle')}`;
-  } else if (type == CONSTANTS.attackType.Ranged) {
+  } else if (type === CONSTANTS.attackType.Ranged) {
     return `${formatSkillImage('Ranged', 25, 'middle')}`;
-  } else {
-    return `${formatSkillImage('Magic', 25, 'middle')}`;
   }
+  return `${formatSkillImage('Magic', 25, 'middle')}`;
 }
 
 /**
@@ -621,13 +634,21 @@ function formatAttackTypeIcon(type) {
  * @return {String}
  */
 function formatAttackTypeName(type) {
-  if (type == CONSTANTS.attackType.Melee) {
+  if (type === CONSTANTS.attackType.Melee) {
     return `Melee`;
-  } else if (type == CONSTANTS.attackType.Ranged) {
+  } else if (type === CONSTANTS.attackType.Ranged) {
     return `Ranged`;
-  } else {
-    return `Magic`;
   }
+  return `Magic`;
+}
+
+/**
+ * @description Formats a monsters attack type
+ * @param {number} type
+ * @return {String}
+ */
+function formatAttackType(type) {
+  return `${formatAttackTypeIcon(type)} ${formatAttackTypeName(type)}`;
 }
 
 /**
@@ -651,9 +672,8 @@ function formatCraftReq(requirements) {
 function formatItemIDasSmithingQty(itemID) {
   if (items[itemID].smithingQty) {
     return formatAsInt(items[itemID].smithingQty);
-  } else {
-    return formatAsInt(1);
   }
+  return formatAsInt(1);
 }
 
 /*
@@ -670,16 +690,16 @@ function formatItemIDasItemSource(itemID) {
     //Search monster drops
     var monsterList = '';
     for (let i = 0; i < MONSTERS.length; i++) {
-        if (MONSTERS[i].lootTable != undefined && selectMonsters(MONSTERS[i])) {
+        if (MONSTERS[i].lootTable !== undefined && selectMonsters(MONSTERS[i])) {
             for (let j = 0; j < MONSTERS[i].lootTable.length; j++) {
-                if (MONSTERS[i].lootTable[j][0] == itemID) {
+                if (MONSTERS[i].lootTable[j][0] === itemID) {
                     monsterList += `${formatMonsterIDAsImageLink(i, 25, 'middle')}, `;
                     break;
                 }
             }
         }
     }
-    if (monsterList != '') {
+    if (monsterList !== '') {
         outputStr += `Killing: ${monsterList.slice(0, monsterList.length - 2)}<br />`;
     }
     var chestList = '';
@@ -689,26 +709,26 @@ function formatItemIDasItemSource(itemID) {
     }
     for (let i = 0; i < openableItems.length; i++) {
         for (let j = 0; j < items[openableItems[i]].dropTable.length; j++) {
-            if (items[openableItems[i]].dropTable[j][0] == itemID) {
+            if (items[openableItems[i]].dropTable[j][0] === itemID) {
                 chestList += `${formatItemIDAsImageLink(openableItems[i], 25, 'middle')}, `;
                 break;
             }
         }
     }
-    if (chestList != '') {
+    if (chestList !== '') {
         outputStr += `Opening: ${chestList.slice(0, chestList.length - 2)}<br />`;
     }
     var thieveList = '';
     //Search thieving targets
     for (let i = 0; i < thievingNPC.length; i++) {
         for (let j = 0; j < thievingNPC[i].lootTable.length; j++) {
-            if (thievingNPC[i].lootTable[j][0] == itemID) {
+            if (thievingNPC[i].lootTable[j][0] === itemID) {
                 thieveList += `${formatThievingIDAsImageLink(i, 25, 'middle')}, `
                 break;
             }
         }
     }
-    if (thieveList != '') {
+    if (thieveList !== '') {
         outputStr += `Pickpocketing: ${thieveList.slice(0, thieveList.length - 2)}<br />`;
     }
     var farmList = '';
@@ -716,57 +736,57 @@ function formatItemIDasItemSource(itemID) {
     var burnList = '';
     //Search items for upgrades, being cooked, being farmed, being burnt
     for (let i = 0; i < items.length; i++) {
-        if (items[i].trimmedItemID == itemID) {
+        if (items[i].trimmedItemID === itemID) {
             outputStr += `Upgrading: ${formatItemIDAsImageLink(i, 25, 'middle')}<br />`
         }
-        if (items[i].grownItemID == itemID) {
+        if (items[i].grownItemID === itemID) {
             farmList += `${formatItemIDAsImageLink(i, 25, 'middle')}, `
         }
-        if (items[i].cookedItemID == itemID) {
+        if (items[i].cookedItemID === itemID) {
             cookList += `${formatItemIDAsImageLink(i, 25, 'middle')}, `
         }
-        if (items[i].burntItemID == itemID) {
+        if (items[i].burntItemID === itemID) {
             burnList += `${formatItemIDAsImageLink(i, 25, 'middle')}, `
         }
     }
-    if (farmList != '') {
+    if (farmList !== '') {
         outputStr += `Growing: ${farmList.slice(0, farmList.length - 2)}<br />`;
     }
-    if (cookList != '') {
+    if (cookList !== '') {
         outputStr += `Cooking: ${cookList.slice(0, cookList.length - 2)}<br />`;
     }
-    if (burnList != '') {
+    if (burnList !== '') {
         outputStr += `Burning: ${burnList.slice(0, burnList.length - 2)}<br />`;
     }
 
     //Check for skills
     //Woodcutting
     for (let i = 0; i < trees.length; i++) {
-        if (i == itemID) {
+        if (i === itemID) {
             outputStr += `${formatSkillImageLink('Woodcutting', 25, 'middle')} (Lv. ${trees[i].level})<br />`;
         }
     }
     //Fishing
     for (let i = 0; i < fishData.length; i++) {
-        if (fishData[i].itemID == itemID) {
+        if (fishData[i].itemID === itemID) {
             outputStr += `${formatSkillImageLink('Fishing', 25, 'middle')} (Lv. ${fishData[i].level})<br />`;
         }
     }
     //Mining
-    if (items[itemID].miningLevel != undefined) {
+    if (items[itemID].miningLevel !== undefined) {
         outputStr += `${formatSkillImageLink('Mining', 25, 'middle')} (Lv. ${items[itemID].miningLevel})<br />`;
     }
 
     //Smithing
-    if (items[itemID].smithingLevel != undefined) {
+    if (items[itemID].smithingLevel !== undefined) {
         outputStr += `${formatSkillImageLink('Smithing', 25, 'middle')} (Lv. ${items[itemID].smithingLevel})<br />`;
     }
     //Fletching
-    if (items[itemID].fletchingLevel != undefined) {
+    if (items[itemID].fletchingLevel !== undefined) {
         outputStr += `${formatSkillImageLink('Fletching', 25, 'middle')} (Lv. ${items[itemID].fletchingLevel})<br />`;
     }
     //Crafting
-    if (items[itemID].craftingLevel != undefined) {
+    if (items[itemID].craftingLevel !== undefined) {
         outputStr += `${formatSkillImageLink('Crafting', 25, 'middle')} (Lv. ${items[itemID].craftingLevel})<br />`;
     }
     //Shop
@@ -774,13 +794,13 @@ function formatItemIDasItemSource(itemID) {
     var shopItems = [CONSTANTS.item.Green_Dragonhide, CONSTANTS.item.Blue_Dragonhide, CONSTANTS.item.Red_Dragonhide, CONSTANTS.item.Cooking_Gloves, CONSTANTS.item.Mining_Gloves, CONSTANTS.item.Smithing_Gloves, CONSTANTS.item.Thieving_Gloves, CONSTANTS.item.Gem_Gloves, CONSTANTS.item.Bowstring, CONSTANTS.item.Compost, CONSTANTS.item.Leather];
     var inShop = false;
     for (let i = 0; i < shopItems.length; i++) {
-        if (itemID == shopItems[i]) {
+        if (itemID === shopItems[i]) {
             inShop = true;
             break;
         }
     }
     for (let i = 0; i < skillcapeItems.length; i++) {
-        if (itemID == skillcapeItems[i]) {
+        if (itemID === skillcapeItems[i]) {
             inShop = true;
             break;
         }
@@ -789,10 +809,10 @@ function formatItemIDasItemSource(itemID) {
         outputStr += '[[Shop]]<br />';
     }
 
-    if (itemID == CONSTANTS.item.Fire_Cape) {
+    if (itemID === CONSTANTS.item.Fire_Cape) {
         outputStr += '[[Elite Dungeon]]<br />';
     }
-    if (outputStr != '') {
+    if (outputStr !== '') {
         outputStr = outputStr.slice(0, outputStr.length - 6);
     } else {
         outputStr = 'None';
@@ -851,11 +871,10 @@ function formatArrayAsNewlines(sourceArray) {
  * @return {String}
  */
 function formatAsDropQty(qty) {
-  if (qty[0] == qty[1]) {
+  if (qty[0] === qty[1]) {
     return `${qty[0]}`;
-  } else {
-    return `${qty[0]}-${qty[1]}`;
   }
+  return `${qty[0]}-${qty[1]}`;
 }
 /**
  * @description Calculates the loot chance of a monster and formats as X%
@@ -863,7 +882,7 @@ function formatAsDropQty(qty) {
  * @return {String}
  */
 function formatMonsterIDAsDropChance(monsterID) {
-  const lootChance = ((MONSTERS[monsterID].lootChance != undefined) ? MONSTERS[monsterID].lootChance / 100 : 1);
+  const lootChance = ((MONSTERS[monsterID].lootChance !== undefined) ? MONSTERS[monsterID].lootChance / 100 : 1);
   const realChance = lootChance * 100;
   return formatNumberPerc(realChance, 0);
 }
@@ -905,8 +924,8 @@ function formatPrayerCosts(costArray) {
   if (costArray[2] > 0) {
     costStrings.push(`${costArray[2]} per HP regen`);
   }
-  if (costArray.length == 0) {
-    costArray.push('None');
+  if (costArray.length === 0) {
+    costStrings.push('None');
   }
   return formatArrayAsNewlines(costStrings);
 }
@@ -1024,6 +1043,15 @@ function getMonsterMagicEvasion(monsterID) {
 }
 
 /**
+ * Gets the chance for a monster to drop items and coins
+ * @param {Number} monsterID Index of MONSTERS
+ * @return {Number}
+ */
+function getMonsterLootChance(monsterID) {
+  return ((MONSTERS[monsterID].lootChance !== undefined) ? MONSTERS[monsterID].lootChance : 100);
+}
+
+/**
  * @description Formats the attacks of a monster for monster templates
  * @return {string} String for template
  * @param {number} monsterID Index of MONSTERS array
@@ -1033,7 +1061,7 @@ function formatMonsterAttacks(monsterID) {
   let outStr = '';
   let normalAttackChance = 100;
   const attackChances = [];
-  if (MONSTERS[monsterID].specialAttackID != undefined) {
+  if (MONSTERS[monsterID].specialAttackID !== undefined) {
     for (let i = 0; i < MONSTERS[monsterID].specialAttackID.length; i++) {
       const specialID = MONSTERS[monsterID].specialAttackID[i];
       if (MONSTERS[monsterID].overrideSpecialChances !== undefined) {
@@ -1045,7 +1073,7 @@ function formatMonsterAttacks(monsterID) {
       }
     }
   }
-  if (normalAttackChance == 100) {
+  if (normalAttackChance === 100) {
     outStr += `${formatAttackTypeIcon(MONSTERS[monsterID].attackType)} 1-${getMonsterMaxHit(monsterID)} ${formatAttackTypeName(MONSTERS[monsterID].attackType)} Damage\n`;
   } else if (normalAttackChance > 0) {
     outStr += `* ${normalAttackChance}% ${formatAttackTypeIcon(MONSTERS[monsterID].attackType)} 1-${getMonsterMaxHit(monsterID)} ${formatAttackTypeName(MONSTERS[monsterID].attackType)} Damage\n`;
@@ -1063,17 +1091,28 @@ function formatMonsterAttacks(monsterID) {
   }
   return outStr;
 }
+
+/**
+ * @description Formats a monster's loot chance as a percentage
+ * @param {number} monsterID Index of MONSTERS array
+ * @return {String}
+ */
+function formatMonsterLootChance(monsterID) {
+  const lootChance = getMonsterLootChance(monsterID);
+  return `${lootChance.toFixed(2)}%`;
+}
+
 /**
  * @description Formats a monsters drops into a bullet list
  * @param {number} monsterID Index of MONSTERS array
  * @return {String}
  */
 function formatMonsterDrops(monsterID) {
-  outputStr = '';
+  let outputStr = '';
   if (isMonsterDungeonOnly(monsterID)) {
     if (MONSTERS[monsterID].isGodMonster) {
       outputStr += '100% chance for: \n';
-      const boneQty = (MONSTERS[monsterID].boneQty != undefined) ? MONSTERS[monsterID].boneQty : 1;
+      const boneQty = (MONSTERS[monsterID].boneQty !== undefined) ? MONSTERS[monsterID].boneQty : 1;
       outputStr += `* ${formatItemIDAsImageLink(MONSTERS[monsterID].bones, 25, 'middle')} ${formatAsDropQty([boneQty, boneQty])} ${formatItemIDAsLink(MONSTERS[monsterID].bones)}\n`;
     } else {
       outputStr += 'None';
@@ -1092,23 +1131,13 @@ function formatMonsterDrops(monsterID) {
       for (let i = 0; i < MONSTERS[monsterID].lootTable.length; i++) {
         let percStr = (100 * MONSTERS[monsterID].lootTable[i][1] / tableWeight).toFixed(2);
         if (percStr.length < 5) {
-          percStr = '&nbsp;&nbsp;' + percStr;
+          percStr = `&nbsp;&nbsp;${percStr}`;
         }
         outputStr += `* ${percStr}%: ${formatItemIDAsImageLink(MONSTERS[monsterID].lootTable[i][0], 25, 'middle')} ${formatAsDropQty([1, MONSTERS[monsterID].lootTable[i][2]])} ${formatItemIDAsLink(MONSTERS[monsterID].lootTable[i][0])}\n`;
       }
     }
   }
   return outputStr;
-}
-
-/**
- * @description Formats a monster's loot chance as a percentage
- * @param {number} monsterID Index of MONSTERS array
- * @return {String}
- */
-function formatMonsterLootChance(monsterID) {
-  const lootChance = getMonsterLootChance(monsterID);
-  return `${lootChance.toFixed(2)}%`;
 }
 
 /**
@@ -1119,10 +1148,10 @@ function formatMonsterLootChance(monsterID) {
  */
 function createItemDescription(itemID) {
   let description = `${items[itemID].name} `;
-  if (items[itemID].equipmentSlot == CONSTANTS.equipmentSlot.Weapon) {
+  if (items[itemID].equipmentSlot === CONSTANTS.equipmentSlot.Weapon) {
     // Items that are weapons
     let weaponType = 'melee';
-    if (items[itemID].type == 'Ranged Weapon' || items[itemID].isRanged) {
+    if (items[itemID].type === 'Ranged Weapon' || items[itemID].isRanged) {
       weaponType = 'ranged';
     } else if (items[itemID].isMagic) {
       weaponType = 'magic';
@@ -1132,26 +1161,26 @@ function createItemDescription(itemID) {
       weaponHandedness = 'two-handed';
     }
     description += `a ${weaponHandedness}, ${weaponType} weapon.`;
-  } else if (items[itemID].equipmentSlot == CONSTANTS.equipmentSlot.Quiver) {
+  } else if (items[itemID].equipmentSlot === CONSTANTS.equipmentSlot.Quiver) {
     // Items that are arrows
     description += `are ranged ammunition that provide +${items[itemID].rangedStrengthBonus} ranged strenth bonus.`;
-  } else if (items[itemID].equipmentSlot == CONSTANTS.equipmentSlot.Ring) {
-    description += 'The ' + description + ` can be equipped in the ring slot.`;
-  } else if (items[itemID].equipmentSlot == CONSTANTS.equipmentSlot.Amulet) {
-    description += 'The ' + description + ` can be equipped in the amulet slot.`;
-  } else if (items[itemID].equipmentSlot == CONSTANTS.equipmentSlot.Cape) {
-    description = 'The ' + description + ` can be equipped in the cape slot.`;
-  } else if (items[itemID].equipmentSlot == CONSTANTS.equipmentSlot.Gloves) {
-    if (items[itemID].defenceLevelRequired != undefined) {
+  } else if (items[itemID].equipmentSlot === CONSTANTS.equipmentSlot.Ring) {
+    description += `The ${description} can be equipped in the ring slot.`;
+  } else if (items[itemID].equipmentSlot === CONSTANTS.equipmentSlot.Amulet) {
+    description += `The ${description} can be equipped in the amulet slot.`;
+  } else if (items[itemID].equipmentSlot === CONSTANTS.equipmentSlot.Cape) {
+    description = `The ${description} can be equipped in the cape slot.`;
+  } else if (items[itemID].equipmentSlot === CONSTANTS.equipmentSlot.Gloves) {
+    if (items[itemID].defenceLevelRequired !== undefined) {
       description += `are a piece of melee armour that can be worn in the gloves slot.`;
-    } else if (items[itemID].rangedLevelRequired != undefined) {
+    } else if (items[itemID].rangedLevelRequired !== undefined) {
       description += `are a piece of ranged armour that can be worn in the gloves slot.`;
-    } else if (items[itemID].magicLevelRequired != undefined) {
+    } else if (items[itemID].magicLevelRequired !== undefined) {
       description += `are a piece of magic armour that can be worn in the gloves slot.`;
     } else {
       description += `are a pair of skill gloves that provide the following bonus when worn: ${items[itemID].description}.`;
     }
-  } else if (items[itemID].healsFor != undefined) {
+  } else if (items[itemID].healsFor !== undefined) {
     // Items that can heal
     description += `is a type of food that heals for ${items[itemID].healsFor} hitpoints.`;
   } else {
@@ -1168,7 +1197,7 @@ function createItemDescription(itemID) {
  */
 function formatDungeonDrops(dungeonID) {
   const monsterID = DUNGEONS[dungeonID].monsters[DUNGEONS[dungeonID].monsters.length - 1];
-  outputStr = `* [[File:Coins.svg|25px|middle|link=GP]] ${MONSTERS[monsterID].dropCoins[0]}-${MONSTERS[monsterID].dropCoins[1]}\n`;
+  let outputStr = `* [[File:Coins.svg|25px|middle|link=GP]] ${MONSTERS[monsterID].dropCoins[0]}-${MONSTERS[monsterID].dropCoins[1]}\n`;
   for (let i = 0; i < DUNGEONS[dungeonID].rewards.length; i++) {
     outputStr += `* ${formatItemIDAsImageLink(DUNGEONS[dungeonID].rewards[i], 25, 'middle')} ${formatAsDropQty([1, 1])} ${formatItemIDAsLink(DUNGEONS[dungeonID].rewards[i])}\n`;
   }
@@ -1181,24 +1210,24 @@ function formatDungeonDrops(dungeonID) {
  * @return {Array<String>}
  */
 function getPrayerCostArray(prayerID) {
-  prayerCosts = [];
+  const prayerCosts = [];
   if (PRAYER[prayerID].pointsPerEnemy) {
     let pointString = 'Points';
-    if (PRAYER[prayerID].pointsPerEnemy == 1) {
+    if (PRAYER[prayerID].pointsPerEnemy === 1) {
       pointString = 'Point';
     }
     prayerCosts.push(`${PRAYER[prayerID].pointsPerEnemy} Prayer ${pointString} when a monster attacks`);
   }
   if (PRAYER[prayerID].pointsPerPlayer) {
     let pointString = 'Points';
-    if (PRAYER[prayerID].pointsPerPlayer == 1) {
+    if (PRAYER[prayerID].pointsPerPlayer === 1) {
       pointString = 'Point';
     }
     prayerCosts.push(`${PRAYER[prayerID].pointsPerPlayer} Prayer ${pointString} when you attack`);
   }
   if (PRAYER[prayerID].pointsPerRegen) {
     let pointString = 'Points';
-    if (PRAYER[prayerID].pointsPerRegen == 1) {
+    if (PRAYER[prayerID].pointsPerRegen === 1) {
       pointString = 'Point';
     }
     prayerCosts.push(`${PRAYER[prayerID].pointsPerRegen} Prayer ${pointString} when you regenerate hitpoints`);
@@ -1212,7 +1241,7 @@ function getPrayerCostArray(prayerID) {
  * @return {Array<String>}
  */
 function getMonsterArray(areaData) {
-  monsterArray = [];
+  const monsterArray = [];
   for (let i = 0; i < areaData.monsters.length; i++) {
     monsterArray.push(`${formatMonsterIDAsImageLink(areaData.monsters[i], 25, 'middle')} ${formatMonsterIDAsLink(areaData.monsters[i])}`);
   }
@@ -1225,7 +1254,7 @@ function getMonsterArray(areaData) {
  * @return {Array<String>}
  */
 function getDungeonMonsterArray(condensedMonsters) {
-  monsterArray = [];
+  const monsterArray = [];
   condensedMonsters.forEach((monster) => {
     monsterArray.push(`${formatMonsterIDAsImageLink(monster.id, 25, 'middle')} ${formatMonsterIDAsLink(monster.id)} x${monster.quantity}`);
   });
@@ -1233,58 +1262,18 @@ function getDungeonMonsterArray(condensedMonsters) {
 }
 
 /**
- * Gets the chance for a monster to drop items and coins
- * @param {Number} monsterID Index of MONSTERS
- * @return {Number}
- */
-function getMonsterLootChance(monsterID) {
-  return ((MONSTERS[monsterID].lootChance != undefined) ? MONSTERS[monsterID].lootChance : 100);
-}
-/**
  * @description Creates an array of the spell requirements with image, qty and name link
  * @param {number} spellID Index of SPELLS array
  * @return {Array<String>}
  */
 function getSpellRuneArray(spellID) {
-  spellArray = [];
+  const spellArray = [];
   for (let i = 0; i < SPELLS[spellID].runesRequired.length; i++) {
     spellArray.push(`${formatItemIDAsImageLink(SPELLS[spellID].runesRequired[i].id, 25, 'middle')} ${formatAsInt(SPELLS[spellID].runesRequired[i].qty)} ${formatItemIDAsLink(SPELLS[spellID].runesRequired[i].id)}`);
   }
   return spellArray;
 }
 
-/**
- * Gets the name of an axe upgrade
- * @param {Number} tier The tier of axe upgrade
- * @return {String}
- */
-function getAxeUpgradeName(tier) {
-  return setToUppercase(tiers[tier]) + ' Axe';
-}
-/**
- * Gets the name of a fishing rod upgrade
- * @param {Number} tier The tier of rod upgrade
- * @return {String}
- */
-function getRodUpgradeName(tier) {
-  return setToUppercase(tiers[tier]) + ' Fishing Rod';
-}
-/**
- * Gets the name of a pickaxe upgrade
- * @param {Number} tier The tier of pick upgrade
- * @return {String}
- */
-function getPickUpgradeName(tier) {
-  return setToUppercase(tiers[tier]) + ' Pickaxe';
-}
-/**
- * Gets the name of a cooking fire upgrade
- * @param {Number} tier The tier of fire upgrade
- * @return {String}
- */
-function getFireUpgradeName(tier) {
-  return setToUppercase(cookingFireData[tier].tier) + ' Cooking Fire';
-}
 /**
  * Gets a formatted string array of the items that can be upgraded into itemID
  * @param {Number} itemID Index of items array

@@ -184,7 +184,7 @@ function createFishingTable() {
   tabSpec.appendColumn('Catch Time', 'right', 'itemID', '0s', (id) => {
     return `${(items[id].minFishingInterval / 1000).toFixed(1)}-${(items[id].maxFishingInterval / 1000).toFixed(1)}s`;
   }, (id) =>{
-    return (items[id].minFishingInterval+items[id].maxFishingInterval)/2;
+    return (items[id].minFishingInterval + items[id].maxFishingInterval) / 2;
   });
   tabSpec.appendColumn('Experience', 'right', 'itemID', 0, (id) => {
     return formatAsInt(items[id].fishingXP);
@@ -203,7 +203,7 @@ function createFishingAreasTable() {
   tabSpec.appendColumn('Fish', 'right', 'fish', [], (fish) => {
     const fishLinks = [];
     for (let i = 0; i < fish.length; i++) {
-      const itemID = fishingItems[fish[i]].itemID;
+      const {itemID} = fishingItems[fish[i]];
       fishLinks.push(`${formatItemIDAsImageLink(itemID, 25, 'middle')} ${formatItemIDAsLink(itemID)}`);
     }
     return formatArrayAsNewlines(fishLinks);
@@ -294,14 +294,13 @@ function createMonsterTable() {
   tabSpec.appendColumn('Coins', 'right', 'dropCoins', [0, 0], (x) => {
     return `${x[0]}-${x[1]}`;
   }, (x)=>{
-    return (x[0]+x[1])/2;
+    return (x[0] + x[1]) / 2;
   });
   tabSpec.appendColumn('Bones', 'right', ['bones', 'canDropBones'], [0, false], (boneData) => {
     if (boneData[1]) {
       return formatItemIDAsImageLink(boneData[0], 25, 'middle');
-    } else {
-      return 'None';
     }
+    return 'None';
   });
   tabSpec.appendColumn('Locations', 'right;white-space: nowrap', 'parentIndex', 0, (id) => formatArrayAsNewlines(getMonsterLocationArray(id)));
 
@@ -323,7 +322,7 @@ function createSmithingTable(type) {
   tabSpec.appendColumn('Name', 'left', 'itemID', 0, formatItemIDAsLink);
   tabSpec.appendColumn('Smithing Level', 'right', 'smithingLevel', 1, formatAsInt);
   tabSpec.appendColumn('Experience', 'right', 'itemID', 0, (id) => formatAsInt(items[id].smithingXP));
-  if (type != 'Bar') {
+  if (type !== 'Bar') {
     tabSpec.appendColumn('Smithing Quantity', 'right', 'itemID', 0, formatItemIDasSmithingQty);
   }
   tabSpec.appendColumn('Item Price', 'right', 'itemID', 0, formatItemIDasPrice);
@@ -364,17 +363,17 @@ function createSmithingPage() {
  * @return {String}
  */
 function createArmourTable(equipmentSlot, type, ammoType = -1) {
-  const isSkillItem = (equipmentSlot == CONSTANTS.equipmentSlot.Gloves && type == 'None');
+  const isSkillItem = (equipmentSlot === CONSTANTS.equipmentSlot.Gloves && type === 'None');
   const itemSubset = getObjectArraySubset(items, (item) => selectArmourItem(item, equipmentSlot, type, ammoType));
-  if (type == 'Melee') {
+  if (type === 'Melee') {
     itemSubset.sort(sortByDefenceLevel);
-  } else if (type == 'Ranged' || (type == 'All' && equipmentSlot == CONSTANTS.equipmentSlot.Quiver)) {
+  } else if (type === 'Ranged' || (type === 'All' && equipmentSlot === CONSTANTS.equipmentSlot.Quiver)) {
     itemSubset.sort(sortByRangedLevel);
-  } else if (type == 'Magic') {
+  } else if (type === 'Magic') {
     itemSubset.sort(sortByMagicLevel);
   }
   const tabSpec = new TableSpecMaker();
-  if (ammoType == 2 || ammoType == 3) {
+  if (ammoType === 2 || ammoType === 3) {
     tabSpec.appendSpan('|', 3); // Name, Image and Speed
   } else {
     tabSpec.appendSpan('|', 2); // Name and image
@@ -382,7 +381,7 @@ function createArmourTable(equipmentSlot, type, ammoType = -1) {
   tabSpec.appendColumn('style="padding:0 1em 0 0.5em;"|Item', 'left;padding: 0 0 0 0', 'id', 0, (id) => formatItemIDAsImageLink(id, 50, 'middle'));
   tabSpec.appendColumn('style="padding:0 1em 0 0.5em;"|Name', 'left;padding: 0 0.5em 0 0.5em', 'id', 0, formatItemIDAsLink);
   if (!isSkillItem) {
-    if (ammoType == 2 || ammoType == 3) {
+    if (ammoType === 2 || ammoType === 3) {
       tabSpec.appendColumn('style="padding:0 1em 0 0.5em;"|Attack Speed', 'right;padding: 0 0.5em 0 0', 'attackSpeed', 0, formatAsInt);
     }
     tabSpec.appendSpan('style="padding:0 0.5em 0 0.5em;"|Attack Bonus', 5);
@@ -404,7 +403,7 @@ function createArmourTable(equipmentSlot, type, ammoType = -1) {
     tabSpec.appendColumn(`style="padding:0 1em 0 0;"|${formatSkillImageLink('Defence', 25, 'middle')}`, 'right;padding: 0 0.5em 0 0', 'damageReduction', 0, formatAsInt);
   }
   // Items that may have extra effects: Capes, Rings, Amulets, Gloves (Skill)
-  if (equipmentSlot == CONSTANTS.equipmentSlot.Cape || equipmentSlot == CONSTANTS.equipmentSlot.Ring || equipmentSlot == CONSTANTS.equipmentSlot.Amulet || (equipmentSlot == CONSTANTS.equipmentSlot.Gloves && type == 'None')) {
+  if (equipmentSlot === CONSTANTS.equipmentSlot.Cape || equipmentSlot === CONSTANTS.equipmentSlot.Ring || equipmentSlot === CONSTANTS.equipmentSlot.Amulet || (equipmentSlot === CONSTANTS.equipmentSlot.Gloves && type === 'None')) {
     tabSpec.appendSpan('|', 1); // Description
     tabSpec.appendColumn('style="padding:0 1em 0 0.5em;"|Description', 'right;padding: 0 0.5em 0 0.5em', 'description', 'None', (a) => {
       return a;
@@ -421,9 +420,8 @@ function createArmourTable(equipmentSlot, type, ammoType = -1) {
 
   if (isSkillItem) {
     return formatObjectArrayAsTable(itemSubset, tabSpec.tableSpec);
-  } else {
-    return formatObjectArrayAsTableWSH(itemSubset, tabSpec.tableSpec, tabSpec.spanSpec);
   }
+  return formatObjectArrayAsTableWSH(itemSubset, tabSpec.tableSpec, tabSpec.spanSpec);
 }
 
 /**
@@ -434,11 +432,11 @@ function createArmourTable(equipmentSlot, type, ammoType = -1) {
  */
 function createWeaponTable(type, ammoTypeRequired = -1) {
   const itemSubset = getObjectArraySubset(items, (item) => selectWeaponItem(item, type, ammoTypeRequired));
-  if (type == 'Melee') {
+  if (type === 'Melee') {
     itemSubset.sort(sortByAttackLevel);
-  } else if (type == 'Ranged') {
+  } else if (type === 'Ranged') {
     itemSubset.sort(sortByRangedLevel);
-  } else if (type == 'Magic') {
+  } else if (type === 'Magic') {
     itemSubset.sort(sortByMagicLevel);
   }
   const tabSpec = new TableSpecMaker();
@@ -478,14 +476,30 @@ function checkItemSubsetForStats(itemSubset,statKey) {
        var foundStat = false;
        var statTotal = 0;
        for (let i=0;i<itemSubset.length;i++) {
-              if (itemSubset[i][statKey] != undefined) {
+              if (itemSubset[i][statKey] !== undefined) {
                      foundStat = true;
                      statTotal += itemSubset[i][statKey];
               }
        }
-       return !(statTotal == 0 | !foundStat);
+       return !(statTotal === 0 | !foundStat);
 }
 */
+
+/**
+ * @description Generates subsections for a type of gear that has all combat types
+ * @param {number} equipmentSlot The slot of gear
+ * @return {String}
+ */
+function createSlotSection(equipmentSlot) {
+  let outStr = '';
+  outStr += createSubSection('Melee');
+  outStr += createArmourTable(equipmentSlot, 'Melee');
+  outStr += createSubSection('Ranged');
+  outStr += createArmourTable(equipmentSlot, 'Ranged');
+  outStr += createSubSection('Magic');
+  outStr += createArmourTable(equipmentSlot, 'Magic');
+  return outStr;
+}
 
 /**
  * @description Creates the tables for the Equipment page
@@ -546,21 +560,6 @@ function createEquipmentPage() {
   outStr += createWeaponTable('Magic');
   return outStr;
 }
-/**
- * @description Generates subsections for a type of gear that has all combat types
- * @param {number} equipmentSlot The slot of gear
- * @return {String}
- */
-function createSlotSection(equipmentSlot) {
-  let outStr = '';
-  outStr += createSubSection('Melee');
-  outStr += createArmourTable(equipmentSlot, 'Melee');
-  outStr += createSubSection('Ranged');
-  outStr += createArmourTable(equipmentSlot, 'Ranged');
-  outStr += createSubSection('Magic');
-  outStr += createArmourTable(equipmentSlot, 'Magic');
-  return outStr;
-}
 
 /**
  * @description Creates a table of spells
@@ -608,7 +607,7 @@ function createMonsterLootTable(monsterID) {
     let totWeight = 0;
     for (let i = 0; i < MONSTERS[monsterID].lootTable.length; i++) {
       totWeight += MONSTERS[monsterID].lootTable[i][1];
-    };
+    }
     const tabSpec = new TableSpecMaker();
     tabSpec.appendColumn('Item', 'left', 0, 0, (id) => formatItemIDAsImageLink(id, 50, 'middle'));
     tabSpec.appendColumn('Name', 'left', 0, 0, formatItemIDAsLink);
@@ -616,9 +615,8 @@ function createMonsterLootTable(monsterID) {
     tabSpec.appendColumn('Weight', 'right', 1, 0, formatAsInt);
     tabSpec.appendColumn('Chance', 'right', 1, 0, (x) => formatNumberPerc(100 * x / totWeight, 2));
     return formatObjectArrayAsTable(MONSTERS[monsterID].lootTable, tabSpec.tableSpec);
-  } else {
-    return '';
   }
+  return '';
 }
 
 /**
@@ -647,9 +645,8 @@ function createChestDropTable(chestID) {
     tabSpec.appendColumn('Chance', 'right', 'itemWeight', 0, (x) => formatNumberPerc(100 * x / totWeight, 2));
     tabSpec.appendColumn('Price', 'right', 'itemID', 0, (x) => formatAsInt(items[x].sellsFor));
     return formatObjectArrayAsTable(dropObject, tabSpec.tableSpec);
-  } else {
-    return '';
   }
+  return '';
 }
 
 
@@ -702,7 +699,7 @@ function createShopAxesTable() {
     axeData.push({
       level: axeLevels[i],
       cost: axeCost[i],
-      name: setToUppercase(tiers[i]) + ' Axe',
+      name: `${setToUppercase(tiers[i])} Axe`,
       bonusSpeed: axeBonusSpeed[i],
     });
   }
@@ -724,7 +721,7 @@ function createShopFishRodTable() {
     axeData.push({
       level: rodLevels[i],
       cost: rodCost[i],
-      name: setToUppercase(tiers[i]) + ' Fishing Rod',
+      name: `${setToUppercase(tiers[i])} Fishing Rod`,
       bonusSpeed: rodBonusSpeed[i],
     });
   }
@@ -746,7 +743,7 @@ function createShopPickaxeTable() {
     axeData.push({
       level: pickaxeLevels[i],
       cost: pickaxeCost[i],
-      name: setToUppercase(tiers[i]) + ' Pickaxe',
+      name: `${setToUppercase(tiers[i])} Pickaxe`,
       bonusOre: pickaxeBonus[i],
       bonusSpeed: pickaxeBonusSpeed[i],
     });
@@ -783,7 +780,7 @@ function createShopCookingFireTable() {
  */
 function createShopGodUpgradeTable() {
   const godData = [];
-  for (let i=0; i<godUpgradeData.length; i++) {
+  for (let i = 0; i < godUpgradeData.length; i++) {
     godData.push({
       name: godUpgradeData[i].name,
       effect: godUpgradeDescriptions[i],
@@ -838,7 +835,7 @@ function createShopGloveTable() {
   tabSpec.appendColumn('Description', 'right', ['itemID', 'charges'], [0, 0], (x) => `+${x[1]} Charges<br/>${items[x[0]].description}`);
   tabSpec.appendColumn('Cost', 'right', 'cost', 0, formatAsShopCost, returnSelf);
   tabSpec.appendColumn('Cost per Charge', 'right', ['cost', 'charges'], 0, (x) => formatAsShopCost(x[0] / x[1]), (x)=>{
-    return x[0]/x[1];
+    return x[0] / x[1];
   });
   return formatObjectArrayAsTable(gloveData, tabSpec.tableSpec);
 }
@@ -858,13 +855,13 @@ function createShopMaterialTable() {
   tabSpec.appendColumn('Name', 'left', 'itemID', 0, formatItemIDAsLink);
   tabSpec.appendColumn('Cost', 'right', ['buysFor', 'buysForLeather', 'buysForItems'], [0, 0, 0], (x) => {
     let costString = '';
-    if (x[0] != 0) {
+    if (x[0] !== 0) {
       costString += `${formatAsShopCost(x[0])}<br/>`;
     }
-    if (x[1] != 0) {
+    if (x[1] !== 0) {
       costString += `${formatItemIDAsImageLink(CONSTANTS.item.Leather, 25, 'middle')} ${x[1]}<br/>`;
     }
-    if (x[2] != 0) {
+    if (x[2] !== 0) {
       for (let i = 0; i < x[2].length; i++) {
         costString += `${formatItemIDAsImageLink(x[2][i][0], 25, 'middle')} ${x[2][i][1]}<br/>`;
       }
@@ -1027,19 +1024,17 @@ function createFletchingTable(type) {
   tabSpec.appendColumn('Fletching Level', 'right', 'fletchingLevel', 0, formatAsInt);
   tabSpec.appendColumn('Experience', 'right', 'fletchingXP', 0, formatAsInt);
   tabSpec.appendColumn('Quantity', 'right', ['fletchQty', 'parentIndex'], 1, (x) => {
-    if (x[1] == CONSTANTS.item.Arrow_Shafts) {
+    if (x[1] === CONSTANTS.item.Arrow_Shafts) {
       return '15-135';
-    } else {
-      return formatAsInt(x[0]);
     }
+    return formatAsInt(x[0]);
   });
   tabSpec.appendColumn('Sells For', 'right', 'sellsFor', 0, formatAsInt);
   tabSpec.appendColumn('Ingredients', 'right', ['fletchReq', 'parentIndex'], 0, (x) => {
-    if (x[1] == CONSTANTS.item.Arrow_Shafts) {
+    if (x[1] === CONSTANTS.item.Arrow_Shafts) {
       return `1 Any ${formatItemIDAsImageLink(CONSTANTS.item.Normal_Logs, 25, 'middle')}`;
-    } else {
-      return formatCraftReq(x[0]);
     }
+    return formatCraftReq(x[0]);
   });
   return formatObjectArrayAsTable(fletchingItems, tabSpec.tableSpec);
 }
@@ -1121,7 +1116,7 @@ function createMasteryXPTable() {
     xp += Math.floor(i + 300 * Math.pow(2, i / 7));
     xpTable.push({
       level: i + 1,
-      xp: Math.floor(xp / 48)+1,
+      xp: Math.floor(xp / 48) + 1,
       xpToNext: 0,
     });
   }
@@ -1156,16 +1151,16 @@ console.log(outstr);
  */
 function createPotionsTable(type) {
   let category = -1;
-  if (type == 'Skill') {
+  if (type === 'Skill') {
     category = 1;
-  } else if (type == 'Combat') {
+  } else if (type === 'Combat') {
     category = 0;
   }
   // Construct item subset for herblore because the data is seperated into 2 arrays again
   const itemSubset = [];
   let subsetIndex = -1;
   for (let i = 0; i < herbloreItemData.length; i++) {
-    if (herbloreItemData[i].category == category) {
+    if (herbloreItemData[i].category === category) {
       for (let j = 0; j < herbloreItemData[i].itemID.length; j++) {
         subsetIndex++;
         itemSubset.push(items[herbloreItemData[i].itemID[j]]);
@@ -1253,7 +1248,7 @@ function createItemLootSourcesTable(itemID) {
   tabSpec.appendColumn('Name', 'left', 'name', '', returnSelf);
   tabSpec.appendColumn('Source Type', 'left', 'type', '', returnSelf);
   tabSpec.appendColumn('Quantity', 'right', ['minQty', 'maxQty'], [1, 1], formatAsDropQty, (x)=>{
-    return x[0]+x[1];
+    return x[0] + x[1];
   });
   tabSpec.appendColumn('Chance', 'right', 'chance', 0, (x) => formatNumberPerc(x, 2));
   return formatObjectArrayAsTable(lootSourceData, tabSpec.tableSpec);
@@ -1272,9 +1267,8 @@ function createPlayerSpecialAttacksTable() {
         weaponFormat.push(`${formatItemIDAsImageLink(itemID, 50, 'middle')} ${formatItemIDAsLink(itemID)}`);
       });
       return formatArrayAsNewlines(weaponFormat);
-    } else {
-      return 'None';
     }
+    return 'None';
   });
   tabSpec.appendColumn('Name', 'right', 'name', '', returnSelf);
   tabSpec.appendColumn('Chance', 'right', 'chance', 0, (chance) => formatNumberPerc(chance, 0));

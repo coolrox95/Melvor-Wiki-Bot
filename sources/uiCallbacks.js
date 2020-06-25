@@ -42,7 +42,7 @@ async function buttonRequestPage() {
   try {
     const pageContent = await getFullWikiPage('Special:AllPages');
     console.log(pageContent);
-    wikiTableOutput.textContent = pageContent;
+    wikiTableOutput.textContent = pageContent.text;
     /*
         let pageSectionID = await getSectionID('Chest of Witwix', 'Loot Table');
         console.log(pageSectionID);
@@ -91,7 +91,7 @@ async function logoutButton() {
 async function buttonImageUploadURL() {
   console.log('Attempting Image Upload From URL');
   const csrftoken = await getCsrfToken();
-  uploadImageFromUrl('Slayer Coins.svg', 'Automatically uploaded by coolbot95.', 'https://melvoridle.com/assets/media/main/slayer_coins.svg', csrftoken);
+  uploadImageFromUrlViaUrl('Slayer Coins.svg', 'Automatically uploaded by coolbot95.', 'https://melvoridle.com/assets/media/main/slayer_coins.svg', csrftoken);
 }
 
 /**
@@ -102,7 +102,7 @@ async function buttonImageUploadURL() {
 async function buttonImageUploadBlob() {
   console.log('Attempting Image Upload From Blob');
   const csrftoken = await getCsrfToken();
-  const imageURL = GAMEURL + 'assets/media/shop/equipment_set.svg';
+  const imageURL = `${GAMEURL}assets/media/shop/equipment_set.svg`;
   const response = await uploadImageFromUrlViaBlob('Equipment Set (upgrade).svg', '[[Category:Upgrades]]', imageURL, csrftoken);
   console.log(response);
 }
@@ -419,20 +419,20 @@ function uploadUpgradeImages() {
     const upgradeImageSources = [];
     const upgradeImageFilenames = [];
     // Bank Slot
-    upgradeImageSources.push(GAMEURL + 'assets/media/main/bank_header.svg');
+    upgradeImageSources.push(`${GAMEURL}assets/media/main/bank_header.svg`);
     upgradeImageFilenames.push('Bank Slot (upgrade).svg');
     // Multi Tree
-    upgradeImageSources.push(GAMEURL + 'assets/media/shop/woodcutting_multi_tree.svg');
+    upgradeImageSources.push(`${GAMEURL}assets/media/shop/woodcutting_multi_tree.svg`);
     upgradeImageFilenames.push('Multi-Tree (upgrade).svg');
     for (let i = 1; i < tiers.length; i++) {
       // Axes
-      upgradeImageSources.push(GAMEURL + 'assets/media/shop/axe_' + tiers[i] + '.svg');
+      upgradeImageSources.push(`${GAMEURL}assets/media/shop/axe_${tiers[i]}.svg`);
       upgradeImageFilenames.push(`${setToUppercase(tiers[i])} Axe (upgrade).svg`);
       // Fishing Rods
-      upgradeImageSources.push(GAMEURL + 'assets/media/shop/fishing_' + tiers[i] + '.svg');
+      upgradeImageSources.push(`${GAMEURL}assets/media/shop/fishing_${tiers[i]}.svg`);
       upgradeImageFilenames.push(`${setToUppercase(tiers[i])} Fishing Rod (upgrade).svg`);
       // Cooking Fires
-      upgradeImageSources.push(GAMEURL + 'assets/media/shop/pickaxe_' + tiers[i] + '.svg');
+      upgradeImageSources.push(`${GAMEURL}assets/media/shop/pickaxe_${tiers[i]}.svg`);
       upgradeImageFilenames.push(`${setToUppercase(tiers[i])} Pickaxe (upgrade).svg`);
     }
     // Cooking fires
@@ -442,7 +442,7 @@ function uploadUpgradeImages() {
     }
     // Auto Eat
     for (let i = 0; i < autoEatData.length; i++) {
-      upgradeImageSources.push(GAMEURL + 'assets/media/shop/autoeat.svg');
+      upgradeImageSources.push(`${GAMEURL}assets/media/shop/autoeat.svg`);
       upgradeImageFilenames.push(`${autoEatData[i].title} (upgrade).svg`);
     }
     for (let i = 0; i < godUpgradeData.length; i++) {
@@ -470,16 +470,16 @@ async function updateItemPages() {
         // Replace Main Item Template
         let newItemPage = oldItemPage.replace(ITEMTEMPLATEREGEX, fillItemTemplate(i));
         // Replace Stats Templates
-        if (items[i].equipmentSlot != undefined) {
-          if (items[i].equipmentSlot == CONSTANTS.equipmentSlot.Quiver && (items[i].ammoType == 2 || items[i].ammoType == 3)) {
+        if (items[i].equipmentSlot !== undefined) {
+          if (items[i].equipmentSlot === CONSTANTS.equipmentSlot.Quiver && (items[i].ammoType === 2 || items[i].ammoType === 3)) {
             newItemPage = newItemPage.replace(WEAPONSTATSREGEX, fillWeaponStatsTemplate(i));
-          } else if (items[i].equipmentSlot == CONSTANTS.equipmentSlot.Weapon) {
+          } else if (items[i].equipmentSlot === CONSTANTS.equipmentSlot.Weapon) {
             newItemPage = newItemPage.replace(WEAPONSTATSREGEX, fillWeaponStatsTemplate(i));
           } else {
             newItemPage = newItemPage.replace(ARMOURSTATSREGEX, fillArmourStatsTemplate(i));
           }
         }
-        if (newItemPage != oldItemPage) {
+        if (newItemPage !== oldItemPage) {
           dataChanged = true;
         }
         // Check Loot Table Template for Changes:
@@ -488,7 +488,7 @@ async function updateItemPages() {
           if (lootPullResult.success) {
             const oldLootPage = lootPullResult.text;
             const newLootPage = oldLootPage.replace(TABLEREGEX, createChestDropTable(i));
-            if (oldLootPage != newLootPage) {
+            if (oldLootPage !== newLootPage) {
               dataChanged = true;
             }
           } else {
@@ -504,7 +504,7 @@ async function updateItemPages() {
           const newSourcePage = createItemSourceTemplatePage(i);
           /* Troubleshooting code for different strings that should be the same
                     for (let j=0;j<oldSourcePage.length;j++) {
-                        if (oldSourcePage.charCodeAt(j) != newSourcePage.charCodeAt(j)) {
+                        if (oldSourcePage.charCodeAt(j) !== newSourcePage.charCodeAt(j)) {
                             console.log(`Character code is different at: ${j}`);
                             console.log(`Old Page Has: ${oldSourcePage.charAt(j)}`);
                             console.log(`New Page Has: ${newSourcePage.charAt(j)}`)
@@ -518,7 +518,7 @@ async function updateItemPages() {
                     console.log(newSourcePage);
                     wikiTableOutput.textContent = oldSourcePage;
                                         */
-          if (oldSourcePage != newSourcePage) {
+          if (oldSourcePage !== newSourcePage) {
             dataChanged = true;
           }
         } else {
@@ -531,9 +531,9 @@ async function updateItemPages() {
             const autoGeneratedPage = createItemPageContent(i);
             let versionModifiedNew = newItemPage.replace(OLDVERSIONREGEX, VERSIONTEMPLATE);
             // Try to fix the linebreak problem
-            if (autoGeneratedPage != versionModifiedNew) {
-              const lineBreakAdded = versionModifiedNew.replace(ITEMTEMPLATEREGEX, fillItemTemplate(i) + '\n');
-              if (lineBreakAdded == autoGeneratedPage) {
+            if (autoGeneratedPage !== versionModifiedNew) {
+              const lineBreakAdded = versionModifiedNew.replace(ITEMTEMPLATEREGEX, `${fillItemTemplate(i)}\n`);
+              if (lineBreakAdded === autoGeneratedPage) {
                 versionModifiedNew = lineBreakAdded;
                 console.log(`Adding Linebreak To Page: ${pageName} to fix generic difference.`);
               }
@@ -542,7 +542,7 @@ async function updateItemPages() {
                         console.log(autoGeneratedPage.length);
                         console.log(versionModifiedNew.length);
                         for (let j = 0; j < versionModifiedNew.length; j++) {
-                            if (autoGeneratedPage.charCodeAt(j) != versionModifiedNew.charCodeAt(j)) {
+                            if (autoGeneratedPage.charCodeAt(j) !== versionModifiedNew.charCodeAt(j)) {
                                 console.log(`Character code is different at: ${j}`);
                                 console.log(`Gen Page Has: "${autoGeneratedPage.charAt(j)}" : ${autoGeneratedPage.charCodeAt(j)}`);
                                 console.log(`New Page Has: "${versionModifiedNew.charAt(j)}" : ${versionModifiedNew.charCodeAt(j)}`)
@@ -552,7 +552,7 @@ async function updateItemPages() {
                             }
                         }
                         */
-            if (autoGeneratedPage == versionModifiedNew) {
+            if (autoGeneratedPage === versionModifiedNew) {
               console.log(`Page: ${pageName}: Data Changed, but matches generic. Updating Version`);
               pagesToEdit.push({name: pageName, content: versionModifiedNew});
             } else {
@@ -593,9 +593,9 @@ async function updateMonsterPageTemplates() {
       if (pullResult.success) {
         const oldItemPage = pullResult.text;
         let newItemPage = oldItemPage.replace(MONSTERTEMPLATEREGEX, fillMonsterTemplate(i));
-        if (oldItemPage == newItemPage) {
+        if (oldItemPage === newItemPage) {
           newItemPage = oldItemPage.replace(OLDVERSIONREGEX, VERSIONTEMPLATE);
-          if (oldItemPage == newItemPage) {
+          if (oldItemPage === newItemPage) {
             console.log(`Page: ${pageName}: No Changes`);
           } else {
             console.log(`Page: ${pageName}: No Template Changes, Auto Updating Version`);
@@ -634,9 +634,9 @@ async function updateDungeonPageTemplates() {
       if (pullResult.success) {
         const oldItemPage = pullResult.text;
         let newItemPage = oldItemPage.replace(DUNGEONTEMPLATEREGEX, fillDungeonTemplate(i));
-        if (oldItemPage == newItemPage) {
+        if (oldItemPage === newItemPage) {
           newItemPage = oldItemPage.replace(OLDVERSIONREGEX, VERSIONTEMPLATE);
-          if (oldItemPage == newItemPage) {
+          if (oldItemPage === newItemPage) {
             console.log(`Page: ${pageName}: No Changes`);
           } else {
             console.log(`Page: ${pageName}: No Template Changes, Auto Updating Version`);
@@ -645,7 +645,7 @@ async function updateDungeonPageTemplates() {
           }
         } else {
           const versionReplacedPage = newItemPage.replace(OLDVERSIONREGEX, VERSIONTEMPLATE);
-          if (versionReplacedPage == createDungeonPageContent(i)) {
+          if (versionReplacedPage === createDungeonPageContent(i)) {
             console.log(`Page: ${pageName}: Dungeon Template Changed, But page is same as Default`);
             pagesToEdit.push({name: pageName, content: versionReplacedPage});
           } else {
@@ -662,6 +662,60 @@ async function updateDungeonPageTemplates() {
     if (numChanged > 0) {
       console.log(pagesToEdit);
       bulkEditPages(pagesToEdit, 'Automatic update of Dungeon page.');
+    }
+  } else {
+    console.error('Wiki data is not loaded.');
+  }
+}
+
+/**
+ * Updates pages by replacing the template found by templateRegex with the output of templateGenerator.
+ * Will automatically update page version template if there are no changes
+ * @param {Array} pageArray Array to loop through
+ * @param {String} pageNameKey Key of wikiPageNames
+ * @param {RegExp} templateRegex Regex of template to replace
+ * @param {Function} templateGenerator Function to fill template
+ * @param {Function} pageGenerator Function to generate default page
+ * @param {Number} startIndex Starting index of pageArray
+ */
+async function updatePageTemplates(pageArray, pageNameKey, templateRegex, templateGenerator, pageGenerator, startIndex = 0) {
+  if (wikiDataLoaded) {
+    const pagesToEdit = [];
+    let numChanged = 0;
+    for (let i = startIndex; i < pageArray.length; i++) {
+      const pageName = wikiPageNames[pageNameKey][i];
+      const pullResult = await getFullWikiPage(pageName, 0);
+      if (pullResult.success) {
+        const oldItemPage = pullResult.text;
+        let newItemPage = oldItemPage.replace(templateRegex, templateGenerator(i));
+        if (oldItemPage === newItemPage) {
+          newItemPage = oldItemPage.replace(OLDVERSIONREGEX, VERSIONTEMPLATE);
+          if (oldItemPage === newItemPage) {
+            console.log(`Page: ${pageName}: No Changes`);
+          } else {
+            console.log(`Page: ${pageName}: No Template Changes, Auto Updating Version`);
+            pagesToEdit.push({name: pageName, content: newItemPage});
+            numChanged++;
+          }
+        } else {
+          const versionReplacedPage = newItemPage.replace(OLDVERSIONREGEX, VERSIONTEMPLATE);
+          if (versionReplacedPage === pageGenerator(i)) {
+            console.log(`Page: ${pageName}: Template Changed, But page is same as Default`);
+            pagesToEdit.push({name: pageName, content: versionReplacedPage});
+          } else {
+            console.log(`Page: ${pageName}: Template Changed, User Data may be inaccurate`);
+            pagesToEdit.push({name: pageName, content: newItemPage});
+          }
+          numChanged++;
+        }
+      } else {
+        console.warn(`Cannot update page: ${pageName}. ${pullResult.error}.`);
+      }
+    }
+    console.log(`${numChanged} Pages changed and ready to update.`);
+    if (numChanged > 0) {
+      console.log(pagesToEdit);
+      await bulkEditPages(pagesToEdit, `Automatic update of ${pageNameKey} page.`);
     }
   } else {
     console.error('Wiki data is not loaded.');
@@ -730,7 +784,7 @@ async function updateWeaponPageStats() {
         if (pullResult.success) {
           const oldItemPage = pullResult.text;
           const newItemPage = oldItemPage.replace(WEAPONSTATSREGEX, fillWeaponStatsTemplate(i));
-          if (oldItemPage == newItemPage) {
+          if (oldItemPage === newItemPage) {
             console.log(`Page: ${pageName}: No Changes`);
           } else {
             console.log(`Page: ${pageName}: Weapon Template Changed`);
@@ -764,7 +818,7 @@ async function updateArmourPageStats() {
         if (pullResult.success) {
           const oldItemPage = pullResult.text;
           const newItemPage = oldItemPage.replace(ARMOURSTATSREGEX, fillArmourStatsTemplate(i));
-          if (oldItemPage == newItemPage) {
+          if (oldItemPage === newItemPage) {
             console.log(`Page: ${pageName}: No Changes`);
           } else {
             console.log(`Page: ${pageName}: Armour Template Changed`);
@@ -785,59 +839,7 @@ async function updateArmourPageStats() {
   }
 }
 
-/**
- * Updates pages by replacing the template found by templateRegex with the output of templateGenerator.
- * Will automatically update page version template if there are no changes
- * @param {Array} pageArray Array to loop through
- * @param {String} pageNameKey Key of wikiPageNames
- * @param {RegExp} templateRegex Regex of template to replace
- * @param {Function} templateGenerator Function to fill template
- * @param {Function} pageGenerator Function to generate default page
- * @param {Number} startIndex Starting index of pageArray
- */
-async function updatePageTemplates(pageArray, pageNameKey, templateRegex, templateGenerator, pageGenerator, startIndex = 0) {
-  if (wikiDataLoaded) {
-    const pagesToEdit = [];
-    let numChanged = 0;
-    for (let i = startIndex; i < pageArray.length; i++) {
-      const pageName = wikiPageNames[pageNameKey][i];
-      const pullResult = await getFullWikiPage(pageName, 0);
-      if (pullResult.success) {
-        const oldItemPage = pullResult.text;
-        let newItemPage = oldItemPage.replace(templateRegex, templateGenerator(i));
-        if (oldItemPage == newItemPage) {
-          newItemPage = oldItemPage.replace(OLDVERSIONREGEX, VERSIONTEMPLATE);
-          if (oldItemPage == newItemPage) {
-            console.log(`Page: ${pageName}: No Changes`);
-          } else {
-            console.log(`Page: ${pageName}: No Template Changes, Auto Updating Version`);
-            pagesToEdit.push({name: pageName, content: newItemPage});
-            numChanged++;
-          }
-        } else {
-          const versionReplacedPage = newItemPage.replace(OLDVERSIONREGEX, VERSIONTEMPLATE);
-          if (versionReplacedPage == pageGenerator(i)) {
-            console.log(`Page: ${pageName}: Template Changed, But page is same as Default`);
-            pagesToEdit.push({name: pageName, content: versionReplacedPage});
-          } else {
-            console.log(`Page: ${pageName}: Template Changed, User Data may be inaccurate`);
-            pagesToEdit.push({name: pageName, content: newItemPage});
-          }
-          numChanged++;
-        }
-      } else {
-        console.warn(`Cannot update page: ${pageName}. ${pullResult.error}.`);
-      }
-    }
-    console.log(`${numChanged} Pages changed and ready to update.`);
-    if (numChanged > 0) {
-      console.log(pagesToEdit);
-      await bulkEditPages(pagesToEdit, `Automatic update of ${pageNameKey} page.`);
-    }
-  } else {
-    console.error('Wiki data is not loaded.');
-  }
-}
+
 /**
  * Changes the version of pages to the most recent if the page content pages the pageGenerator output
  * @param {Array} pageArray Array to loop through
@@ -854,8 +856,8 @@ async function fixPageVersions(pageArray, pageNameKey, pageGenerator) {
       if (pullResult.success) {
         const oldItemPage = pullResult.text;
         const newItemPage = oldItemPage.replace(OLDVERSIONREGEX, VERSIONTEMPLATE);
-        if (newItemPage == pageGenerator(i)) {
-          if (oldItemPage == newItemPage) {
+        if (newItemPage === pageGenerator(i)) {
+          if (oldItemPage === newItemPage) {
             console.log(`Page: ${pageName}: is already up to date.`);
           } else {
             console.log(`Page: ${pageName}: matches generate, changing version`);
@@ -885,8 +887,9 @@ async function fixPageVersions(pageArray, pageNameKey, pageGenerator) {
  * @async
  */
 async function rollBackBadSectionRemoval(pageTitle) {
-  revisions = await getLastRevisions(pageTitle, 2);
-  if (revisions[0].comment == 'Removal of old section.') {
+  const revisions = await getLastRevisions(pageTitle, 2);
+  let result;
+  if (revisions[0].comment === 'Removal of old section.') {
     const firstID = revisions[0].revid;
     const secondID = revisions[1].revid;
     const token = await getCsrfToken();
@@ -905,11 +908,11 @@ async function fixBadItemPageEdits() {
     for (let i = 0; i < items.length; i++) {
       const pageName = wikiPageNames.items[i];
       const revisions = await getLastRevisions(pageName, 2);
-      if (revisions[0].comment == 'Removal of old section.' && revisions[1].comment == 'Removal of old section.') {
+      if (revisions[0].comment === 'Removal of old section.' && revisions[1].comment === 'Removal of old section.') {
         const firstID = revisions[0].revid;
         const secondID = revisions[1].revid;
         const token = await getCsrfToken();
-        result = await undoLastEdit(pageName, token, firstID, secondID);
+        await undoLastEdit(pageName, token, firstID, secondID);
         console.log('Undid bad Revision');
       }
     }
@@ -926,7 +929,7 @@ async function updateSpecificSourceTemplates() {
     const pagesToEdit = [];
     let numChanged = 0;
     for (let i = 0; i < items.length; i++) {
-      if (items[i].shopSources.length>0) {
+      if (items[i].shopSources.length > 0) {
         const pageName = `Template:${items[i].name} Sources`;
         pagesToEdit.push({name: pageName, content: createItemSourceTemplatePage(i)});
         numChanged++;
@@ -953,7 +956,7 @@ async function removeItemPageSections(sectionName) {
     for (let i = 2; i < 3; i++) {
       const pageName = wikiPageNames.items[i];
       const sectionIDs = await getSectionIDs(pageName, sectionName);
-      if (sectionIDs.length != 0) {
+      if (sectionIDs.length !== 0) {
         pageData.push({name: pageName, content: '', section: sectionIDs[0]});
       }
     }
@@ -986,15 +989,6 @@ async function manualVersionReview(version) {
 }
 
 /**
- * Callback for the manual review screen, for when a page should have it's version updated
- */
-function updateVersion() {
-  oldVersionReview.updatePages.push(
-      {name: oldVersionReview.pages[oldVersionReview.currentPage].title, content: oldVersionReview.currentPageContent.replace(OLDVERSIONREGEX, VERSIONTEMPLATE)},
-  );
-  proceedToNextPage();
-}
-/**
  * Callback for the manual review screen, for when a page should not have it's version updated.
  * Also handles when the last page is reviewed.
  * @async
@@ -1009,5 +1003,57 @@ async function proceedToNextPage() {
     console.log(oldVersionReview.updatePages);
     bulkEditPages(oldVersionReview.updatePages, 'Manual Review: No Changes. Updating Version.');
     oldVersionReview.panel.style.display = 'none';
+  }
+}
+
+/**
+ * Callback for the manual review screen, for when a page should have it's version updated
+ */
+function updateVersion() {
+  oldVersionReview.updatePages.push(
+      {name: oldVersionReview.pages[oldVersionReview.currentPage].title, content: oldVersionReview.currentPageContent.replace(OLDVERSIONREGEX, VERSIONTEMPLATE)},
+  );
+  proceedToNextPage();
+}
+
+/**
+ * Callback for the test generators button
+ */
+function testGenerators() {
+  if (wikiDataLoaded) {
+    console.log('Testing Table Generators');
+    for (let i = 0; i < masterTable.length; i++) {
+      try {
+        masterTable[i].generate();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    console.log('Testing Item Page Generators');
+    for (let i = 0; i < items.length; i++) {
+      try {
+        createItemPageContent(i);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    console.log('Testing Monster Page Generators');
+    for (let i = 0; i < MONSTERS.length; i++) {
+      try {
+        createMonsterPageContent(i);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    console.log('Testing Item Source Template Generators');
+    for (let i = 0; i < items.length; i++) {
+      try {
+        createItemSourceTemplatePage(i);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  } else {
+    console.log('Wikidata has not loaded');
   }
 }

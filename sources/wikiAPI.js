@@ -1,4 +1,34 @@
 // Fetch implementation of wiki api
+
+// Support functions for fetch API
+/**
+ * Creates a query string to send to the wiki
+ * @param {Object} params An object containing name pair values of strings
+ * @return {String}
+ */
+function createQueryString(params) {
+  let qString = '?';
+  const pKeys = Object.keys(params);
+  qString += `${pKeys[0]}=${params[pKeys[0]]}`;
+  for (let i = 1; i < pKeys.length; i++) {
+    qString += `&${pKeys[i]}=${params[pKeys[i]]}`;
+  }
+  return qString;
+}
+
+/**
+ * Creates a FormData object to send to the wiki via POST request
+ * @param {Object} data An object containing name pair values to add to the form
+ * @return {FormData}
+ */
+function createFormData(data) {
+  const dataForm = new FormData();
+  Object.keys(data).forEach((keys) => {
+    dataForm.append(keys, data[keys]);
+  });
+  return dataForm;
+}
+
 // Basic API Calls
 /**
  * Attempts to get the wikitext of the page specified
@@ -77,7 +107,7 @@ async function getWikiPageSection(pageTitle, pageSection = 0) {
   try {
     return data.parse.wikitext['*'];
   } catch {
-    throw Error('Could not get wikitext: ' + data.error.info);
+    throw Error(`Could not get wikitext: ${data.error.info}`);
   }
 }
 /**
@@ -99,7 +129,7 @@ async function getPageSections(pageTitle) {
   try {
     return data.parse.sections;
   } catch {
-    throw Error('Could not get page sections: ' + data.error.info);
+    throw Error(`Could not get page sections: ${data.error.info}`);
   }
 }
 
@@ -125,14 +155,14 @@ async function getLastRevisions(pageTitle, maxRev) {
   console.log(`Requesting last revision for Page: ${pageTitle}`);
   try {
     let revisions;
-    const pages = data.query.pages;
+    const {pages} = data.query;
     Object.keys(pages).forEach((pageID) => {
-      revisions = pages[pageID].revisions;
+      ({revisions} = pages[pageID]);
     });
     console.log(revisions);
     return revisions;
   } catch {
-    throw Error('Could not get page sections: ' + data.error.info);
+    throw Error(`Could not get page sections: ${data.error.info}`);
   }
 }
 
@@ -160,7 +190,7 @@ async function getCategoryPageMembers(categoryName) {
     const pages = data.query.categorymembers;
     return pages;
   } catch {
-    throw Error(`Could not get get Category:${categoryName}.` + data.error.info);
+    throw Error(`Could not get get Category:${categoryName}.${data.error.info}`);
   }
 }
 
@@ -387,7 +417,7 @@ async function createWikiPage(pageTitle, pageContent, editSummary, token, overWr
  * @param {String} summary The reason for the rollback
  */
 async function rollBackPage(pageTitle, user, summary) {
-  rollbacktoken = await getRollBackToken();
+  const rollbacktoken = await getRollBackToken();
   // Generate the request data
   const params = {
     action: 'rollback',
@@ -535,41 +565,11 @@ async function editWikiPageSection(pageTitle, sectionID, newContent, editSummary
  */
 async function getSectionIDs(pageTitle, sectionTitle) {
   const pageSections = await getPageSections(pageTitle);
-  sectionIDs = [];
+  const sectionIDs = [];
   for (let i = 0; i < pageSections.length; i++) {
-    if (pageSections[i].line == sectionTitle) {
+    if (pageSections[i].line === sectionTitle) {
       sectionIDs.push(parseInt(pageSections[i].index));
     }
   }
   return sectionIDs;
-}
-
-
-// Support functions for fetch API
-/**
- * Creates a query string to send to the wiki
- * @param {Object} params An object containing name pair values of strings
- * @return {String}
- */
-function createQueryString(params) {
-  let qString = '?';
-  const pKeys = Object.keys(params);
-  qString += pKeys[0] + '=' + params[pKeys[0]];
-  for (let i = 1; i < pKeys.length; i++) {
-    qString += '&' + pKeys[i] + '=' + params[pKeys[i]];
-  }
-  return qString;
-}
-
-/**
- * Creates a FormData object to send to the wiki via POST request
- * @param {Object} data An object containing name pair values to add to the form
- * @return {FormData}
- */
-function createFormData(data) {
-  const dataForm = new FormData();
-  Object.keys(data).forEach((keys) => {
-    dataForm.append(keys, data[keys]);
-  });
-  return dataForm;
 }

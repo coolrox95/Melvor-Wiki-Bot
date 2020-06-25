@@ -6,8 +6,8 @@
  * @return {Number}
  */
 function sortByDefenceLevel(item1, item2) {
-  const x = (item1.defenceLevelRequired == undefined) ? 0 : item1.defenceLevelRequired;
-  const y = (item2.defenceLevelRequired == undefined) ? 0 : item2.defenceLevelRequired;
+  const x = (item1.defenceLevelRequired === undefined) ? 0 : item1.defenceLevelRequired;
+  const y = (item2.defenceLevelRequired === undefined) ? 0 : item2.defenceLevelRequired;
   return (x - y);
 }
 /**
@@ -17,8 +17,8 @@ function sortByDefenceLevel(item1, item2) {
  * @return {Number}
  */
 function sortByRangedLevel(item1, item2) {
-  const x = (item1.rangedLevelRequired == undefined) ? 0 : item1.rangedLevelRequired;
-  const y = (item2.rangedLevelRequired == undefined) ? 0 : item2.rangedLevelRequired;
+  const x = (item1.rangedLevelRequired === undefined) ? 0 : item1.rangedLevelRequired;
+  const y = (item2.rangedLevelRequired === undefined) ? 0 : item2.rangedLevelRequired;
   return (x - y);
 }
 /**
@@ -28,8 +28,8 @@ function sortByRangedLevel(item1, item2) {
  * @return {Number}
  */
 function sortByMagicLevel(item1, item2) {
-  const x = (item1.magicLevelRequired == undefined) ? 0 : item1.magicLevelRequired;
-  const y = (item2.magicLevelRequired == undefined) ? 0 : item2.magicLevelRequired;
+  const x = (item1.magicLevelRequired === undefined) ? 0 : item1.magicLevelRequired;
+  const y = (item2.magicLevelRequired === undefined) ? 0 : item2.magicLevelRequired;
   return (x - y);
 }
 
@@ -40,7 +40,7 @@ function sortByMagicLevel(item1, item2) {
  * @return {Number}
  */
 function sortByAttackLevel(item1, item2) {
-  const x = (item1.attackLevelRequired == undefined) ? 0 : item1.attackLevelRequired;
-  const y = (item2.attackLevelRequired == undefined) ? 0 : item2.attackLevelRequired;
+  const x = (item1.attackLevelRequired === undefined) ? 0 : item1.attackLevelRequired;
+  const y = (item2.attackLevelRequired === undefined) ? 0 : item2.attackLevelRequired;
   return (x - y);
 }

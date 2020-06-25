@@ -8,20 +8,20 @@
 function createItemPageContent(itemID) {
   let pageContent = '';
   pageContent += VERSIONTEMPLATE;
-  pageContent += fillItemTemplate(itemID) + '\n'; // linebreak is only there sometimes?
+  pageContent += `${fillItemTemplate(itemID)}\n`; // linebreak is only there sometimes?
   // pageContent += createItemDescription(itemID); Too difficult to do, I give up
   if (items[itemID].canOpen) {
     pageContent += createSection('Loot Table');
     pageContent += `{{${items[itemID].name}LootTable}}` + '\n';
   }
-  if (items[itemID].equipmentSlot != undefined) {
-    if (items[itemID].equipmentSlot == 4) {
-      pageContent += fillWeaponStatsTemplate(itemID) + '\n';
+  if (items[itemID].equipmentSlot !== undefined) {
+    if (items[itemID].equipmentSlot === 4) {
+      pageContent += `${fillWeaponStatsTemplate(itemID)}\n`;
     } else {
-      if (items[itemID].equipmentSlot == CONSTANTS.equipmentSlot.Quiver && (items[itemID].ammoType == 2 || items[itemID].ammoType == 3)) {
-        pageContent += fillWeaponStatsTemplate(itemID) + '\n';
+      if (items[itemID].equipmentSlot === CONSTANTS.equipmentSlot.Quiver && (items[itemID].ammoType === 2 || items[itemID].ammoType === 3)) {
+        pageContent += `${fillWeaponStatsTemplate(itemID)}\n`;
       } else {
-        pageContent += fillArmourStatsTemplate(itemID) + '\n';
+        pageContent += `${fillArmourStatsTemplate(itemID)}\n`;
       }
     }
   }
@@ -43,8 +43,8 @@ function createItemPageContent(itemID) {
  */
 function createCombatAreaPageContent(areaID) {
   let pageContent = '';
-  pageContent += VERSIONTEMPLATE + '\n';
-  pageContent += fillCombatAreaTemplate(areaID) + '\n';
+  pageContent += `${VERSIONTEMPLATE}\n`;
+  pageContent += `${fillCombatAreaTemplate(areaID)}\n`;
   pageContent += '[[Category:Combat Areas]]\n';
   pageContent += '{{Menu}}';
   return pageContent;
@@ -56,8 +56,8 @@ function createCombatAreaPageContent(areaID) {
  */
 function createSlayerAreaPageContent(areaID) {
   let pageContent = '';
-  pageContent += VERSIONTEMPLATE + '\n';
-  pageContent += fillSlayerAreaTemplate(areaID) + '\n';
+  pageContent += `${VERSIONTEMPLATE}\n`;
+  pageContent += `${fillSlayerAreaTemplate(areaID)}\n`;
   pageContent += '[[Category:Slayer Areas]]\n';
   pageContent += '{{Menu}}';
   return pageContent;
@@ -69,8 +69,8 @@ function createSlayerAreaPageContent(areaID) {
  */
 function createDungeonPageContent(dungeonID) {
   let pageContent = '';
-  pageContent += VERSIONTEMPLATE + '\n';
-  pageContent += fillDungeonTemplate(dungeonID) + '\n';
+  pageContent += `${VERSIONTEMPLATE}\n`;
+  pageContent += `${fillDungeonTemplate(dungeonID)}\n`;
   pageContent += '[[Category:Dungeons]]\n';
   pageContent += '{{Menu}}';
   return pageContent;
@@ -125,11 +125,11 @@ function createPrayerPageContent(prayerID) {
  */
 function createThievingTargetPage(targetInd) {
   let outputStr = '';
-  outputStr += VERSIONTEMPLATE + '\n';
+  outputStr += `${VERSIONTEMPLATE}\n`;
   outputStr += fillThievingTemplate(targetInd);
   const orderNames = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth'];
   outputStr += '\n\n';
-  outputStr += 'The ' + thievingNPC[targetInd].name + ' is the ' + orderNames[targetInd] + ' NPC in the thieving skill. On successful pickpockets players receive ' + thievingNPC[targetInd].xp + ' xp and up to ' + thievingNPC[targetInd].maxCoins + ' gold.\n\n';
+  outputStr += `The ${thievingNPC[targetInd].name} is the ${orderNames[targetInd]} NPC in the thieving skill. On successful pickpockets players receive ${thievingNPC[targetInd].xp} xp and up to ${thievingNPC[targetInd].maxCoins} gold.\n\n`;
   outputStr += '{{Menu}}';
   outputStr += '[[Category:Thieving Targets]]';
   return outputStr;
@@ -248,23 +248,23 @@ function createItemSourceTemplatePage(itemID) {
   if (items[itemID].shopSources.length > 0) {
     outStr += createSubSection('Shop');
     items[itemID].shopSources.forEach((shopSource)=>{
-      outStr += fillItemShopPurchaseTemplate(shopSource) + '\n';
+      outStr += `${fillItemShopPurchaseTemplate(shopSource)}\n`;
     });
   }
   // Creation Template
   if (items[itemID].creationSources.length > 0 || items[itemID].upgradesFrom.length > 0) {
     outStr += createSubSection('Creation');
-    for (i = 0; i < items[itemID].creationSources.length; i++) {
-      outStr += items[itemID].creationSources[i].fillTemplate(itemID) + '\n';
+    for (let i = 0; i < items[itemID].creationSources.length; i++) {
+      outStr += `${items[itemID].creationSources[i].fillTemplate(itemID)}\n`;
     }
     if (items[itemID].upgradesFrom.length > 0) {
-      outStr += fillItemUpgradeTemplate(itemID) + '\n';
+      outStr += `${fillItemUpgradeTemplate(itemID)}\n`;
     }
   }
   // Loot sources Template
   if (items[itemID].hasLootSource) {
     outStr += createSubSection('Loot');
-    outStr += createItemLootSourcesTable(itemID) + '\n';
+    outStr += `${createItemLootSourcesTable(itemID)}\n`;
   }
   outStr = outStr.slice(0, -1);
   return outStr;

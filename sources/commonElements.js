@@ -1,5 +1,4 @@
 // Contains a collection of functions that create strings that are commonly used
-
 /**
  * @description tableMaker is used to create wikimedia tables
  */
@@ -16,7 +15,7 @@ class TableMaker {
    * @description Starts the table
    */
   startTable() {
-    this.outputStr += '{| class="' + this.tableClass + '"';
+    this.outputStr += `{| class="${this.tableClass}"`;
     this.headerRows = 0;
   }
   /**
@@ -30,7 +29,7 @@ class TableMaker {
    * @param {string} headerName
    */
   addHeader(headerName) {
-    this.outputStr += '\n!' + headerName;
+    this.outputStr += `\n!${headerName}`;
   }
   /**
    * @description Starts a new row in the table
@@ -208,10 +207,10 @@ function formatObjectArrayAsTableWSH(objectArray, tableSpec, spanSpec) {
     for (let j = 0; j < tableSpec.length; j++) {
       tableGen.nextColumn(tableSpec[j].just);
       // Exception for arrays of arrayKeys
-      if (typeof (tableSpec[j].arrayKey) != 'string') {
+      if (typeof (tableSpec[j].arrayKey) !== 'string') {
         const keyValues = [];
         for (let k = 0; k < tableSpec[j].arrayKey.length; k++) {
-          if (objectArray[i][tableSpec[j].arrayKey[k]] != undefined) {
+          if (objectArray[i][tableSpec[j].arrayKey[k]] !== undefined) {
             keyValues[k] = objectArray[i][tableSpec[j].arrayKey[k]];
           } else {
             keyValues[k] = tableSpec[j].defaultKeyValue[k];
@@ -219,7 +218,7 @@ function formatObjectArrayAsTableWSH(objectArray, tableSpec, spanSpec) {
         }
         tableGen.addCellData(tableSpec[j].formatFunc(keyValues));
       } else {
-        if (objectArray[i][tableSpec[j].arrayKey] != undefined) {
+        if (objectArray[i][tableSpec[j].arrayKey] !== undefined) {
           tableGen.addCellData(tableSpec[j].formatFunc(objectArray[i][tableSpec[j].arrayKey]));
         } else {
           tableGen.addCellData(tableSpec[j].formatFunc(tableSpec[j].defaultKeyValue));
@@ -272,20 +271,20 @@ class TableSpecMaker {
     if (sortOrderFunc !== undefined) {
       this.tableSpec.push({
         header: colName,
-        just: just,
-        arrayKey: arrayKey,
-        defaultKeyValue: defaultKeyValue,
-        formatFunc: formatFunc,
+        just,
+        arrayKey,
+        defaultKeyValue,
+        formatFunc,
         isSorted: true,
         sortFunction: sortOrderFunc,
       });
     } else {
       this.tableSpec.push({
         header: colName,
-        just: just,
-        arrayKey: arrayKey,
-        defaultKeyValue: defaultKeyValue,
-        formatFunc: formatFunc,
+        just,
+        arrayKey,
+        defaultKeyValue,
+        formatFunc,
         isSorted: false,
       });
     }
@@ -297,8 +296,8 @@ class TableSpecMaker {
    */
   appendSpan(spanText, spanLength) {
     this.spanSpec.push({
-      spanLength: spanLength,
-      spanText, spanText,
+      spanLength,
+      spanText,
     });
   }
 }
@@ -325,7 +324,7 @@ function getMonsterLocationArray(monsterID) {
   const locationArray = [];
   for (let i = 0; i < combatAreas.length; i++) {
     for (let j = 0; j < combatAreas[i].monsters.length; j++) {
-      if (monsterID == combatAreas[i].monsters[j]) {
+      if (monsterID === combatAreas[i].monsters[j]) {
         locationArray.push(`${formatCombatAreaIDAsImageLink(i, 25, 'middle')} ${formatCombatAreaIDAsLink(i)}`);
         break;
       }
@@ -333,7 +332,7 @@ function getMonsterLocationArray(monsterID) {
   }
   for (let i = 0; i < slayerAreas.length; i++) {
     for (let j = 0; j < slayerAreas[i].monsters.length; j++) {
-      if (monsterID == slayerAreas[i].monsters[j]) {
+      if (monsterID === slayerAreas[i].monsters[j]) {
         locationArray.push(`${formatSlayerAreaIDAsImageLink(i, 25, 'middle')} ${formatSlayerAreaIDAsLink(i)}`);
         break;
       }
@@ -341,7 +340,7 @@ function getMonsterLocationArray(monsterID) {
   }
   for (let i = 0; i < DUNGEONS.length; i++) {
     for (let j = 0; j < DUNGEONS[i].monsters.length; j++) {
-      if (monsterID == DUNGEONS[i].monsters[j]) {
+      if (monsterID === DUNGEONS[i].monsters[j]) {
         locationArray.push(`${formatDungeonIDAsImageLink(i, 25, 'middle')} ${formatDungeonIDAsLink(i)}`);
         break;
       }
@@ -352,7 +351,7 @@ function getMonsterLocationArray(monsterID) {
 
 /**
  * @description Generates an array of the possible keys that items have
- * @return {string[]} Array of Strings
+ * @return {*} Array of Strings
  */
 function getListOfItemKeys() {
   const keyList = [];
@@ -362,7 +361,7 @@ function getListOfItemKeys() {
     Object.keys(item).forEach((itemKey) => {
       keyOnList = false;
       for (let i = 0; i < keyList.length; i++) {
-        if (keyList[i] == itemKey) {
+        if (keyList[i] === itemKey) {
           keyQuantity[i]++;
           keyOnList = true;
           break;
@@ -386,13 +385,13 @@ function getItemUsesArray(itemID) {
   const itemUseArray = [];
   Object.keys(itemUses).forEach((key) => {
     for (let i = 0; i < itemUses[key].items.length; i++) {
-      if (itemID == itemUses[key].items[i]) {
+      if (itemID === itemUses[key].items[i]) {
         itemUseArray.push(itemUses[key].format);
         break;
       }
     }
   });
-  if (itemUseArray.length == 0) {
+  if (itemUseArray.length === 0) {
     itemUseArray.push('None');
   }
   return itemUseArray;
@@ -416,15 +415,15 @@ function getItemSourcesArray(itemID) {
   for (let i = 0; i < combatAreas.length; i++) {
     for (let j = 0; j < combatAreas[i].monsters.length; j++) {
       const monsterID = combatAreas[i].monsters[j];
-      if (MONSTERS[monsterID].lootTable != undefined) {
+      if (MONSTERS[monsterID].lootTable !== undefined) {
         for (let k = 0; k < MONSTERS[monsterID].lootTable.length; k++) {
-          if (MONSTERS[monsterID].lootTable[k][0] == itemID) {
+          if (MONSTERS[monsterID].lootTable[k][0] === itemID) {
             monsterList += `${formatMonsterIDAsImageLink(monsterID, 25, 'middle')}, `;
             break;
           }
         }
       }
-      if (MONSTERS[monsterID].bones == itemID) {
+      if (MONSTERS[monsterID].bones === itemID) {
         monsterList += `${formatMonsterIDAsImageLink(monsterID, 25, 'middle')}, `;
       }
     }
@@ -432,62 +431,62 @@ function getItemSourcesArray(itemID) {
   for (let i = 0; i < slayerAreas.length; i++) {
     for (let j = 0; j < slayerAreas[i].monsters.length; j++) {
       const monsterID = slayerAreas[i].monsters[j];
-      if (MONSTERS[monsterID].lootTable != undefined) {
+      if (MONSTERS[monsterID].lootTable !== undefined) {
         for (let k = 0; k < MONSTERS[monsterID].lootTable.length; k++) {
-          if (MONSTERS[monsterID].lootTable[k][0] == itemID) {
+          if (MONSTERS[monsterID].lootTable[k][0] === itemID) {
             monsterList += `${formatMonsterIDAsImageLink(monsterID, 25, 'middle')}, `;
             break;
           }
         }
       }
-      if (MONSTERS[monsterID].bones == itemID) {
+      if (MONSTERS[monsterID].bones === itemID) {
         monsterList += `${formatMonsterIDAsImageLink(monsterID, 25, 'middle')}, `;
       }
     }
   }
 
-  if (monsterList != '') {
+  if (monsterList !== '') {
     itemSources.push(`Killing: ${monsterList.slice(0, monsterList.length - 2)}`);
   }
   // Dungeons
   let dungeonList = '';
   for (let i = 0; i < DUNGEONS.length; i++) {
     for (let j = 0; j < DUNGEONS[i].rewards.length; j++) {
-      if (DUNGEONS[i].rewards[j] == itemID) {
+      if (DUNGEONS[i].rewards[j] === itemID) {
         dungeonList += `${formatDungeonIDAsImageLink(i, 25, 'middle')}, `;
       }
     }
   }
-  if (dungeonList != '') {
+  if (dungeonList !== '') {
     itemSources.push(`Completing: ${dungeonList.slice(0, dungeonList.length - 2)}`);
   }
   let chestList = '';
   // Search openable items
   for (let i = 0; i < openableItems.length; i++) {
     for (let j = 0; j < items[openableItems[i]].dropTable.length; j++) {
-      if (items[openableItems[i]].dropTable[j][0] == itemID) {
+      if (items[openableItems[i]].dropTable[j][0] === itemID) {
         chestList += `${formatItemIDAsImageLink(openableItems[i], 25, 'middle')}, `;
         break;
       }
     }
   }
-  if (chestList != '') {
+  if (chestList !== '') {
     itemSources.push(`Opening: ${chestList.slice(0, chestList.length - 2)}`);
   }
   let thieveList = '';
   // Search thieving targets
   for (let i = 0; i < thievingNPC.length; i++) {
     for (let j = 0; j < thievingNPC[i].lootTable.length; j++) {
-      if (thievingNPC[i].lootTable[j][0] == itemID) {
+      if (thievingNPC[i].lootTable[j][0] === itemID) {
         thieveList += `${formatThievingIDAsImageLink(i, 25, 'middle')}, `;
         break;
       }
     }
   }
-  if (thieveList != '') {
+  if (thieveList !== '') {
     itemSources.push(`Pickpocketing: ${thieveList.slice(0, thieveList.length - 2)}`);
   }
-  if (itemID == CONSTANTS.item.Bobbys_Pocket || itemID == CONSTANTS.item.Chapeau_Noir) {
+  if (itemID === CONSTANTS.item.Bobbys_Pocket || itemID === CONSTANTS.item.Chapeau_Noir) {
     itemSources.push(`${formatSkillImageLink('Thieving', 25, 'middle')} (Lv. ${1})`);
   }
 
@@ -496,79 +495,79 @@ function getItemSourcesArray(itemID) {
   let burnList = '';
   // Search items for upgrades, being cooked, being farmed, being burnt
   for (let i = 0; i < items.length; i++) {
-    if (items[i].trimmedItemID == itemID) {
+    if (items[i].trimmedItemID === itemID) {
       itemSources.push(`Upgrading: ${formatItemIDAsImageLink(i, 25, 'middle')}`);
     }
-    if (items[i].grownItemID == itemID) {
+    if (items[i].grownItemID === itemID) {
       farmList += `${formatItemIDAsImageLink(i, 25, 'middle')}, `;
     }
-    if (items[i].cookedItemID == itemID) {
+    if (items[i].cookedItemID === itemID) {
       cookList += `${formatItemIDAsImageLink(i, 25, 'middle')}, `;
     }
-    if (items[i].burntItemID == itemID) {
+    if (items[i].burntItemID === itemID) {
       burnList += `${formatItemIDAsImageLink(i, 25, 'middle')}, `;
     }
   }
-  if (farmList != '') {
+  if (farmList !== '') {
     itemSources.push(`Growing: ${farmList.slice(0, farmList.length - 2)}`);
   }
-  if (cookList != '') {
+  if (cookList !== '') {
     itemSources.push(`Cooking: ${cookList.slice(0, cookList.length - 2)}`);
   }
-  if (burnList != '') {
+  if (burnList !== '') {
     itemSources.push(`Burning: ${burnList.slice(0, burnList.length - 2)}`);
   }
   // Check for skills
   // Woodcutting
   for (let i = 0; i < trees.length; i++) {
-    if (i == itemID) {
+    if (i === itemID) {
       itemSources.push(`${formatSkillImageLink('Woodcutting', 25, 'middle')} (Lv. ${trees[i].level})`);
     }
   }
-  if (itemID == CONSTANTS.item.Bird_Nest) {
+  if (itemID === CONSTANTS.item.Bird_Nest) {
     itemSources.push(`${formatSkillImageLink('Woodcutting', 25, 'middle')} (Lv. ${1})`);
   }
   // Fishing
   for (let i = 0; i < fishingItems.length; i++) {
-    if (fishingItems[i].itemID == itemID) {
+    if (fishingItems[i].itemID === itemID) {
       itemSources.push(`${formatSkillImageLink('Fishing', 25, 'middle')} (Lv. ${fishingItems[i].fishingLevel})`);
     }
   }
   for (let i = 0; i < junkItems.length; i++) {
-    if (junkItems[i] == itemID) {
+    if (junkItems[i] === itemID) {
       itemSources.push(`${formatSkillImageLink('Fishing', 25, 'middle')} (Lv. 1)`);
     }
   }
   for (let i = 0; i < specialItems.length; i++) {
-    if (specialItems[i][0] == itemID) {
+    if (specialItems[i][0] === itemID) {
       itemSources.push(`${formatSkillImageLink('Fishing', 25, 'middle')} (Lv. 1)`);
     }
   }
   // Firemaking
-  if (itemID == CONSTANTS.item.Coal_Ore) {
+  if (itemID === CONSTANTS.item.Coal_Ore) {
     itemSources.push(`${formatSkillImageLink('Firemaking', 25, 'middle')} (Lv. ${1})`);
   }
   // Mining
-  if (items[itemID].miningLevel != undefined) {
+  if (items[itemID].miningLevel !== undefined) {
     itemSources.push(`${formatSkillImageLink('Mining', 25, 'middle')} (Lv. ${items[itemID].miningLevel})`);
   }
-  if (items[itemID].type == 'Gem') {
+  if (items[itemID].type === 'Gem') {
     itemSources.push(`${formatSkillImageLink('Mining', 25, 'middle')} (Lv. ${1})`);
   }
   // Smithing
-  if (items[itemID].smithingLevel != undefined) {
+  if (items[itemID].smithingLevel !== undefined) {
     itemSources.push(`${formatSkillImageLink('Smithing', 25, 'middle')} (Lv. ${items[itemID].smithingLevel})`);
   }
   // Fletching
-  if (items[itemID].fletchingLevel != undefined) {
+  if (items[itemID].fletchingLevel !== undefined) {
     itemSources.push(`${formatSkillImageLink('Fletching', 25, 'middle')} (Lv. ${items[itemID].fletchingLevel})`);
   }
   // Crafting
-  if (items[itemID].craftingLevel != undefined) {
+  if (items[itemID].craftingLevel !== undefined) {
     itemSources.push(`${formatSkillImageLink('Crafting', 25, 'middle')} (Lv. ${items[itemID].craftingLevel})`);
   }
   // Runecrafting
-  if (items[itemID].runecraftingLevel != undefined) {
+  if (items[itemID].runecraftingLevel !== undefined) {
     itemSources.push(`${formatSkillImageLink('Runecrafting', 25, 'middle')} (Lv. ${items[itemID].runecraftingLevel})`);
   }
   // Herblore
@@ -584,19 +583,19 @@ function getItemSourcesArray(itemID) {
   const shopItems = [CONSTANTS.item.Green_Dragonhide, CONSTANTS.item.Blue_Dragonhide, CONSTANTS.item.Red_Dragonhide, CONSTANTS.item.Cooking_Gloves, CONSTANTS.item.Mining_Gloves, CONSTANTS.item.Smithing_Gloves, CONSTANTS.item.Thieving_Gloves, CONSTANTS.item.Gem_Gloves, CONSTANTS.item.Bowstring, CONSTANTS.item.Compost, CONSTANTS.item.Leather, CONSTANTS.item.Weird_Gloop];
   let inShop = false;
   for (let i = 0; i < shopItems.length; i++) {
-    if (itemID == shopItems[i]) {
+    if (itemID === shopItems[i]) {
       inShop = true;
       break;
     }
   }
   for (let i = 0; i < skillcapeItems.length; i++) {
-    if (itemID == skillcapeItems[i]) {
+    if (itemID === skillcapeItems[i]) {
       inShop = true;
       break;
     }
   }
   for (let i = 0; i < slayerItems.length; i++) {
-    if (itemID == slayerItems[i]) {
+    if (itemID === slayerItems[i]) {
       inShop = true;
       break;
     }
@@ -604,16 +603,16 @@ function getItemSourcesArray(itemID) {
   if (inShop) {
     itemSources.push('[[Shop]]');
   }
-  if (itemID == CONSTANTS.item.Signet_Ring_Half_B) {
+  if (itemID === CONSTANTS.item.Signet_Ring_Half_B) {
     itemSources.push('Killing any [[Monsters|Monster]]');
   }
-  if (itemID == CONSTANTS.item.Signet_Ring_Half_A) {
+  if (itemID === CONSTANTS.item.Signet_Ring_Half_A) {
     itemSources.push('Any non-combat [[:Category:Skills|Skill]] action');
   }
-  if (itemID == CONSTANTS.item.Amulet_of_Calculated_Promotion || itemID == CONSTANTS.item.Clue_Chasers_Insignia || itemID == CONSTANTS.item.Lemon) {
+  if (itemID === CONSTANTS.item.Amulet_of_Calculated_Promotion || itemID === CONSTANTS.item.Clue_Chasers_Insignia || itemID === CONSTANTS.item.Lemon) {
     itemSources.push('[[Easter Eggs]]');
   }
-  if (itemSources.length == 0) {
+  if (itemSources.length === 0) {
     itemSources.push('None');
   }
   return itemSources;
@@ -625,10 +624,10 @@ function getItemSourcesArray(itemID) {
  * @return {Boolean}
  */
 function isMonsterDungeonOnly(monsterID) {
-  isDungeon = true;
-  for (i = 0; i < combatAreas.length; i++) {
+  let isDungeon = true;
+  for (let i = 0; i < combatAreas.length; i++) {
     for (let j = 0; j < combatAreas[i].monsters.length; j++) {
-      if (combatAreas[i].monsters[j] == monsterID) {
+      if (combatAreas[i].monsters[j] === monsterID) {
         isDungeon = false;
         break;
       }
@@ -637,9 +636,9 @@ function isMonsterDungeonOnly(monsterID) {
       break;
     }
   }
-  for (i = 0; i < slayerAreas.length; i++) {
+  for (let i = 0; i < slayerAreas.length; i++) {
     for (let j = 0; j < slayerAreas[i].monsters.length; j++) {
-      if (slayerAreas[i].monsters[j] == monsterID) {
+      if (slayerAreas[i].monsters[j] === monsterID) {
         isDungeon = false;
         break;
       }
@@ -658,6 +657,69 @@ function isMonsterDungeonOnly(monsterID) {
  */
 function setToUppercase(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+/**
+ * @description Returns true if arrayItem is contained on arrayToSearch
+ * @param {*} arrayItem
+ * @param {Array} arrayToSearch
+ * @return {Boolean}
+ */
+function isItemOnArray(arrayItem, arrayToSearch) {
+  for (let i = 0; i < arrayToSearch.length; i++) {
+    if (arrayToSearch[i] === arrayItem) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * @description Returns the indices where the arrayItem is found
+ * @param {*} arrayItem
+ * @param {Array} arrayToSearch
+ * @return {Array<Number>}
+ */
+function findItemOnArray(arrayItem, arrayToSearch) {
+  const indices = [];
+  for (let i = 0; i < arrayToSearch.length; i++) {
+    if (arrayToSearch[i] === arrayItem) {
+      indices.push(i);
+    }
+  }
+  return indices;
+}
+
+/**
+ * Adds a name to the dupe data
+ * @param {*} dupeData Dupe data
+ * @param {String} basePageName Page Name before disambiguation
+ */
+function addNameToDupeData(dupeData, basePageName) {
+  if (isItemOnArray(basePageName, dupeData.usedBaseNames)) {
+    if (!isItemOnArray(basePageName, dupeData.duplicateNames)) {
+      dupeData.duplicateNames.push(basePageName);
+    }
+  } else {
+    dupeData.usedBaseNames.push(basePageName);
+  }
+}
+
+/**
+ * Adds An arrays names to the dupe data
+ * @param {Array} array Array containing names
+ * @param {String} arrayKey Key of array that corresponds to name
+ * @return {*}
+ */
+function findSelfDuplicateNames(array, arrayKey) {
+  const dupeData = {
+    duplicateNames: [],
+    usedBaseNames: [],
+  };
+  for (let i = 0; i < array.length; i++) {
+    addNameToDupeData(dupeData, array[i][arrayKey]);
+  }
+  return dupeData;
 }
 
 /**
@@ -804,73 +866,10 @@ function findDuplicatePageNames() {
   });
 
   const returnObject = {
-    pageNames: pageNames,
-    disambiguationData: disambiguationData,
+    pageNames,
+    disambiguationData,
   };
   return returnObject;
-}
-
-/**
- * Adds An arrays names to the dupe data
- * @param {Array} array Array containing names
- * @param {String} arrayKey Key of array that corresponds to name
- * @return {*}
- */
-function findSelfDuplicateNames(array, arrayKey) {
-  const dupeData = {
-    duplicateNames: [],
-    usedBaseNames: [],
-  };
-  for (let i = 0; i < array.length; i++) {
-    addNameToDupeData(dupeData, array[i][arrayKey]);
-  }
-  return dupeData;
-}
-
-/**
- * Adds a name to the dupe data
- * @param {*} dupeData Dupe data
- * @param {String} basePageName Page Name before disambiguation
- */
-function addNameToDupeData(dupeData, basePageName) {
-  if (isItemOnArray(basePageName, dupeData.usedBaseNames)) {
-    if (!isItemOnArray(basePageName, dupeData.duplicateNames)) {
-      dupeData.duplicateNames.push(basePageName);
-    }
-  } else {
-    dupeData.usedBaseNames.push(basePageName);
-  }
-}
-
-/**
- * @description Returns true if arrayItem is contained on arrayToSearch
- * @param {*} arrayItem
- * @param {Array} arrayToSearch
- * @return {Boolean}
- */
-function isItemOnArray(arrayItem, arrayToSearch) {
-  for (let i = 0; i < arrayToSearch.length; i++) {
-    if (arrayToSearch[i] == arrayItem) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * @description Returns the indices where the arrayItem is found
- * @param {*} arrayItem
- * @param {Array} arrayToSearch
- * @return {Number}
- */
-function findItemOnArray(arrayItem, arrayToSearch) {
-  const indices = [];
-  for (let i = 0; i < arrayToSearch.length; i++) {
-    if (arrayToSearch[i] == arrayItem) {
-      indices.push(i);
-    }
-  }
-  return indices;
 }
 
 /**
@@ -896,9 +895,9 @@ function getFileExtension(filename) {
 /** Shows which items have no bot defined source template */
 function showEmptySourceTemplates() {
   const emptyList = [];
-  for (let i=0; i<items.length; i++) {
+  for (let i = 0; i < items.length; i++) {
     const sourcePage = createItemSourceTemplatePage(i);
-    if (sourcePage == `<noinclude>This template was autogenerated by MelvorWikiBot.\n${BOTCATEGORY}\n[[Category:Item Sources]]\n${VERSIONCATEGORY}</noinclude>`) {
+    if (sourcePage === `<noinclude>This template was autogenerated by MelvorWikiBot.\n${BOTCATEGORY}\n[[Category:Item Sources]]\n${VERSIONCATEGORY}</noinclude>`) {
       emptyList.push(items[i].name);
     }
   }
