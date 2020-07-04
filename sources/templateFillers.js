@@ -163,7 +163,7 @@ function fillSpellTemplate(spellID) {
   template += `|name=${SPELLS[spellID].name}`;
   template += `|id=${spellID}`;
   template += `|level=${SPELLS[spellID].magicLevelRequired}`;
-  template += `|maxHit=${SPELLS[spellID].maxHit}`;
+  template += `|maxHit=${SPELLS[spellID].maxHit * numberMultiplier}`;
   template += `|runeList=${formatArrayAsBulletList(getSpellRuneArray(spellID))}`;
   template += '}}';
   return template;
@@ -511,37 +511,41 @@ function fillItemUpgradeTemplate(itemID) {
  * @return {String}
  */
 function fillItemTemplate(itemID) {
+  const item = items[itemID];
   let template = '{{Item';
-  template += `|name=${items[itemID].name}`;
+  template += `|name=${item.name}`;
   let itemDescription = 'No Description';
-  if (items[itemID].description !== undefined) {
-    itemDescription = items[itemID].description;
+  if (item.description !== undefined) {
+    itemDescription = item.description;
   }
-  template += `|imagefile=${items[itemID].name} (item)${getFileExtension(items[itemID].media)}`;
+  template += `|imagefile=${item.name} (item)${getFileExtension(item.media)}`;
   template += `|description=${itemDescription}`;
   template += `|id=${itemID}`;
-  template += `|category=${items[itemID].category}`;
-  template += `|type=${items[itemID].type}`;
-  template += `|sellsfor=${items[itemID].sellsFor}`;
+  template += `|category=${item.category}`;
+  template += `|type=${item.type}`;
+  template += `|sellsfor=${item.sellsFor}`;
   let customData = '';
-  if (items[itemID].healsFor) {
-    customData += `{{ItemHealsFor|healsFor=${items[itemID].healsFor * numberMultiplier}}}`;
+  if (item.healsFor) {
+    customData += `{{ItemHealsFor|healsFor=${item.healsFor * numberMultiplier}}}`;
   }
-  if (items[itemID].equipmentSlot !== undefined) {
+  if (item.equipmentSlot !== undefined) {
     const slotKeys = Object.keys(CONSTANTS.equipmentSlot);
     for (let i = 0; i < slotKeys.length; i++) {
-      if (CONSTANTS.equipmentSlot[slotKeys[i]] === items[itemID].equipmentSlot) {
+      if (CONSTANTS.equipmentSlot[slotKeys[i]] === item.equipmentSlot) {
         customData += `{{ItemEquipSlot|equipmentSlot=${slotKeys[i]}}}`;
         break;
       }
     }
   }
-  if (items[itemID].hasSpecialAttack) {
-    const specialID = items[itemID].specialAttackID;
+  if (item.hasSpecialAttack) {
+    const specialID = item.specialAttackID;
     customData += `{{ItemSpecialAttack|specialChance=${playerSpecialAttacks[specialID].chance}|specialName=${playerSpecialAttacks[specialID].name}|specialEffect=${playerSpecialAttacks[specialID].description}}}`;
   }
-  if (items[itemID].potionCharges !== undefined) {
-    customData += `{{ItemCharges|charges=${items[itemID].potionCharges}}}`;
+  if (item.potionCharges !== undefined) {
+    customData += `{{ItemCharges|charges=${item.potionCharges}}}`;
+  }
+  if (item.prayerPoints !== undefined) {
+    customData += `{{ItemPrayerPoints|prayerPoints=${item.prayerPoints}}}`;
   }
   template += `|customData=${customData}`;
   template += `|itemSources=${formatArrayAsBulletList(getItemSourcesArray(itemID))}`;

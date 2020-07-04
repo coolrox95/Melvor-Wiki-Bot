@@ -199,6 +199,7 @@ const menuDivD = document.createElement('div');
 menuDivD.className = 'mweMenuDiv';
 wikiMenuContent.appendChild(menuDivD);
 menuDivD.appendChild(createButton('Update Item Pages', updateItemPages));
+menuDivD.appendChild(createButton('Update Bone Pages', ()=>updateItemPages('prayerPoints')));
 menuDivD.appendChild(createButton('Update Monster Page Templates', updateMonsterPageTemplates));
 menuDivD.appendChild(createButton('Update Dungeon Page Templates', updateDungeonPageTemplates));
 menuDivD.appendChild(createButton('Update Combat Area Page Templates', updateCombatAreaPageTemplates));
@@ -213,7 +214,7 @@ menuDivD.appendChild(createButton('Update Armour Stat Templates', updateArmourPa
 menuDivD.appendChild(createButton('Update Item Page Item Templates', updateItemPageItemTemplates));
 menuDivD.appendChild(createButton('Update Source Template Subset', updateSpecificSourceTemplates));
 
-menuDivD.appendChild(createButton('Manually Review Previous Version', () => manualVersionReview('v0.15.2')));
+menuDivD.appendChild(createButton('Manually Review Previous Version', () => manualVersionReview('v0.15.3')));
 
 menuDivD.appendChild(createButton('Log Empty Sources', showEmptySourceTemplates));
 
@@ -364,8 +365,8 @@ let wikiDataLoaded = false;
 let imageUploadInProgress = false;
 const WIKURL = 'https://wiki.melvoridle.com/api.php';
 const GAMEURL = 'https://melvoridle.com/';
-const VERSIONTEMPLATE = '{{V0.15.3}}';
-const VERSIONCATEGORY = '[[Category:v0.15.3]]';
+const VERSIONTEMPLATE = '{{V0.15.4}}';
+const VERSIONCATEGORY = '[[Category:v0.15.4]]';
 const BOTCATEGORY = '[[Category:Bot Templates]]';
 const TABLEREGEX = /{\| class="wikitable sortable"(.|\n)*?\|}/g;
 const ITEMTEMPLATEREGEX = /{{Item\|name=(.|\n)*?\|description=(.|\n)*?\|id=(.|\n)*?\|category=(.|\n)*?\|type=(.|\n)*?\|sellsfor=(.|\n)*?\|customData=(.|\n)*?\|itemSources=(.|\n)*?\|itemUses=(.|\n)*?}}/;
@@ -377,15 +378,15 @@ const PRAYERTEMPLATEREGEX = /{{Prayer\|name=(.|\n)*?\|id=(.|\n)*?\|level=(.|\n)*
 const SPELLTEMPLATEREGEX = /{{Spell\|name=(.|\n)*?\|id=(.|\n)*?\|level=(.|\n)*?\|maxHit=(.|\n)*?\|runeList=(.|\n)*?}}/;
 const ITEMPRODUCTIONREGEX = /{{ItemProduction\|requirements=(.|\n)*?\|quantity=(.|\n)*?\|experience=(.|\n)*?\|creationTime=(.|\n)*?}}/;
 const ITEMCREATIONREGEX = /{{ItemCreation\|requirements=(.|\n)*?\|materials=(.|\n)*?\|quantity=(.|\n)*?\|experience=(.|\n)*?\|creationTime=(.|\n)*?}}/;
-const CURRENTVERSIONREGEX = /{{V0\.15\.2}}/;
+const CURRENTVERSIONREGEX = /{{V0\.15\.4}}/;
 const WEAPONSTATSREGEX = /{{WeaponStats\|attackSpeed=(.|\n)*?\|attackType=(.|\n)*?\|isTwoHanded=(.|\n)*?\|stabAttackBonus=(.|\n)*?\|slashAttackBonus=(.|\n)*?\|blockAttackBonus=(.|\n)*?\|rangedAttackBonus=(.|\n)*?\|magicAttackBonus=(.|\n)*?\|strengthBonus=(.|\n)*?\|rangedStrengthBonus=(.|\n)*?\|magicDamageBonus=(.|\n)*?\|defenceBonus=(.|\n)*?\|rangedDefenceBonus=(.|\n)*?\|magicDefenceBonus=(.|\n)*?\|damageReduction=(.|\n)*?\|attackLevelRequired=(.|\n)*?\|rangedLevelRequired=(.|\n)*?\|magicLevelRequired=(.|\n)*?\|specialAttack=(.|\n)*?}}/;
 const ARMOURSTATSREGEX = /{{ArmourStats\|stabAttackBonus=(.|\n)*?\|slashAttackBonus=(.|\n)*?\|blockAttackBonus=(.|\n)*?\|rangedAttackBonus=(.|\n)*?\|magicAttackBonus=(.|\n)*?\|strengthBonus=(.|\n)*?\|rangedStrengthBonus=(.|\n)*?\|magicDamageBonus=(.|\n)*?\|defenceBonus=(.|\n)*?\|rangedDefenceBonus=(.|\n)*?\|magicDefenceBonus=(.|\n)*?\|damageReduction=(.|\n)*?\|defenceLevelRequired=(.|\n)*?\|rangedLevelRequired=(.|\n)*?\|magicLevelRequired=(.|\n)*?}}/;
 const THIEVINGTARGETREGEX = /{{ThievingTarget\|name=(.|\n)*?\|level=(.|\n)*?\|xp=(.|\n)*?\|drops=(.|\n)*?}}/;
 const UPGRADETEMPLATEREGEX = /{{Upgrade\|name=(.|\n)*?\|upgradeEffect=(.|\n)*?\|upgradeRequirements=(.|\n)*?\|upgradeCost(.|\n)*?}}/;
 const EXTENSIONREGEX = /\..*$/;
 const EXTENSIONREGEX2 = /\?\d*$/;
-const OLDVERSIONREGEX = /{{V0\.15\.2}}/;
-const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.15\.2\]\]/;
+const OLDVERSIONREGEX = /{{V0\.15\.3}}/;
+const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.15\.3\]\]/;
 
 /**
  * Removes HTML from a string (currently only removes &apos; and replaces with ')

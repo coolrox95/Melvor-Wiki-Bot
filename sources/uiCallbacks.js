@@ -456,11 +456,16 @@ function uploadUpgradeImages() {
 }
 /**
  * Callback for updating item pages. Will automatically replace templates and version if the templated data has not changed.
+ * @param {string} filterKey A key on an item to look for
  */
-async function updateItemPages() {
+async function updateItemPages(filterKey = '') {
   if (wikiDataLoaded) {
     const pagesToEdit = [];
     for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (filterKey !== '' && item[filterKey] === undefined) {
+        continue;
+      }
       let updateSuccess = true;
       let dataChanged = false;
       const pageName = wikiPageNames.items[i];
@@ -470,10 +475,10 @@ async function updateItemPages() {
         // Replace Main Item Template
         let newItemPage = oldItemPage.replace(ITEMTEMPLATEREGEX, fillItemTemplate(i));
         // Replace Stats Templates
-        if (items[i].equipmentSlot !== undefined) {
-          if (items[i].equipmentSlot === CONSTANTS.equipmentSlot.Quiver && (items[i].ammoType === 2 || items[i].ammoType === 3)) {
+        if (item.equipmentSlot !== undefined) {
+          if (item.equipmentSlot === CONSTANTS.equipmentSlot.Quiver && (item.ammoType === 2 || item.ammoType === 3)) {
             newItemPage = newItemPage.replace(WEAPONSTATSREGEX, fillWeaponStatsTemplate(i));
-          } else if (items[i].equipmentSlot === CONSTANTS.equipmentSlot.Weapon) {
+          } else if (item.equipmentSlot === CONSTANTS.equipmentSlot.Weapon) {
             newItemPage = newItemPage.replace(WEAPONSTATSREGEX, fillWeaponStatsTemplate(i));
           } else {
             newItemPage = newItemPage.replace(ARMOURSTATSREGEX, fillArmourStatsTemplate(i));
@@ -483,8 +488,8 @@ async function updateItemPages() {
           dataChanged = true;
         }
         // Check Loot Table Template for Changes:
-        if (items[i].canOpen) {
-          const lootPullResult = await getFullWikiPage(`Template:${items[i].name}LootTable`, 0);
+        if (item.canOpen) {
+          const lootPullResult = await getFullWikiPage(`Template:${item.name}LootTable`, 0);
           if (lootPullResult.success) {
             const oldLootPage = lootPullResult.text;
             const newLootPage = oldLootPage.replace(TABLEREGEX, createChestDropTable(i));
@@ -497,7 +502,7 @@ async function updateItemPages() {
           }
         }
         // Check Source Template for Changes:
-        const sourcePullResult = await getFullWikiPage(`Template:${items[i].name} Sources`);
+        const sourcePullResult = await getFullWikiPage(`Template:${item.name} Sources`);
         if (sourcePullResult.success) {
           let oldSourcePage = sourcePullResult.text;
           oldSourcePage = oldSourcePage.replace(OLDVERSIONCATEGORYREGEX, VERSIONCATEGORY);
