@@ -1,5 +1,21 @@
 // Functions for bulk wiki operations
 /**
+ * Page Data for bulk editing pages
+ * @typedef {Object} pageEditData
+ * @property {string} name Title of the page to edit
+ * @property {string} content New Content of Page
+ */
+
+/**
+ * Page Data for bulk editing pages
+ * @typedef {Object} sectionEditData
+ * @property {string} name Title of the page to edit
+ * @property {string} content New Content of section
+ * @property {number} section Section of page to edit
+ */
+
+
+/**
  * @description Uploads multiple images to the wiki in succession
  * @param {string[]} imageFileNames The names of the files on the wiki
  * @param {string[]} imageSourceURLs The URLs of the images from the game
@@ -66,8 +82,8 @@ async function bulkUploadImages(imageFileNames, imageSourceURLs, imageText) {
 
 /**
  * Bulk creates pages
- * @param {Array} pageData Array containing which pages to create, and their content
- * @param {Boolean} overwrite Creation should overwrite existing pages
+ * @param {pageEditData[]} pageData Array containing which pages to create, and their content
+ * @param {boolean} overwrite Creation should overwrite existing pages
  */
 async function bulkCreatePages(pageData, overwrite = false) {
   if (imageUploadInProgress) {
@@ -564,8 +580,8 @@ async function bulkCreateSpellPages(indexStart, indexEnd) {
 
 /**
  * Bulk Creates individual prayer pages
- * @param {Number} indexStart Starting index of PRAYER array
- * @param {Number} indexEnd End index of PRAYER
+ * @param {number} indexStart Starting index of PRAYER array
+ * @param {number} indexEnd End index of PRAYER
  * @async
  */
 async function bulkCreatePrayerPages(indexStart, indexEnd) {
@@ -635,8 +651,8 @@ async function bulkCreatePrayerPages(indexStart, indexEnd) {
 }
 /**
  * Bulk creates individual theiving target pages
- * @param {Number} indexStart Starting index of thievingNPC
- * @param {Number} indexEnd End index of thievingNPC
+ * @param {number} indexStart Starting index of thievingNPC
+ * @param {number} indexEnd End index of thievingNPC
  * @async
  */
 async function bulkCreateThievingPages(indexStart, indexEnd) {
@@ -800,8 +816,8 @@ async function bulkCreateItemSourceTemplates() {
 
 /**
  * Bulk edits pages
- * @param {Array} pageData Array containing which pages to edit, and the new content
- * @param {String} editSummary Summary text for each edit
+ * @param {pageEditData[]} pageData Array containing which pages to edit, and the new content
+ * @param {string} editSummary Summary text for each edit
  */
 async function bulkEditPages(pageData, editSummary) {
   if (imageUploadInProgress) {
@@ -864,8 +880,8 @@ async function bulkEditPages(pageData, editSummary) {
 
 /**
  * Bulk edits the sections on pages
- * @param {Array} pageData Array containing which pages and sections to edit, and the new section content
- * @param {String} editSummary Summary text for each edit
+ * @param {sectionEditData[]} pageData Array containing which pages and sections to edit, and the new section content
+ * @param {string} editSummary Summary text for each edit
  */
 async function bulkEditPageSections(pageData, editSummary) {
   if (imageUploadInProgress) {

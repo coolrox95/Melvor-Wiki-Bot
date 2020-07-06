@@ -76,141 +76,141 @@ function formatPageLink(pageTitle) {
 // Functions for getting upgrade names
 /**
  * Gets the name of an axe upgrade
- * @param {Number} tier The tier of axe upgrade
- * @return {String}
+ * @param {number} tier The tier of axe upgrade
+ * @return {string}
  */
 function getAxeUpgradeName(tier) {
   return `${setToUppercase(tiers[tier])} Axe`;
 }
 /**
  * Gets the name of a fishing rod upgrade
- * @param {Number} tier The tier of rod upgrade
- * @return {String}
+ * @param {number} tier The tier of rod upgrade
+ * @return {string}
  */
 function getRodUpgradeName(tier) {
   return `${setToUppercase(tiers[tier])} Fishing Rod`;
 }
 /**
  * Gets the name of a pickaxe upgrade
- * @param {Number} tier The tier of pick upgrade
- * @return {String}
+ * @param {number} tier The tier of pick upgrade
+ * @return {string}
  */
 function getPickUpgradeName(tier) {
   return `${setToUppercase(tiers[tier])} Pickaxe`;
 }
 /**
  * Gets the name of a cooking fire upgrade
- * @param {Number} tier The tier of fire upgrade
- * @return {String}
+ * @param {number} tier The tier of fire upgrade
+ * @return {string}
  */
 function getFireUpgradeName(tier) {
   return `${setToUppercase(cookingFireData[tier].tier)} Cooking Fire`;
 }
 // ID To Image
 /**
- * @param {Number} id Index of Items
- * @param {Number} size Size of image in pixels
- * @param {String} alignment Alignment of image
- * @return {String}
+ * @param {number} id Index of Items
+ * @param {number} size Size of image in pixels
+ * @param {string} alignment Alignment of image
+ * @return {string}
  */
 function formatItemIDAsImageLink(id, size, alignment) {
   return createImageLink(`${items[id].name} (item)${getFileExtension(items[id].media)}`, wikiPageNames.items[id], size, alignment);
 }
 /**
- * @param {Number} id Index of MONSTERS
- * @param {Number} size Size of image in pixels
- * @param {String} alignment Alignment of image
- * @return {String}
+ * @param {number} id Index of MONSTERS
+ * @param {number} size Size of image in pixels
+ * @param {string} alignment Alignment of image
+ * @return {string}
  */
 function formatMonsterIDAsImageLink(id, size, alignment) {
   return createImageLink(`${MONSTERS[id].name} (monster).svg`, wikiPageNames.monsters[id], size, alignment);
 }
 /**
- * @param {Number} id Index of thievingNPC
- * @param {Number} size Size of image in pixels
- * @param {String} alignment Alignment of image
- * @return {String}
+ * @param {number} id Index of thievingNPC
+ * @param {number} size Size of image in pixels
+ * @param {string} alignment Alignment of image
+ * @return {string}
  */
 function formatThievingIDAsImageLink(id, size, alignment) {
   return createImageLink(`${thievingNPC[id].name} (thieving).svg`, wikiPageNames.thievingTarget[id], size, alignment);
 }
 /**
- * @param {Number} id Index of combatAreas
- * @param {Number} size Size of image in pixels
- * @param {String} alignment Alignment of image
- * @return {String}
+ * @param {number} id Index of combatAreas
+ * @param {number} size Size of image in pixels
+ * @param {string} alignment Alignment of image
+ * @return {string}
  */
 function formatCombatAreaIDAsImageLink(id, size, alignment) {
   return createImageLink(`${combatAreas[id].areaName} (combatArea).svg`, wikiPageNames.combatAreas[id], size, alignment);
 }
 /**
- * @param {Number} id Index of Slayer Areas
- * @param {Number} size Size of image in pixels
- * @param {String} alignment Alignment of image
- * @return {String}
+ * @param {number} id Index of Slayer Areas
+ * @param {number} size Size of image in pixels
+ * @param {string} alignment Alignment of image
+ * @return {string}
  */
 function formatSlayerAreaIDAsImageLink(id, size, alignment) {
   return createImageLink(`${slayerAreas[id].areaName} (combatArea).svg`, wikiPageNames.slayerAreas[id], size, alignment);
 }
 /**
- * @param {Number} id Index of DUNGEONS
- * @param {Number} size Size of image in pixels
- * @param {String} alignment Alignment of image
- * @return {String}
+ * @param {number} id Index of DUNGEONS
+ * @param {number} size Size of image in pixels
+ * @param {string} alignment Alignment of image
+ * @return {string}
  */
 function formatDungeonIDAsImageLink(id, size, alignment) {
   return createImageLink(`${DUNGEONS[id].name} (dungeon).svg`, wikiPageNames.dungeons[id], size, alignment);
 }
 /**
- * @param {Number} id Index of SPELLS
- * @param {Number} size Size of image in pixels
- * @param {String} alignment Alignment of image
- * @return {String}
+ * @param {number} id Index of SPELLS
+ * @param {number} size Size of image in pixels
+ * @param {string} alignment Alignment of image
+ * @return {string}
  */
 function formatSpellIDAsImageLink(id, size, alignment) {
   return createImageLink(`${SPELLS[id].name} (spell).svg`, wikiPageNames.spells[id], size, alignment);
 }
 /**
- * @param {Number} id Index of axeUpgrades
- * @param {Number} size Size of image in pixels
- * @param {String} alignment Alignment of image
- * @return {String}
+ * @param {number} id Index of axeUpgrades
+ * @param {number} size Size of image in pixels
+ * @param {string} alignment Alignment of image
+ * @return {string}
  */
 function formatAxeIDAsImageLink(id, size, alignment) {
   return createImageLink(`${getAxeUpgradeName(id)} (upgrade).svg`, wikiPageNames.axeUpgrades[id], size, alignment);
 }
 /**
- * @param {Number} id Index of pickUpgrades
- * @param {Number} size Size of image in pixels
- * @param {String} alignment Alignment of image
- * @return {String}
+ * @param {number} id Index of pickUpgrades
+ * @param {number} size Size of image in pixels
+ * @param {string} alignment Alignment of image
+ * @return {string}
  */
 function formatPickIDAsImageLink(id, size, alignment) {
   return createImageLink(`${getPickUpgradeName(id)} (upgrade).svg`, wikiPageNames.pickUpgrades[id], size, alignment);
 }
 /**
- * @param {Number} id Index of rodUpgrades
- * @param {Number} size Size of image in pixels
- * @param {String} alignment Alignment of image
- * @return {String}
+ * @param {number} id Index of rodUpgrades
+ * @param {number} size Size of image in pixels
+ * @param {string} alignment Alignment of image
+ * @return {string}
  */
 function formatRodIDAsImageLink(id, size, alignment) {
   return createImageLink(`${getRodUpgradeName(id)} (upgrade).svg`, wikiPageNames.rodUpgrades[id], size, alignment);
 }
 /**
- * @param {Number} id Index of fireUpgrades
- * @param {Number} size Size of image in pixels
- * @param {String} alignment Alignment of image
- * @return {String}
+ * @param {number} id Index of fireUpgrades
+ * @param {number} size Size of image in pixels
+ * @param {string} alignment Alignment of image
+ * @return {string}
  */
 function formatFireIDAsImageLink(id, size, alignment) {
   return createImageLink(`${getFireUpgradeName(id)} (upgrade).svg`, wikiPageNames.fireUpgrades[id], size, alignment);
 }
 /**
- * @param {Number} id Index of eatUpgrades
- * @param {Number} size Size of image in pixels
- * @param {String} alignment Alignment of image
- * @return {String}
+ * @param {number} id Index of eatUpgrades
+ * @param {number} size Size of image in pixels
+ * @param {string} alignment Alignment of image
+ * @return {string}
  */
 function formatEatIDAsImageLink(id, size, alignment) {
   return createImageLink(`${autoEatData[id].title} (upgrade).svg`, wikiPageNames.eatUpgrades[id], size, alignment);
@@ -219,8 +219,8 @@ function formatEatIDAsImageLink(id, size, alignment) {
 // ID To Link
 /**
 * @description Formats an itemID as a page link
-* @param {Number} id Index of items
-* @return {String}
+* @param {number} id Index of items
+* @return {string}
 */
 function formatItemIDAsLink(id) {
   if (wikiPageNames.items[id] === items[id].name) {
@@ -230,8 +230,8 @@ function formatItemIDAsLink(id) {
 }
 /**
 * @description Formats a monsterID as a page link
-* @param {Number} id Index of MONSTERS
-* @return {String}
+* @param {number} id Index of MONSTERS
+* @return {string}
 */
 function formatMonsterIDAsLink(id) {
   if (wikiPageNames.monsters[id] === MONSTERS[id].name) {
@@ -241,8 +241,8 @@ function formatMonsterIDAsLink(id) {
 }
 /**
 * @description Formats a thieving ID as a page link
-* @param {Number} id Index of thievingNPC
-* @return {String}
+* @param {number} id Index of thievingNPC
+* @return {string}
 */
 function formatThievingIDAsLink(id) {
   if (wikiPageNames.thievingTarget[id] === thievingNPC[id].name) {
@@ -252,8 +252,8 @@ function formatThievingIDAsLink(id) {
 }
 /**
 * @description Formats a combat area as a page link
-* @param {Number} id Index of combatAreas
-* @return {String}
+* @param {number} id Index of combatAreas
+* @return {string}
 */
 function formatCombatAreaIDAsLink(id) {
   if (wikiPageNames.combatAreas[id] === combatAreas[id].areaName) {
@@ -263,8 +263,8 @@ function formatCombatAreaIDAsLink(id) {
 }
 /**
 * @description Formats a slayer area as a page link
-* @param {Number} id Index of slayerAreas
-* @return {String}
+* @param {number} id Index of slayerAreas
+* @return {string}
 */
 function formatSlayerAreaIDAsLink(id) {
   if (wikiPageNames.slayerAreas[id] === slayerAreas[id].areaName) {
@@ -274,8 +274,8 @@ function formatSlayerAreaIDAsLink(id) {
 }
 /**
 * @description Formats a dungeon as a page link
-* @param {Number} id Index of DUNGEONS
-* @return {String}
+* @param {number} id Index of DUNGEONS
+* @return {string}
 */
 function formatDungeonIDAsLink(id) {
   if (wikiPageNames.dungeons[id] === DUNGEONS[id].name) {
@@ -285,8 +285,8 @@ function formatDungeonIDAsLink(id) {
 }
 /**
 * @description Formats a spell as a page link
-* @param {Number} id Index of SPELLS
-* @return {String}
+* @param {number} id Index of SPELLS
+* @return {string}
 */
 function formatSpellIDAsLink(id) {
   if (wikiPageNames.spells[id] === SPELLS[id].name) {
@@ -296,8 +296,8 @@ function formatSpellIDAsLink(id) {
 }
 /**
 * @description Formats an axe upgrade as a page link
-* @param {Number} id Index of axeUpgrades
-* @return {String}
+* @param {number} id Index of axeUpgrades
+* @return {string}
 */
 function formatAxeIDAsLink(id) {
   if (wikiPageNames.axeUpgrades[id] === getAxeUpgradeName(id)) {
@@ -307,8 +307,8 @@ function formatAxeIDAsLink(id) {
 }
 /**
 * @description Formats a rod upgrade as a page link
-* @param {Number} id Index of rodUpgrades
-* @return {String}
+* @param {number} id Index of rodUpgrades
+* @return {string}
 */
 function formatRodIDAsLink(id) {
   if (wikiPageNames.rodUpgrades[id] === getRodUpgradeName(id)) {
@@ -318,8 +318,8 @@ function formatRodIDAsLink(id) {
 }
 /**
 * @description Formats a pick upgrade as a page link
-* @param {Number} id Index of pickUpgrades
-* @return {String}
+* @param {number} id Index of pickUpgrades
+* @return {string}
 */
 function formatPickIDAsLink(id) {
   if (wikiPageNames.pickUpgrades[id] === getPickUpgradeName(id)) {
@@ -329,8 +329,8 @@ function formatPickIDAsLink(id) {
 }
 /**
 * @description Formats a cooking fire upgrade as a page link
-* @param {Number} id Index of fireUpgrades
-* @return {String}
+* @param {number} id Index of fireUpgrades
+* @return {string}
 */
 function formatFireIDAsLink(id) {
   if (wikiPageNames.fireUpgrades[id] === getFireUpgradeName(id)) {
@@ -340,8 +340,8 @@ function formatFireIDAsLink(id) {
 }
 /**
 * @description Formats an auto-eat upgrade as a page link
-* @param {Number} id Index of eatUpgrades
-* @return {String}
+* @param {number} id Index of eatUpgrades
+* @return {string}
 */
 function formatEatIDAsLink(id) {
   if (wikiPageNames.eatUpgrades[id] === autoEatData[id].title) {
@@ -352,10 +352,10 @@ function formatEatIDAsLink(id) {
 
 /**
  * @description Formats a skillName as a skill image
- * @param {String} skillName The name of the skill
- * @param {Number} size The size of the image in pixels
- * @param {String} alignment The alignment of the image
- * @return {String}
+ * @param {string} skillName The name of the skill
+ * @param {number} size The size of the image in pixels
+ * @param {string} alignment The alignment of the image
+ * @return {string}
  */
 function formatSkillImage(skillName, size, alignment) {
   return `[[File:${skillName} (skill).svg|${size}px|${alignment}]]`;
@@ -364,7 +364,7 @@ function formatSkillImage(skillName, size, alignment) {
  * @description Adds a combat image
  * @param {number} size The size of the image in pixels
  * @param {string} alignment The alignment of the image
- * @return {String}
+ * @return {string}
  */
 function formatCombatImage(size, alignment) {
   return `[[File:Combat.svg|${size}px|${alignment}]]`;
@@ -382,9 +382,9 @@ function formatSkillImageLink(skillName, size, alignment) {
 
 /**
  * Creates an image of the mastery icon
- * @param {Number} size The size of the image in pixels
- * @param {String} alignment The alignment of the image
- * @return {String}
+ * @param {number} size The size of the image in pixels
+ * @param {string} alignment The alignment of the image
+ * @return {string}
  */
 function formatMasteryImageLink(size, alignment) {
   return `[[File:Mastery.svg|${size}px|${alignment}|link=Mastery]]`;
@@ -394,7 +394,7 @@ function formatMasteryImageLink(size, alignment) {
  * @description Formats the requirement for a skill
  * @param {string} skillName The name of the skill
  * @param {number} levelRequired The level requirement for the skill
- * @return {String}
+ * @return {string}
  */
 function formatSkillRequirement(skillName, levelRequired) {
   return `${formatSkillImageLink(skillName, 25, 'middle')} ${levelRequired} ${formatPageLink(skillName)}`;
@@ -446,7 +446,7 @@ function formatUpgradeImageLink(upgradeName, size, alignment) {
 /**
  * @description Formats a cost as the cost then the image of coins
  * @param {number} cost
- * @return {String}
+ * @return {string}
  */
 function formatAsShopCost(cost) {
   return `[[File:Coins.svg|25px|middle]] ${cost}`;
@@ -454,7 +454,7 @@ function formatAsShopCost(cost) {
 
 /**
  * @description Formats barsRequired as ingredients list
- * @param {Array<Number>} ingArray
+ * @param {number[]} ingArray
  * @return {string}
  */
 function formatIngredientsRequired(ingArray) {
@@ -464,7 +464,7 @@ function formatIngredientsRequired(ingArray) {
 /**
  * @description formats an itemID as the bars and gp cost
  * @param {number} itemID
- * @return {String}
+ * @return {string}
  */
 function formatItemTrimCost(itemID) {
   let outputStr = '';
@@ -482,7 +482,7 @@ function formatItemTrimCost(itemID) {
 /**
  * @description Formates the cost of creating and item
  * @param {any[]} costArray Array of objects with properties id and qty
- * @return {String}
+ * @return {string}
  */
 function formatItemCreationCost(costArray) {
   let outputStr = '';
@@ -495,7 +495,7 @@ function formatItemCreationCost(costArray) {
 /**
  * @description Formats a cost as the cost then the image of slayer coins
  * @param {number} cost
- * @return {String}
+ * @return {string}
  */
 function formatAsSlayerCost(cost) {
   return `[[File:Slayer_Coins.svg|25px|middle]] ${cost}`;
@@ -504,7 +504,7 @@ function formatAsSlayerCost(cost) {
 /**
 * @description Formats an itemID as its sale price
 * @param {number} itemID
-* @return {String}
+* @return {string}
 */
 function formatItemIDasPrice(itemID) {
   return formatAsInt(items[itemID].sellsFor);
@@ -513,7 +513,7 @@ function formatItemIDasPrice(itemID) {
 /**
  * @description Formats time in ms as s
  * @param {number} t time in ms
- * @return {String}
+ * @return {string}
  */
 function formatMSasS(t) {
   return formatNumberDec(t / 1000, 0);
@@ -521,7 +521,7 @@ function formatMSasS(t) {
 
 /**
  * @description formats rateArray into rate/s
- * @param {Array<Number>} rateArray rateArray[0] is amount, rateAray[1] is time in ms
+ * @param {number[]} rateArray rateArray[0] is amount, rateAray[1] is time in ms
  * @return {string}
  */
 function formatAsRate(rateArray) {
@@ -616,8 +616,8 @@ function formatUpgradeChange(itemID) {
 
 /**
  * Formats an attack type as an image icon with no link
- * @param {Number} type Attack type ID
- * @return {String}
+ * @param {number} type Attack type ID
+ * @return {string}
  */
 function formatAttackTypeIcon(type) {
   if (type === CONSTANTS.attackType.Melee) {
@@ -630,8 +630,8 @@ function formatAttackTypeIcon(type) {
 
 /**
  * Formats an attack type as the name of the type
- * @param {Number} type Attack type ID
- * @return {String}
+ * @param {number} type Attack type ID
+ * @return {string}
  */
 function formatAttackTypeName(type) {
   if (type === CONSTANTS.attackType.Melee) {
@@ -645,7 +645,7 @@ function formatAttackTypeName(type) {
 /**
  * @description Formats a monsters attack type
  * @param {number} type
- * @return {String}
+ * @return {string}
  */
 function formatAttackType(type) {
   return `${formatAttackTypeIcon(type)} ${formatAttackTypeName(type)}`;
@@ -654,7 +654,7 @@ function formatAttackType(type) {
 /**
  * @description Formats a requirement object array into a table
  * @param {Object} requirements
- * @return {String}
+ * @return {string}
  */
 function formatCraftReq(requirements) {
   let outStr = '';
@@ -667,7 +667,7 @@ function formatCraftReq(requirements) {
 /**
  * @description Formatting function for smithing quantity
  * @param {number} itemID
- * @return {String}
+ * @return {string}
  */
 function formatItemIDasSmithingQty(itemID) {
   if (items[itemID].smithingQty) {
@@ -824,7 +824,7 @@ function formatItemIDasItemSource(itemID) {
 /**
  * @description Formats a boolean as a Yes or No entry
  * @param {boolean} bool
- * @return {String}
+ * @return {string}
  */
 function formatBoolAsYesNo(bool) {
   return bool ? 'Yes' : 'No';
@@ -867,8 +867,8 @@ function formatArrayAsNewlines(sourceArray) {
 
 /**
  * @description Formats a quantity array. qty[0] is min, qty[1] is max
- * @param {Array<Number>} qty
- * @return {String}
+ * @param {number[]} qty
+ * @return {string}
  */
 function formatAsDropQty(qty) {
   if (qty[0] === qty[1]) {
@@ -879,7 +879,7 @@ function formatAsDropQty(qty) {
 /**
  * @description Calculates the loot chance of a monster and formats as X%
  * @param {number} monsterID
- * @return {String}
+ * @return {string}
  */
 function formatMonsterIDAsDropChance(monsterID) {
   const lootChance = ((MONSTERS[monsterID].lootChance !== undefined) ? MONSTERS[monsterID].lootChance / 100 : 1);
@@ -890,7 +890,7 @@ function formatMonsterIDAsDropChance(monsterID) {
 /**
  * @description Formats the description of a prayer for the table
  * @param {number} prayerID
- * @return {Array<String>}
+ * @return {string[]}
  */
 function getPrayerEffectArray(prayerID) {
   const effects = [];
@@ -910,8 +910,8 @@ function getPrayerEffectArray(prayerID) {
 
 /**
 * @description Formats the costs of a prayer
-* @param {Array<Number>} costArray
-* @return {String}
+* @param {number[]} costArray
+* @return {string}
 */
 function formatPrayerCosts(costArray) {
   const costStrings = [];
@@ -933,7 +933,7 @@ function formatPrayerCosts(costArray) {
 /**
  * @description Computes the combat level of a monster
  * @param {number} monsterID Index of MONSTERS
- * @return {Number}
+ * @return {number}
  */
 function getMonsterCombatLevel(monsterID) {
   const prayer = 1;
@@ -947,7 +947,7 @@ function getMonsterCombatLevel(monsterID) {
 /**
  * @description Computes the max hit of a monster
  * @param {number} monsterID
- * @return {Number}
+ * @return {number}
  */
 function getMonsterMaxHit(monsterID) {
   let maximumStrengthRoll;
@@ -966,8 +966,8 @@ function getMonsterMaxHit(monsterID) {
 
 /**
  * Gets the True max hit of a monster
- * @param {Number} monsterID
- * @return {Number}
+ * @param {number} monsterID
+ * @return {number}
  */
 function getMonsterTrueMaxHit(monsterID) {
   let maxHit = 0;
@@ -998,7 +998,7 @@ function getMonsterTrueMaxHit(monsterID) {
 /**
  * @description Computes the accuracy of a monster
  * @param {number} monsterID
- * @return {Number}
+ * @return {number}
  */
 function getMonsterAccuracy(monsterID) {
   let maximumAttackRoll;
@@ -1017,7 +1017,7 @@ function getMonsterAccuracy(monsterID) {
 /**
  * @description Computes the melee evasion of a monster
  * @param {number} monsterID
- * @return {Number}
+ * @return {number}
  */
 function getMonsterMeleeEvasion(monsterID) {
   const effectiveDefenceLevel = Math.floor(MONSTERS[monsterID].defenceLevel + 8 + 1);
@@ -1026,7 +1026,7 @@ function getMonsterMeleeEvasion(monsterID) {
 /**
  * @description Computes the ranged evasion of a monster
  * @param {number} monsterID
- * @return {Number}
+ * @return {number}
  */
 function getMonsterRangedEvasion(monsterID) {
   const effectiveDefenceLevel = Math.floor(MONSTERS[monsterID].defenceLevel + 8 + 1);
@@ -1035,7 +1035,7 @@ function getMonsterRangedEvasion(monsterID) {
 /**
  * @description Computes the magic evasion of a monster
  * @param {number} monsterID
- * @return {Number}
+ * @return {number}
  */
 function getMonsterMagicEvasion(monsterID) {
   const effectiveMagicDefenceLevel = Math.floor((Math.floor(MONSTERS[monsterID].magicLevel * 0.7) + Math.floor(MONSTERS[monsterID].defenceLevel * 0.3)) + 8 + 1);
@@ -1044,8 +1044,8 @@ function getMonsterMagicEvasion(monsterID) {
 
 /**
  * Gets the chance for a monster to drop items and coins
- * @param {Number} monsterID Index of MONSTERS
- * @return {Number}
+ * @param {number} monsterID Index of MONSTERS
+ * @return {number}
  */
 function getMonsterLootChance(monsterID) {
   return ((MONSTERS[monsterID].lootChance !== undefined) ? MONSTERS[monsterID].lootChance : 100);
@@ -1055,7 +1055,7 @@ function getMonsterLootChance(monsterID) {
  * @description Formats the attacks of a monster for monster templates
  * @return {string} String for template
  * @param {number} monsterID Index of MONSTERS array
- * @return {String}
+ * @return {string}
  */
 function formatMonsterAttacks(monsterID) {
   let outStr = '';
@@ -1095,7 +1095,7 @@ function formatMonsterAttacks(monsterID) {
 /**
  * @description Formats a monster's loot chance as a percentage
  * @param {number} monsterID Index of MONSTERS array
- * @return {String}
+ * @return {string}
  */
 function formatMonsterLootChance(monsterID) {
   const lootChance = getMonsterLootChance(monsterID);
@@ -1105,7 +1105,7 @@ function formatMonsterLootChance(monsterID) {
 /**
  * @description Formats a monsters drops into a bullet list
  * @param {number} monsterID Index of MONSTERS array
- * @return {String}
+ * @return {string}
  */
 function formatMonsterDrops(monsterID) {
   let outputStr = '';
@@ -1143,7 +1143,7 @@ function formatMonsterDrops(monsterID) {
 /**
  * @description Experimental function to automatically generate brief descriptions for item pages
  * @param {number} itemID Index of items array
- * @return {String}
+ * @return {string}
  * @deprecated
  */
 function createItemDescription(itemID) {
@@ -1193,7 +1193,7 @@ function createItemDescription(itemID) {
 /**
  * @description Formats a dungeonID as a string of drops
  * @param {number} dungeonID Index of DUNGEONS
- * @return {String}
+ * @return {string}
  */
 function formatDungeonDrops(dungeonID) {
   const monsterID = DUNGEONS[dungeonID].monsters[DUNGEONS[dungeonID].monsters.length - 1];
@@ -1206,8 +1206,8 @@ function formatDungeonDrops(dungeonID) {
 
 /**
  * Gets a string array of a prayer's costs
- * @param {Number} prayerID Index of PRAYER
- * @return {Array<String>}
+ * @param {number} prayerID Index of PRAYER
+ * @return {string[]}
  */
 function getPrayerCostArray(prayerID) {
   const prayerCosts = [];
@@ -1238,7 +1238,7 @@ function getPrayerCostArray(prayerID) {
 /**
  * @description Creates a string array of 25px monster images with their names
  * @param {*} areaData Element of combatAreas or DUNGEONS
- * @return {Array<String>}
+ * @return {string[]}
  */
 function getMonsterArray(areaData) {
   const monsterArray = [];
@@ -1251,7 +1251,7 @@ function getMonsterArray(areaData) {
 /**
  * Formats the condensed monsters of a dungeon into a string array
  * @param {*} condensedMonsters Condensed monsters of Dungeon
- * @return {Array<String>}
+ * @return {string[]}
  */
 function getDungeonMonsterArray(condensedMonsters) {
   const monsterArray = [];
@@ -1264,7 +1264,7 @@ function getDungeonMonsterArray(condensedMonsters) {
 /**
  * @description Creates an array of the spell requirements with image, qty and name link
  * @param {number} spellID Index of SPELLS array
- * @return {Array<String>}
+ * @return {string[]}
  */
 function getSpellRuneArray(spellID) {
   const spellArray = [];
@@ -1276,8 +1276,8 @@ function getSpellRuneArray(spellID) {
 
 /**
  * Gets a formatted string array of the items that can be upgraded into itemID
- * @param {Number} itemID Index of items array
- * @return {Array<String>}
+ * @param {number} itemID Index of items array
+ * @return {string[]}
  */
 function getUpgradesFromArray(itemID) {
   const upgradesFrom = [];

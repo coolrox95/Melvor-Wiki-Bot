@@ -53,7 +53,7 @@ class TableMaker {
   }
   /**
    * Starts a new column with the specificed cell alignment and data sorting value
-   * @param {String} textAlignment Algnment of text in cell
+   * @param {string} textAlignment Algnment of text in cell
    * @param {*} sortValue Sort value for cell
    */
   nextColumnSort(textAlignment, sortValue) {
@@ -291,8 +291,8 @@ class TableSpecMaker {
   }
   /**
    * Appends a span to the table specification
-   * @param {String} spanText The text contained in the span
-   * @param {Number} spanLength The length of the span
+   * @param {string} spanText The text contained in the span
+   * @param {number} spanLength The length of the span
    */
   appendSpan(spanText, spanLength) {
     this.spanSpec.push({
@@ -317,8 +317,8 @@ function copyToClipboard(stringToCopy) {
 
 /**
  * @description Gets an array of the locations a monster is found in
- * @param {Number} monsterID
- * @return {Array<String>}
+ * @param {number} monsterID
+ * @return {string[]}
  */
 function getMonsterLocationArray(monsterID) {
   const locationArray = [];
@@ -379,7 +379,7 @@ function getListOfItemKeys() {
 /**
  * @description Creates a string array of item uses to be formatted later
  * @param {number} itemID Index of items array
- * @return {Array<String>}
+ * @return {string[]}
  */
 function getItemUsesArray(itemID) {
   const itemUseArray = [];
@@ -400,7 +400,7 @@ function getItemUsesArray(itemID) {
 /**
  * @description Creates a string array of the items sources to be formatted later
  * @param {number} itemID Index of items array
- * @return {Array<String>}
+ * @return {string[]}
  */
 function getItemSourcesArray(itemID) {
   // Potential Sources:
@@ -621,7 +621,7 @@ function getItemSourcesArray(itemID) {
 /**
  * @description Determines if a monster can only be found in dungeons
  * @param {number} monsterID Index of MONSTERS array
- * @return {Boolean}
+ * @return {boolean}
  */
 function isMonsterDungeonOnly(monsterID) {
   let isDungeon = true;
@@ -653,7 +653,7 @@ function isMonsterDungeonOnly(monsterID) {
 /**
  * @description Sets the first character of a string to uppercase
  * @param {string} string
- * @return {String}
+ * @return {string}
  */
 function setToUppercase(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -663,7 +663,7 @@ function setToUppercase(string) {
  * @description Returns true if arrayItem is contained on arrayToSearch
  * @param {*} arrayItem
  * @param {Array} arrayToSearch
- * @return {Boolean}
+ * @return {boolean}
  */
 function isItemOnArray(arrayItem, arrayToSearch) {
   for (let i = 0; i < arrayToSearch.length; i++) {
@@ -678,7 +678,7 @@ function isItemOnArray(arrayItem, arrayToSearch) {
  * @description Returns the indices where the arrayItem is found
  * @param {*} arrayItem
  * @param {Array} arrayToSearch
- * @return {Array<Number>}
+ * @return {number[]}
  */
 function findItemOnArray(arrayItem, arrayToSearch) {
   const indices = [];
@@ -693,7 +693,7 @@ function findItemOnArray(arrayItem, arrayToSearch) {
 /**
  * Adds a name to the dupe data
  * @param {*} dupeData Dupe data
- * @param {String} basePageName Page Name before disambiguation
+ * @param {string} basePageName Page Name before disambiguation
  */
 function addNameToDupeData(dupeData, basePageName) {
   if (isItemOnArray(basePageName, dupeData.usedBaseNames)) {
@@ -708,7 +708,7 @@ function addNameToDupeData(dupeData, basePageName) {
 /**
  * Adds An arrays names to the dupe data
  * @param {Array} array Array containing names
- * @param {String} arrayKey Key of array that corresponds to name
+ * @param {string} arrayKey Key of array that corresponds to name
  * @return {*}
  */
 function findSelfDuplicateNames(array, arrayKey) {
@@ -876,7 +876,7 @@ function findDuplicatePageNames() {
  * Replaces a table in a string with a newTable
  * @param {string} originalString
  * @param {string} newTableString
- * @return {String}
+ * @return {string}
  */
 function replaceTableInString(originalString, newTableString) {
   return originalString.replace(TABLEREGEX, newTableString);
@@ -884,8 +884,8 @@ function replaceTableInString(originalString, newTableString) {
 
 /**
  * Extracts the extension from a file name
- * @param {String} filename The original filename
- * @return {String} The file extension
+ * @param {string} filename The original filename
+ * @return {string} The file extension
  */
 function getFileExtension(filename) {
   const matches = filename.match(EXTENSIONREGEX);

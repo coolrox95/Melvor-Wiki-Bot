@@ -4,7 +4,7 @@
 /**
  * Creates a query string to send to the wiki
  * @param {Object} params An object containing name pair values of strings
- * @return {String}
+ * @return {string}
  */
 function createQueryString(params) {
   let qString = '?';
@@ -32,7 +32,7 @@ function createFormData(data) {
 // Basic API Calls
 /**
  * Attempts to get the wikitext of the page specified
- * @param {String} pageTitle The title of the page
+ * @param {string} pageTitle The title of the page
  * @async
  */
 async function getFullWikiPage(pageTitle) {
@@ -60,7 +60,7 @@ async function getFullWikiPage(pageTitle) {
 }
 /**
  * Attempts to get the HTML of the page specified
- * @param {String} pageTitle Title of page to get
+ * @param {string} pageTitle Title of page to get
  */
 async function getWikiHTMLFromTitle(pageTitle) {
   const params = {
@@ -87,8 +87,8 @@ async function getWikiHTMLFromTitle(pageTitle) {
 }
 /**
  * Attempts to get the wikitext for the specified page and section
- * @param {String} pageTitle The title of the page
- * @param {Number} pageSection The section id of the page
+ * @param {string} pageTitle The title of the page
+ * @param {number} pageSection The section id of the page
  * @async
  */
 async function getWikiPageSection(pageTitle, pageSection = 0) {
@@ -112,7 +112,7 @@ async function getWikiPageSection(pageTitle, pageSection = 0) {
 }
 /**
  * Attempts to get the sections of a page
- * @param {String} pageTitle The title of the page
+ * @param {string} pageTitle The title of the page
  */
 async function getPageSections(pageTitle) {
   const params = {
@@ -135,8 +135,8 @@ async function getPageSections(pageTitle) {
 
 /**
  * Attemptes to get the revisions of a page
- * @param {String} pageTitle The title of the page
- * @param {Number} maxRev The maximum number of revisions to get
+ * @param {string} pageTitle The title of the page
+ * @param {number} maxRev The maximum number of revisions to get
  */
 async function getLastRevisions(pageTitle, maxRev) {
   const params = {
@@ -168,7 +168,7 @@ async function getLastRevisions(pageTitle, maxRev) {
 
 /**
  * @description Requests the members of a category that are pages
- * @param {String} categoryName The name of the category, does not include Category:
+ * @param {string} categoryName The name of the category, does not include Category:
  * @async
  */
 async function getCategoryPageMembers(categoryName) {
@@ -215,9 +215,9 @@ async function getLoginToken() {
 
 /**
  * Attempts to login to the wiki with the provided credentials
- * @param {String} logintoken Login Token
- * @param {String} user Username
- * @param {String} pass Password
+ * @param {string} logintoken Login Token
+ * @param {string} user Username
+ * @param {string} pass Password
  * @async
  */
 async function getLoginRequest(logintoken, user, pass) {
@@ -241,7 +241,7 @@ async function getLoginRequest(logintoken, user, pass) {
 }
 /**
  * Attempts to log out of the wiki
- * @param {String} csrftoken CRSF Token
+ * @param {string} csrftoken CRSF Token
  * @async
  */
 async function getLogoutRequest(csrftoken) {
@@ -333,10 +333,10 @@ async function uploadImageFromUrlViaUrl(imageFileName, imageText, imageURL, csrf
 
 /**
  * Uploads an image to the wiki by fetching it as a blob and then making a post request
- * @param {String} imageFileName The name of the image on file on the wiki
- * @param {String} imageText Text to put on image page
- * @param {String} fileURL URL of image to upload
- * @param {String} token CRSF Token
+ * @param {string} imageFileName The name of the image on file on the wiki
+ * @param {string} imageText Text to put on image page
+ * @param {string} fileURL URL of image to upload
+ * @param {string} token CRSF Token
  */
 async function uploadImageFromUrlViaBlob(imageFileName, imageText, fileURL, token) {
   // Get the file as a blob from the URL
@@ -369,11 +369,11 @@ async function uploadImageFromUrlViaBlob(imageFileName, imageText, fileURL, toke
 
 /**
  * Attempts to create a wiki page
- * @param {String} pageTitle The title of the page to create
- * @param {String} pageContent The wikitext of the page to create
- * @param {String} editSummary The edit comment for the page creation
- * @param {String} token A valid CRSF token
- * @param {Boolean} overWrite Whether or not to overwrite a page if it already exists
+ * @param {string} pageTitle The title of the page to create
+ * @param {string} pageContent The wikitext of the page to create
+ * @param {string} editSummary The edit comment for the page creation
+ * @param {string} token A valid CRSF token
+ * @param {boolean} overWrite Whether or not to overwrite a page if it already exists
  * @async
  */
 async function createWikiPage(pageTitle, pageContent, editSummary, token, overWrite) {
@@ -412,9 +412,9 @@ async function createWikiPage(pageTitle, pageContent, editSummary, token, overWr
 /**
  * Attempts to rollback a page
  * Requires a user with Admin permissions
- * @param {String} pageTitle The title of the page to rollback
- * @param {String} user The user to rollback edits for
- * @param {String} summary The reason for the rollback
+ * @param {string} pageTitle The title of the page to rollback
+ * @param {string} user The user to rollback edits for
+ * @param {string} summary The reason for the rollback
  */
 async function rollBackPage(pageTitle, user, summary) {
   const rollbacktoken = await getRollBackToken();
@@ -445,10 +445,10 @@ async function rollBackPage(pageTitle, user, summary) {
 
 /**
  * Attempts to edit an existing wiki page
- * @param {String} pageTitle The title of the page to edit
- * @param {String} newContent The new wikitext of the page
- * @param {String} editSummary The summary comment for the edit
- * @param {String} token A valid CRSF token
+ * @param {string} pageTitle The title of the page to edit
+ * @param {string} newContent The new wikitext of the page
+ * @param {string} editSummary The summary comment for the edit
+ * @param {string} token A valid CRSF token
  */
 async function editWikiPage(pageTitle, newContent, editSummary, token) {
   // Generate the request data
@@ -483,10 +483,10 @@ async function editWikiPage(pageTitle, newContent, editSummary, token) {
 
 /**
  * Attempts to undo edits to a page
- * @param {String} pageTitle The title of the page to undo edits for
- * @param {String} token A valid CRSF Token
- * @param {Number} revID The revsion to undo from
- * @param {Number} undoToID The revsion to undo to
+ * @param {string} pageTitle The title of the page to undo edits for
+ * @param {string} token A valid CRSF Token
+ * @param {number} revID The revsion to undo from
+ * @param {number} undoToID The revsion to undo to
  */
 async function undoLastEdit(pageTitle, token, revID, undoToID) {
   // Generate the request data
@@ -521,11 +521,11 @@ async function undoLastEdit(pageTitle, token, revID, undoToID) {
 
 /**
  * Attempts to edit a section of a wiki page
- * @param {String} pageTitle The title of the page to edit
- * @param {Number} sectionID The section ID of the page
- * @param {String} newContent The new wikitext for the section
- * @param {String} editSummary The edit summary comment
- * @param {String} token A valid CRSF token
+ * @param {string} pageTitle The title of the page to edit
+ * @param {number} sectionID The section ID of the page
+ * @param {string} newContent The new wikitext for the section
+ * @param {string} editSummary The edit summary comment
+ * @param {string} token A valid CRSF token
  */
 async function editWikiPageSection(pageTitle, sectionID, newContent, editSummary, token) {
   // Generate the request data

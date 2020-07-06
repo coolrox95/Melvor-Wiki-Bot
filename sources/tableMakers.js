@@ -22,7 +22,7 @@ function createCookingTable() {
 /**
  * @description Creates a table of farming areas
  * @param {number} areaID ID of area array, 0 is allotments, 1 is herbs, 2 is trees
- * @return {String}
+ * @return {string}
  */
 function createFarmingPlotsTable(areaID) {
   const plotSpec = new TableSpecMaker();
@@ -190,12 +190,15 @@ function createFishingTable() {
     return formatAsInt(items[id].fishingXP);
   });
   tabSpec.appendColumn('Fish Price', 'right', 'itemID', 0, formatItemIDasPrice);
+  tabSpec.appendColumn('Cookable', 'right', 'itemID', 0, (id) => {
+    return (items[id].cookedItemID !== undefined) ? 'Yes' : 'No';
+  });
   return formatObjectArrayAsTable(fishingItems, tabSpec.tableSpec);
 }
 
 /**
  * Creates a table of fishing areas
- * @return {String}
+ * @return {string}
  */
 function createFishingAreasTable() {
   const tabSpec = new TableSpecMaker();
@@ -359,8 +362,8 @@ function createSmithingPage() {
  * @description Creates a table of equipment of the given type for the provided slot
  * @param {number} equipmentSlot
  * @param {string} type Type of equipment: 'Melee','Ranged,'Magic','All','Skill'
- * @param {Number} ammoType Type of ammo of equipment to match
- * @return {String}
+ * @param {number} ammoType Type of ammo of equipment to match
+ * @return {string}
  */
 function createArmourTable(equipmentSlot, type, ammoType = -1) {
   const isSkillItem = (equipmentSlot === CONSTANTS.equipmentSlot.Gloves && type === 'None');
@@ -427,8 +430,8 @@ function createArmourTable(equipmentSlot, type, ammoType = -1) {
 /**
  * Creates a table of weapons
  * @param {string} type Type of equipment: 'Melee','Ranged','Magic'
- * @param {Number} ammoTypeRequired Type of ammo the weapon needs
- * @return {String}
+ * @param {number} ammoTypeRequired Type of ammo the weapon needs
+ * @return {string}
  */
 function createWeaponTable(type, ammoTypeRequired = -1) {
   const itemSubset = getObjectArraySubset(items, (item) => selectWeaponItem(item, type, ammoTypeRequired));
@@ -488,7 +491,7 @@ function checkItemSubsetForStats(itemSubset,statKey) {
 /**
  * @description Generates subsections for a type of gear that has all combat types
  * @param {number} equipmentSlot The slot of gear
- * @return {String}
+ * @return {string}
  */
 function createSlotSection(equipmentSlot) {
   let outStr = '';
@@ -563,7 +566,7 @@ function createEquipmentPage() {
 
 /**
  * @description Creates a table of spells
- * @return {String}
+ * @return {string}
  */
 function createSpellTable() {
   const tabSpec = new TableSpecMaker();
@@ -622,7 +625,7 @@ function createMonsterLootTable(monsterID) {
 /**
  * @description Creates a table of the drops that can come from an openable items
  * @param {number} chestID
- * @return {String}
+ * @return {string}
  */
 function createChestDropTable(chestID) {
   if (items[chestID].dropTable) {
@@ -652,7 +655,7 @@ function createChestDropTable(chestID) {
 
 /**
  * @description Creates a table of the drops that can come from fishing Treasure
- * @return {String}
+ * @return {string}
  */
 function createFishTreasureTable() {
   const dropObject = [];
@@ -676,7 +679,7 @@ function createFishTreasureTable() {
 
 /**
  * @description Creates a table of the junk items that can come from fishing
- * @return {String}
+ * @return {string}
  */
 function createFishingJunkTable() {
   const junkData = [];
@@ -691,7 +694,7 @@ function createFishingJunkTable() {
 }
 /**
  * @description Generates the table of Axes for the Shop Page
- * @return {String}
+ * @return {string}
  */
 function createShopAxesTable() {
   const axeData = [];
@@ -713,7 +716,7 @@ function createShopAxesTable() {
 }
 /**
  * @description Generates the table of fishing rods for the Shop Page
- * @return {String}
+ * @return {string}
  */
 function createShopFishRodTable() {
   const axeData = [];
@@ -735,7 +738,7 @@ function createShopFishRodTable() {
 }
 /**
  * @description Generates the table of pickaxes for the Shop Page
- * @return {String}
+ * @return {string}
  */
 function createShopPickaxeTable() {
   const axeData = [];
@@ -759,7 +762,7 @@ function createShopPickaxeTable() {
 }
 /**
  * @description Generates the table of cooking fires for the Shop Page
- * @return {String}
+ * @return {string}
  */
 function createShopCookingFireTable() {
   const tabSpec = new TableSpecMaker();
@@ -776,7 +779,7 @@ function createShopCookingFireTable() {
 }
 /**
  * Creates the table of god upgrades for the shop
- * @return {String}
+ * @return {string}
  */
 function createShopGodUpgradeTable() {
   const godData = [];
@@ -801,7 +804,7 @@ function createShopGodUpgradeTable() {
 
 /**
  * Creates the table of auto eat upgrades for the shop
- * @return {String}
+ * @return {string}
  */
 function createShopAutoEatTable() {
   const tabSpec = new TableSpecMaker();
@@ -818,7 +821,7 @@ function createShopAutoEatTable() {
 }
 /**
  * @description Generates the table of skill gloves for the Shop Page
- * @return {String}
+ * @return {string}
  */
 function createShopGloveTable() {
   const gloveData = [];
@@ -842,7 +845,7 @@ function createShopGloveTable() {
 
 /**
  * @description Generates the table of Materials for the Shop Page
- * @return {String}
+ * @return {string}
  */
 function createShopMaterialTable() {
   const itemSubset = [];
@@ -875,7 +878,7 @@ function createShopMaterialTable() {
 
 /**
  * @description Generates the table of skillcapes for the Shop page
- * @return {String}
+ * @return {string}
  */
 function createShopSkillcapeTable() {
   const itemSubset = [];
@@ -896,7 +899,7 @@ function createShopSkillcapeTable() {
 
 /**
  * @description Generates the table of slayer items for the Shop page
- * @return {String}
+ * @return {string}
  */
 function createShopSlayerTable() {
   const itemSubset = [];
@@ -916,7 +919,7 @@ function createShopSlayerTable() {
 /**
  * @description Generates a table for the Crafting page
  * @param {string} type String to search for inside the crafted items name
- * @return {String}
+ * @return {string}
  */
 function createCraftingTable(type) {
   const itemSubset = getObjectArraySubset(items, (item) => selectCraftingItem(item, type));
@@ -935,7 +938,7 @@ function createCraftingTable(type) {
 
 /**
  * @description Generates all the tables and sections for the Crafting Page
- * @return {String}
+ * @return {string}
  */
 function createCraftingPage() {
   let outStr = '';
@@ -952,7 +955,7 @@ function createCraftingPage() {
 
 /**
  * @description Generates the table of pickpocket targets for the Thieving Page
- * @return {String}
+ * @return {string}
  */
 function createThievingTable() {
   const tabSpec = new TableSpecMaker();
@@ -967,7 +970,7 @@ function createThievingTable() {
 
 /**
  * @description Generates the table of logs for the Woodcutting Page
- * @return {String}
+ * @return {string}
  */
 function createWoodCuttingTable() {
   const treeData = getObjectArraySubset(trees, () => {
@@ -1011,7 +1014,7 @@ function createItemsTable() {
 /**
  * @description Creates a table of fletching items
  * @param {string} type The type of fletching item
- * @return {String}
+ * @return {string}
  */
 function createFletchingTable(type) {
   const fletchingItems = getObjectArraySubset(items, (item) => selectFletchingItem(item, type));
@@ -1041,7 +1044,7 @@ function createFletchingTable(type) {
 
 /**
  * Creates the table of prayers for the Prayer page
- * @return {String}
+ * @return {string}
  */
 function createPrayerTable() {
   const prayerSubset = getObjectArraySubset(PRAYER, selectAll);
@@ -1064,7 +1067,7 @@ function createPrayerTable() {
 
 /**
  * Creates the table of bones for the Prayer page
- * @return {String}
+ * @return {string}
  */
 function createBonesTable() {
   const bones = getObjectArraySubset(items, (item) => selectIfHasKey(item, 'prayerPoints'));
@@ -1081,7 +1084,7 @@ function createBonesTable() {
 
 /**
  * Creates the table of experience for the xp page
- * @return {String}
+ * @return {string}
  * @deprecated
  */
 function createXPTable() {
@@ -1107,7 +1110,7 @@ function createXPTable() {
 
 /**
  * Creates the table of mastery xp for the mastery page
- * @return {String}
+ * @return {string}
  */
 function createMasteryXPTable() {
   const xpTable = [{level: 1, xp: 0, xpToNext: 0}];
@@ -1199,7 +1202,7 @@ function createPotionsTable(type) {
 /**
  * @description Creates a table of loot sources for an item
  * @param {number} itemID Index of items array
- * @return {String}
+ * @return {string}
  */
 function createItemLootSourcesTable(itemID) {
   const lootSourceData = [];
@@ -1256,7 +1259,7 @@ function createItemLootSourcesTable(itemID) {
 
 /**
  * Creates the table of player special attacks for the Special Attacks page
- * @return {String}
+ * @return {string}
  */
 function createPlayerSpecialAttacksTable() {
   const tabSpec = new TableSpecMaker();

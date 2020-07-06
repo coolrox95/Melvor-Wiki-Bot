@@ -1,7 +1,7 @@
 // User Interface Generating Functions
 /**
  * Creates a button
- * @param {String} text Text on button
+ * @param {string} text Text on button
  * @param {Function} funOnClick callback function when button is clicked
  * @return {HTMLButtonElement}
  */
@@ -17,11 +17,11 @@ function createButton(text, funOnClick) {
 
 /**
  * Creates a dropdown element
- * @param {Array<String>} optionText Text of options
+ * @param {string[]} optionText Text of options
  * @param {Array} optionValues Values of options
- * @param {String} dropDownID DOM ID string
+ * @param {string} dropDownID DOM ID string
  * @param {Function} onChangeCallback Callback when option changes
- * @param {*} width Style width
+ * @param {string} width Style width
  * @return {HTMLSelectElement}
  */
 function createDropdown(optionText, optionValues, dropDownID, onChangeCallback, width) {
@@ -349,9 +349,9 @@ let godUpgradeData;
 let godDungeonID;
 
 // My Variables
-/** @type {Array<Number>} */
+/** @type {number[]} */
 let shopMaterials;
-/** @type {Array<Number} */
+/** @type {number[]} */
 const openableItems = [];
 const godUpgradeDescriptions = [
   '20% Decreased Base Crafting & Fletching Interval',
@@ -390,8 +390,8 @@ const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.15\.3\]\]/;
 
 /**
  * Removes HTML from a string (currently only removes &apos; and replaces with ')
- * @param {String} stringToClean The dirty string
- * @return {String}
+ * @param {string} stringToClean The dirty string
+ * @return {string}
  */
 function sanatizeString(stringToClean) {
   return stringToClean.replace(/&apos;/g, '\'');
@@ -779,6 +779,20 @@ function processWikiData() {
     for (let i = 0; i < godUpgradeData.length; i++) {
       godUpgradeData[i].name = sanatizeString(godUpgradeData[i].name);
     }
+    // Sort Loot Tables
+    MONSTERS.forEach((monster)=>{
+      if (monster.lootTable !== undefined) {
+        monster.lootTable = monster.lootTable.sort(sortByDropWeight);
+      }
+    });
+    thievingNPC.forEach((npc)=>{
+      npc.lootTable = npc.lootTable.sort(sortByDropWeight);
+    });
+    items.forEach((item)=>{
+      if (item.canOpen) {
+        item.dropTable = item.dropTable.sort(sortByDropWeight);
+      }
+    });
     // Parse Array and initialize arrays
     for (let i = 0; i < items.length; i++) {
       items[i].id = i;

@@ -1,7 +1,7 @@
 /**
  * @description Fills the monster template for a particular monster
  * @param {number} monsterID Index of MONSTERS array
- * @return {String}
+ * @return {string}
  */
 function fillMonsterTemplate(monsterID) {
   let template = '{{Monster';
@@ -29,7 +29,7 @@ function fillMonsterTemplate(monsterID) {
 /**
  * @description Fills the armour stats template for an item
  * @param {number} itemID Index of items array
- * @return {String}
+ * @return {string}
  */
 function fillArmourStatsTemplate(itemID) {
   const statKeys = ['stabAttackBonus', 'slashAttackBonus', 'blockAttackBonus', 'rangedAttackBonus', 'magicAttackBonus', 'strengthBonus', 'rangedStrengthBonus', 'magicDamageBonus', 'defenceBonus', 'rangedDefenceBonus', 'magicDefenceBonus', 'damageReduction', 'defenceLevelRequired', 'rangedLevelRequired', 'magicLevelRequired'];
@@ -62,7 +62,7 @@ function fillArmourStatsTemplate(itemID) {
 /**
  * @description Automatically fills in the weapon stats template for an item page
  * @param {number} itemID Index of items array
- * @return {String}
+ * @return {string}
  */
 function fillWeaponStatsTemplate(itemID) {
   const statKeys = ['attackSpeed', 'attackType', 'isTwoHanded', 'stabAttackBonus', 'slashAttackBonus', 'blockAttackBonus', 'rangedAttackBonus', 'magicAttackBonus', 'strengthBonus', 'rangedStrengthBonus', 'magicDamageBonus', 'defenceBonus', 'rangedDefenceBonus', 'magicDefenceBonus', 'damageReduction', 'attackLevelRequired', 'rangedLevelRequired', 'magicLevelRequired', 'specialAttack'];
@@ -111,7 +111,7 @@ function fillWeaponStatsTemplate(itemID) {
 /**
  * @description Fills in the combat area template
  * @param {number} areaID Index of combatAreas
- * @return {String}
+ * @return {string}
  */
 function fillCombatAreaTemplate(areaID) {
   let template = '{{CombatArea';
@@ -125,7 +125,7 @@ function fillCombatAreaTemplate(areaID) {
 /**
  * @description Fills in the slayer Area template
  * @param {number} areaID Index of combatAreas
- * @return {String}
+ * @return {string}
  */
 function fillSlayerAreaTemplate(areaID) {
   let template = '{{SlayerArea';
@@ -141,7 +141,7 @@ function fillSlayerAreaTemplate(areaID) {
 /**
  * @description Fills in the combat area template
  * @param {number} dungeonID Index of combatAreas
- * @return {String}
+ * @return {string}
  */
 function fillDungeonTemplate(dungeonID) {
   let template = '{{Dungeon';
@@ -156,7 +156,7 @@ function fillDungeonTemplate(dungeonID) {
 /**
  * @description Fills in the Spell template
  * @param {number} spellID Index of SPELLS
- * @return {String}
+ * @return {string}
  */
 function fillSpellTemplate(spellID) {
   let template = '{{Spell';
@@ -172,7 +172,7 @@ function fillSpellTemplate(spellID) {
 /**
  * @description Fills in the Prayer template
  * @param {number} prayerID Index of PRAYER
- * @return {String}
+ * @return {string}
  */
 function fillPrayerTemplate(prayerID) {
   let template = '{{Prayer';
@@ -187,8 +187,8 @@ function fillPrayerTemplate(prayerID) {
 
 /**
  * Fills in the upgrade template for an axe
- * @param {Number} axeID Index of axeUpgrades
- * @return {String}
+ * @param {number} axeID Index of axeUpgrades
+ * @return {string}
  */
 function fillAxeUpgradeTemplate(axeID) {
   let template = '{{Upgrade';
@@ -206,8 +206,8 @@ function fillAxeUpgradeTemplate(axeID) {
 
 /**
  * Fills in the upgrade template for a fishing rod
- * @param {Number} rodID INdex of rodUpgrades
- * @return {String}
+ * @param {number} rodID INdex of rodUpgrades
+ * @return {string}
  */
 function fillRodUpgradeTemplate(rodID) {
   let template = '{{Upgrade';
@@ -225,8 +225,8 @@ function fillRodUpgradeTemplate(rodID) {
 
 /**
  * Fills in the upgrade template for a pickaxe
- * @param {Number} pickID Index of pickUpgrades
- * @return {String}
+ * @param {number} pickID Index of pickUpgrades
+ * @return {string}
  */
 function fillPickUpgradeTemplate(pickID) {
   let template = '{{Upgrade';
@@ -244,8 +244,8 @@ function fillPickUpgradeTemplate(pickID) {
 
 /**
  * Fills in the Upgrade template for an auto eat upgrade
- * @param {Number} eatID index of autoEatData
- * @return {String}
+ * @param {number} eatID index of autoEatData
+ * @return {string}
  */
 function fillEatUpgradeTemplate(eatID) {
   let template = '{{Upgrade';
@@ -262,8 +262,8 @@ function fillEatUpgradeTemplate(eatID) {
 }
 /**
  * Fills in the Upgrade template for a cooking fire upgrade
- * @param {Number} fireID Index of cookingFireData
- * @return {String}
+ * @param {number} fireID Index of cookingFireData
+ * @return {string}
  */
 function fillFireUpgradeTemplate(fireID) {
   let template = '{{Upgrade';
@@ -281,8 +281,8 @@ function fillFireUpgradeTemplate(fireID) {
 
 /**
  * Fills in the Upgrade template for a god upgrade
- * @param {Number} godID Index of godUpgradeData
- * @return {String}
+ * @param {number} godID Index of godUpgradeData
+ * @return {string}
  */
 function fillGodUpgradeTemplate(godID) {
   let template = '{{Upgrade';
@@ -296,8 +296,8 @@ function fillGodUpgradeTemplate(godID) {
 
 /**
  * Fills in the ItemProduction template for a log
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillItemProductionTemplateForWoodcutting(itemID) {
   let template = '{{ItemProduction';
@@ -310,8 +310,8 @@ function fillItemProductionTemplateForWoodcutting(itemID) {
 }
 /**
  * Fills in the ItemProduction template for a fish
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillItemProductionTemplateForFishing(itemID) {
   let template = '{{ItemProduction';
@@ -328,8 +328,8 @@ function fillItemProductionTemplateForFishing(itemID) {
 }
 /**
  * Fills in the itemProduction template for an ore
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillItemProductionTemplateForMining(itemID) {
   let template = '{{ItemProduction';
@@ -345,8 +345,8 @@ function fillItemProductionTemplateForMining(itemID) {
 }
 /**
  * Fills in the Item Creation template for a cooked item
- * @param {Number} itemID Index of item
- * @return {String}
+ * @param {number} itemID Index of item
+ * @return {string}
  */
 function fillItemCreationTemplateForCooking(itemID) {
   let template = '{{ItemCreation';
@@ -360,8 +360,8 @@ function fillItemCreationTemplateForCooking(itemID) {
 }
 /**
  * Fills in the Item Creation template for a smithing item
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillItemCreationTemplateForSmithing(itemID) {
   let template = '{{ItemCreation';
@@ -375,8 +375,8 @@ function fillItemCreationTemplateForSmithing(itemID) {
 }
 /**
  * Fills in the Item Creation template for a farming harvest item
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillItemCreationTemplateForFarming(itemID) {
   let template = '{{ItemCreation';
@@ -390,8 +390,8 @@ function fillItemCreationTemplateForFarming(itemID) {
 }
 /**
  * Fills in the ItemCreation template for a fletching item
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillItemCreationTemplateForFletching(itemID) {
   let template = '{{ItemCreation';
@@ -410,8 +410,8 @@ function fillItemCreationTemplateForFletching(itemID) {
 }
 /**
  * Fills in the ItemCreation template for a crafting item
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillItemCreationTemplateForCrafting(itemID) {
   let template = '{{ItemCreation';
@@ -425,8 +425,8 @@ function fillItemCreationTemplateForCrafting(itemID) {
 }
 /**
  * Fills in the ItemCreation template for a runecrafting item
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillItemCreationTemplateForRunecrafting(itemID) {
   let template = '{{ItemCreation';
@@ -440,8 +440,8 @@ function fillItemCreationTemplateForRunecrafting(itemID) {
 }
 /**
  * Fills in the ItemCreation template for a potion
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillItemCreationTemplateForHerblore(itemID) {
   let template = '{{ItemCreation';
@@ -466,8 +466,8 @@ function fillItemCreationTemplateForHerblore(itemID) {
 }
 /**
  * Fills in the FishingSpecial template for a special item
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillFishingSpecialTemplate(itemID) {
   let template = '{{FishingSpecial';
@@ -480,8 +480,8 @@ function fillFishingSpecialTemplate(itemID) {
 }
 /**
  * Fills in the FishingJunk template for a junk item
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillFishingJunkTemplate(itemID) {
   let template = '{{FishingJunk';
@@ -494,8 +494,8 @@ function fillFishingJunkTemplate(itemID) {
 }
 /**
  * Fills in the ItemUpgrade source template for a trimmed item
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillItemUpgradeTemplate(itemID) {
   let template = '{{ItemUpgrade';
@@ -507,8 +507,8 @@ function fillItemUpgradeTemplate(itemID) {
 
 /**
  * Fills in the item template for use on invidual item pages
- * @param {Number} itemID Index of items
- * @return {String}
+ * @param {number} itemID Index of items
+ * @return {string}
  */
 function fillItemTemplate(itemID) {
   const item = items[itemID];
@@ -556,8 +556,8 @@ function fillItemTemplate(itemID) {
 
 /**
  * Fills in the thieving template for individual thieving target pages
- * @param {Number} targetInd Index of thievingNPC
- * @return {String}
+ * @param {number} targetInd Index of thievingNPC
+ * @return {string}
  */
 function fillThievingTemplate(targetInd) {
   let template = '{{ThievingTarget';
@@ -593,7 +593,7 @@ function fillThievingTemplate(targetInd) {
 /**
  * Fills the ItemShopPurchase Template for an item
  * @param {*} shopSource Element of items shopSources
- * @return {String}
+ * @return {string}
  */
 function fillItemShopPurchaseTemplate(shopSource) {
   let template = '{{ItemShopSource';

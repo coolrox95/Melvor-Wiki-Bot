@@ -109,7 +109,7 @@ async function buttonImageUploadBlob() {
 
 /**
  * Callback for testing the creation of an item page
- * @param {Number} itemID Index of items
+ * @param {number} itemID Index of items
  * @async
  */
 async function uploadTestItemPage(itemID) {
@@ -179,7 +179,7 @@ function uploadItemImages() {
 
 /**
  * Callback for uploading all item images from startIndex to the end of items
- * @param {Number} startIndex Starting index of items
+ * @param {number} startIndex Starting index of items
  */
 function uploadNewItemImages(startIndex) {
   if (wikiDataLoaded) {
@@ -198,7 +198,7 @@ function uploadNewItemImages(startIndex) {
 
 /**
  * Callback for creating item pages. Will not overwrite existing pages.
- * @param {Number} startIndex Starting index of items
+ * @param {number} startIndex Starting index of items
  */
 function createItemPages(startIndex) {
   if (wikiDataLoaded) {
@@ -211,7 +211,7 @@ function createItemPages(startIndex) {
 
 /**
  * Callback for creating monster pages. Will not overwrite existing pages.
- * @param {Number} startIndex Starting index of MONSTERS
+ * @param {number} startIndex Starting index of MONSTERS
  */
 function createMonsterPages(startIndex) {
   if (wikiDataLoaded) {
@@ -224,7 +224,7 @@ function createMonsterPages(startIndex) {
 
 /**
  * Callback for creating combat area pages. Will not overwrite existing pages.
- * @param {Number} startIndex Starting index of combatAreas
+ * @param {number} startIndex Starting index of combatAreas
  */
 function createCombatAreaPages(startIndex) {
   if (wikiDataLoaded) {
@@ -237,7 +237,7 @@ function createCombatAreaPages(startIndex) {
 
 /**
  * Callback for creating slayer area pages. Will not overwrite existing pages.
- * @param {Number} startIndex Starting index of slayerAreas
+ * @param {number} startIndex Starting index of slayerAreas
  */
 function createSlayerAreaPages(startIndex) {
   if (wikiDataLoaded) {
@@ -250,7 +250,7 @@ function createSlayerAreaPages(startIndex) {
 
 /**
  * Callback for creating dungeon pages. Will not overwrite existing pages.
- * @param {Number} startIndex  Starting index of DUNGEONS
+ * @param {number} startIndex  Starting index of DUNGEONS
  */
 function createDungeonPages(startIndex) {
   if (wikiDataLoaded) {
@@ -263,7 +263,7 @@ function createDungeonPages(startIndex) {
 
 /**
  * Callback for creating spell pages. Will not overwrite existing pages.
- * @param {Number} startIndex Starting Index of SPELLS
+ * @param {number} startIndex Starting Index of SPELLS
  */
 function createSpellPages(startIndex) {
   if (wikiDataLoaded) {
@@ -276,7 +276,7 @@ function createSpellPages(startIndex) {
 
 /**
  * Callback for creating prayer pages. Will not overwrite existing pages.
- * @param {Number} startIndex Starting index of PRAYER
+ * @param {number} startIndex Starting index of PRAYER
  */
 function createPrayerPages(startIndex) {
   if (wikiDataLoaded) {
@@ -289,7 +289,7 @@ function createPrayerPages(startIndex) {
 
 /**
  * Callback for creating thieving target pages. Will not overwrite existing pages.
- * @param {Number} startIndex Starting index of thievingNPC
+ * @param {number} startIndex Starting index of thievingNPC
  */
 function createThievingPages(startIndex) {
   if (wikiDataLoaded) {
@@ -677,11 +677,11 @@ async function updateDungeonPageTemplates() {
  * Updates pages by replacing the template found by templateRegex with the output of templateGenerator.
  * Will automatically update page version template if there are no changes
  * @param {Array} pageArray Array to loop through
- * @param {String} pageNameKey Key of wikiPageNames
+ * @param {string} pageNameKey Key of wikiPageNames
  * @param {RegExp} templateRegex Regex of template to replace
  * @param {Function} templateGenerator Function to fill template
  * @param {Function} pageGenerator Function to generate default page
- * @param {Number} startIndex Starting index of pageArray
+ * @param {number} startIndex Starting index of pageArray
  */
 async function updatePageTemplates(pageArray, pageNameKey, templateRegex, templateGenerator, pageGenerator, startIndex = 0) {
   if (wikiDataLoaded) {
@@ -848,7 +848,7 @@ async function updateArmourPageStats() {
 /**
  * Changes the version of pages to the most recent if the page content pages the pageGenerator output
  * @param {Array} pageArray Array to loop through
- * @param {String} pageNameKey Key of wikiPageNames
+ * @param {string} pageNameKey Key of wikiPageNames
  * @param {Function} pageGenerator Function to generate default page
  */
 async function fixPageVersions(pageArray, pageNameKey, pageGenerator) {
@@ -887,7 +887,7 @@ async function fixPageVersions(pageArray, pageNameKey, pageGenerator) {
 }
 /**
  * Temporary function to undo a bad revision
- * @param {String} pageTitle The title of the page to rollback
+ * @param {string} pageTitle The title of the page to rollback
  * @deprecated
  * @async
  */
@@ -951,7 +951,7 @@ async function updateSpecificSourceTemplates() {
 
 /**
  * Removes a section from an item page, and all the content in it
- * @param {String} sectionName The name of the section to remove
+ * @param {string} sectionName The name of the section to remove
  * @async
  * @deprecated
  */
@@ -979,7 +979,7 @@ async function removeItemPageSections(sectionName) {
 
 /**
  * Opens the manual review screen to help update pages to new versions
- * @param {String} version Version Category to go through
+ * @param {string} version Version Category to go through
  * @async
  */
 async function manualVersionReview(version) {
