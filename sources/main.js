@@ -779,6 +779,14 @@ function processWikiData() {
     for (let i = 0; i < godUpgradeData.length; i++) {
       godUpgradeData[i].name = sanatizeString(godUpgradeData[i].name);
     }
+    // Fix chest loot tables with quantity
+    items.forEach((item)=>{
+      if (item.canOpen) {
+        item.dropTable.forEach((drop, i)=>{
+          drop.push(item.dropQty[i]);
+        });
+      }
+    });
     // Sort Loot Tables
     MONSTERS.forEach((monster)=>{
       if (monster.lootTable !== undefined) {
@@ -1133,11 +1141,12 @@ function processWikiData() {
     }
     // Chest Item Loot Sources
     for (let i = 0; i < openableItems.length; i++) {
-      for (let j = 0; j < items[openableItems[i]].dropTable.length; j++) {
-        items[items[openableItems[i]].dropTable[j][0]].chestSources.push({
+      const chest = items[openableItems[i]];
+      for (let j = 0; j < chest.dropTable.length; j++) {
+        items[chest.dropTable[j][0]].chestSources.push({
           id: openableItems[i],
-          chance: 100 * items[openableItems[i]].dropTable[j][1] / items[openableItems[i]].totalWeight,
-          maxQty: (items[openableItems[i]].dropQty !== undefined) ? (items[openableItems[i]].dropQty[j]) : 1,
+          chance: 100 * chest.dropTable[j][1] / chest.totalWeight,
+          maxQty: chest.dropTable[j][2],
         });
       }
     }

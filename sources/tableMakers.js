@@ -628,15 +628,16 @@ function createMonsterLootTable(monsterID) {
  * @return {string}
  */
 function createChestDropTable(chestID) {
-  if (items[chestID].dropTable) {
+  const chest = items[chestID];
+  if (chest.dropTable) {
     const dropObject = [];
     let totWeight = 0;
-    for (let i = 0; i < items[chestID].dropTable.length; i++) {
-      totWeight += items[chestID].dropTable[i][1];
+    for (let i = 0; i < chest.dropTable.length; i++) {
+      totWeight += chest.dropTable[i][1];
       dropObject.push({
-        itemID: items[chestID].dropTable[i][0],
-        itemWeight: items[chestID].dropTable[i][1],
-        itemQty: (items[chestID].dropQty) ? items[chestID].dropQty[i] : 1,
+        itemID: chest.dropTable[i][0],
+        itemWeight: chest.dropTable[i][1],
+        itemQty: chest.dropTable[i][2],
       });
     }
 
