@@ -32,7 +32,7 @@ function fillMonsterTemplate(monsterID) {
  * @return {string}
  */
 function fillArmourStatsTemplate(itemID) {
-  const statKeys = ['stabAttackBonus', 'slashAttackBonus', 'blockAttackBonus', 'rangedAttackBonus', 'magicAttackBonus', 'strengthBonus', 'rangedStrengthBonus', 'magicDamageBonus', 'defenceBonus', 'rangedDefenceBonus', 'magicDefenceBonus', 'damageReduction', 'defenceLevelRequired', 'rangedLevelRequired', 'magicLevelRequired'];
+  const statKeys = ['stabAttackBonus', 'slashAttackBonus', 'blockAttackBonus', 'rangedAttackBonus', 'magicAttackBonus', 'strengthBonus', 'rangedStrengthBonus', 'magicDamageBonus', 'defenceBonus', 'rangedDefenceBonus', 'magicDefenceBonus', 'damageReduction', 'defenceLevelRequired', 'rangedLevelRequired', 'magicLevelRequired', 'slayerBonusXP'];
   let template = '{{ArmourStats';
   for (let i = 0; i < statKeys.length; i++) {
     let statValue = 0;
@@ -65,7 +65,7 @@ function fillArmourStatsTemplate(itemID) {
  * @return {string}
  */
 function fillWeaponStatsTemplate(itemID) {
-  const statKeys = ['attackSpeed', 'attackType', 'isTwoHanded', 'stabAttackBonus', 'slashAttackBonus', 'blockAttackBonus', 'rangedAttackBonus', 'magicAttackBonus', 'strengthBonus', 'rangedStrengthBonus', 'magicDamageBonus', 'defenceBonus', 'rangedDefenceBonus', 'magicDefenceBonus', 'damageReduction', 'attackLevelRequired', 'rangedLevelRequired', 'magicLevelRequired', 'specialAttack'];
+  const statKeys = ['attackSpeed', 'attackType', 'isTwoHanded', 'stabAttackBonus', 'slashAttackBonus', 'blockAttackBonus', 'rangedAttackBonus', 'magicAttackBonus', 'strengthBonus', 'rangedStrengthBonus', 'magicDamageBonus', 'defenceBonus', 'rangedDefenceBonus', 'magicDefenceBonus', 'damageReduction', 'attackLevelRequired', 'rangedLevelRequired', 'magicLevelRequired', 'slayerBonusXP'];
   let template = '{{WeaponStats';
   for (let i = 0; i < statKeys.length; i++) {
     let statValue = 0;
@@ -91,12 +91,6 @@ function fillWeaponStatsTemplate(itemID) {
       }
     } else if (statKeys[i] === 'isTwoHanded') {
       statValue = (items[itemID].isTwoHanded ? 'Yes' : 'No');
-    } else if (statKeys[i] === 'specialAttack') {
-      if (items[itemID].hasSpecialAttack) {
-        statValue = playerSpecialAttacks[items[itemID].specialAttackID].name;
-      } else {
-        statValue = 'None';
-      }
     } else {
       if (items[itemID][statKeys[i]]) {
         statValue = items[itemID][statKeys[i]];

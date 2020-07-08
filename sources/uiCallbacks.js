@@ -783,7 +783,7 @@ async function updateWeaponPageStats() {
     const pagesToEdit = [];
     let numChanged = 0;
     for (let i = 0; i < items.length; i++) {
-      if (items[i].equipmentSlot === CONSTANTS.equipmentSlot.Weapon) {
+      if (items[i].equipmentSlot === CONSTANTS.equipmentSlot.Weapon || (items[i].equipmentSlot === CONSTANTS.equipmentSlot.Quiver && (items[i].ammoType === 2 || items[i].ammoType === 3))) {
         const pageName = wikiPageNames.items[i];
         const pullResult = await getFullWikiPage(pageName, 0);
         if (pullResult.success) {
@@ -817,7 +817,7 @@ async function updateArmourPageStats() {
     const pagesToEdit = [];
     let numChanged = 0;
     for (let i = 0; i < items.length; i++) {
-      if (items[i].equipmentSlot !== CONSTANTS.equipmentSlot.Weapon && items[i].equipmentSlot !== undefined) {
+      if (items[i].equipmentSlot !== CONSTANTS.equipmentSlot.Weapon && items[i].equipmentSlot !== undefined && !(items[i].equipmentSlot === CONSTANTS.equipmentSlot.Quiver && (items[i].ammoType === 2 || items[i].ammoType === 3))) {
         const pageName = wikiPageNames.items[i];
         const pullResult = await getFullWikiPage(pageName, 0);
         if (pullResult.success) {
