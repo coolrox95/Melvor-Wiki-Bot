@@ -158,7 +158,104 @@ function fillSpellTemplate(spellID) {
   template += `|id=${spellID}`;
   template += `|level=${SPELLS[spellID].magicLevelRequired}`;
   template += `|maxHit=${SPELLS[spellID].maxHit * numberMultiplier}`;
-  template += `|runeList=${formatArrayAsBulletList(getSpellRuneArray(spellID))}`;
+  template += `|runeList=${formatSpellAsRuneRequirements(SPELLS[spellID], formatArrayAsBulletList)}`;
+  template += '}}';
+  return template;
+}
+
+/**
+ * @description Fills in the Curse template
+ * @param {number} curseID Index of CURSES
+ * @return {string}
+ */
+function fillCurseTemplate(curseID) {
+  const curse = CURSES[curseID];
+  let template = '{{Curse';
+  template += `|name=${curse.name}`;
+  template += `|id=${curseID}`;
+  template += `|level=${curse.magicLevelRequired}`;
+  template += `|chance=${curse.chance}`;
+  template += `|effect=${curse.description}`;
+  template += `|runeList=${formatSpellAsRuneRequirements(curse, formatArrayAsBulletList)}`;
+  template += '}}';
+  return template;
+}
+
+/**
+ * @description Fills in the Aurora template
+ * @param {number} auroraID Index of AURORAS
+ * @return {string}
+ */
+function fillAuroraTemplate(auroraID) {
+  const aurora = AURORAS[auroraID];
+  let template = '{{Aurora';
+  template += `|name=${aurora.name}`;
+  template += `|id=${auroraID}`;
+  template += `|level=${aurora.magicLevelRequired}`;
+  let itemReq = 'None';
+  if (aurora.requiredItem !== -1) {
+    itemReq = `${formatItemIDAsImageLink(aurora.requiredItem, 25, 'middle')} ${formatItemIDAsLink(aurora.requiredItem)}`;
+  }
+  template += `|itemRequired=${itemReq}`;
+  template += `|effect=${aurora.description}`;
+  template += `|runeList=${formatSpellAsRuneRequirements(aurora, formatArrayAsBulletList)}`;
+  template += '}}';
+  return template;
+}
+
+/**
+ * @description Fills in the AncientMagick template
+ * @param {number} spellID Index of ANCIENT
+ * @return {string}
+ */
+function fillAncientTemplate(spellID) {
+  const ancient = ANCIENT[spellID];
+  let template = '{{AncientMagick';
+  template += `|name=${ancient.name}`;
+  template += `|id=${spellID}`;
+  template += `|level=${ancient.magicLevelRequired}`;
+  template += `|unlockReq=${ancient.requiredDungeonCompletion[1]} ${formatDungeonIDAsImageLink(ancient.requiredDungeonCompletion[0], 25, 'middle')} ${formatDungeonIDAsLink(ancient.requiredDungeonCompletion[0])} clears`;
+  template += `|maxHit=${ancient.maxHit * numberMultiplier}`;
+  template += `|description=${ancient.description}`;
+  template += `|runeList=${formatSpellAsRuneRequirements(ancient, formatArrayAsBulletList)}`;
+  template += '}}';
+  return template;
+}
+
+/**
+ * @description Fills in the AltMagic template
+ * @param {number} spellID Index of ALTMAGIC
+ * @return {string}
+ */
+function fillAltMagicSpellTemplate(spellID) {
+  const spell = ALTMAGIC[spellID];
+  let template = '{{AltMagic';
+  template += `|name=${spell.name}`;
+  template += `|id=${spellID}`;
+  template += `|level=${spell.magicLevelRequired}`;
+  template += `|effect=${spell.description}`;
+  template += `|runeList=${formatSpellAsRuneRequirements(spell, formatArrayAsBulletList)}`;
+  template += '}}';
+  return template;
+}
+
+/**
+ * Fills the Pet template
+ * @param {number} petID Index of PETS
+ * @return {string}
+ */
+function fillPetTemplate(petID) {
+  const pet = PETS[petID];
+  let template = '{{Pet';
+  template += `|name=${pet.name}`;
+  template += `|ext=${getFileExtension(pet.media)}`;
+  template += `|id=${petID}`;
+  if (pet.skill === undefined && petID === 20) {
+    template += `|skill=${formatCombatImage(25, 'middle')} ${formatPageLink('Combat')}`;
+  } else {
+    template += `|skill=${formatSkillImageLink(skillName[pet.skill], 25, 'middle')} ${formatPageLink(skillName[pet.skill])}`;
+  }
+  template += `|effect=${pet.effect}`;
   template += '}}';
   return template;
 }
@@ -455,6 +552,65 @@ function fillItemCreationTemplateForHerblore(itemID) {
   template += `|quantity=${1}`;
   template += `|experience=${items[itemID].herbloreXP}`;
   template += `|creationTime=${(herbloreInterval / 1000).toFixed(1)}`;
+  template += '}}';
+  return template;
+}
+
+/**
+ * Fills in the ItemAltMagic template for a given spell and item
+ * @param {number} spellID Index of ALTMAGIC
+ * @param {number} itemID Index of items
+ * @return {string}
+ */
+function fillAltMagicTemplate(spellID, itemID) {
+  const spell = ALTMAGIC[spellID];
+  const item = items[itemID];
+  let template = '{{ItemAltMagic';
+  template += `|spellName=${spell.name}`;
+  template += `|requirements=${formatSkillRequirement('Magic', spell.magicLevelRequired)}`;
+  if (spell.selectItem === 0) {
+    template += `<br>${formatSkillRequirement('Smithing', item.smithingLevel)}`;
+  }
+  let spellMats;
+  switch (spell.selectItem) {
+    case -1:
+      // Creates either gems or convertTo value
+      if (spell.needCoal) {
+        spellMats = formatItemCreationCost([
+          {id: CONSTANTS.item.Coal_Ore,
+            qty: 1,
+          },
+        ]);
+      } else {
+        spellMats = 'Nothing';
+      }
+      break;
+    case 0:
+      if (spell.ignoreCoal) {
+        spellMats = formatItemCreationCost(item.smithReq.filter((req)=>{
+          return req.id !== CONSTANTS.item.Coal_Ore;
+        }));
+      } else {
+        spellMats = formatItemCreationCost(item.smithReq);
+      }
+      break;
+    case 1:
+      if (spell.isJunk) {
+        spellMats = `1 of any ${createPageLink('Fishing Junk', 'Fishing#Junk')}`;
+      } else if (!spell.isAlch) {
+        spellMats = '1 of any Item';
+      }
+      break;
+  }
+  // Determine spell materials
+  template += `|materials=${spellMats}`;
+  template += `|runes=${formatSpellAsRuneRequirements(spell, formatArrayAsNewlines)}`;
+  template += `|quantity=${spell.convertToQty}`;
+  if (item.gemChance !== undefined) {
+    template += `(${item.gemChance}%)`;
+  }
+  template += `|experience=${spell.magicXP}`;
+  template += `|creationTime=${magicInterval / 1000}`;
   template += '}}';
   return template;
 }

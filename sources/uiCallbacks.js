@@ -26,6 +26,19 @@ function itemChanged(event) {
 }
 
 /**
+ * Callback for item source page browser dropdown
+ * @param {Event} event change event for select element
+ */
+function itemSourceChanged(event) {
+  const itemID = parseInt(event.currentTarget.selectedOptions[0].value);
+  try {
+    wikiTableOutput.textContent = createItemSourceTemplatePage(itemID);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
  * Callback for login button in bottom menu
  */
 function loginButton() {
@@ -275,6 +288,92 @@ function createSpellPages(startIndex) {
 }
 
 /**
+ * Callback for creating curse pages. Will not overwrite existing pages.
+ */
+function createCursePages() {
+  if (wikiDataLoaded) {
+    const pageData = CURSES.map((_curse, curseID)=>{
+      return {name: wikiPageNames.curses[curseID],
+        content: createCursePageContent(curseID),
+      };
+    });
+    // Create item pages
+    bulkCreatePages(pageData, true);
+  } else {
+    console.error('Wiki data is not loaded.');
+  }
+}
+
+/**
+ * Callback for creating aurora pages. Will not overwrite existing pages.
+ */
+function createAuroraPages() {
+  if (wikiDataLoaded) {
+    const pageData = AURORAS.map((_aurora, auroraID)=>{
+      return {name: wikiPageNames.auroras[auroraID],
+        content: createAuroraPageContent(auroraID),
+      };
+    });
+    // Create item pages
+    bulkCreatePages(pageData, true);
+  } else {
+    console.error('Wiki data is not loaded.');
+  }
+}
+
+/**
+ * Callback for creating ancient magick pages. Will not overwrite existing pages.
+ */
+function createAncientMagickPages() {
+  if (wikiDataLoaded) {
+    const pageData = ANCIENT.map((_spell, spellID)=>{
+      return {name: wikiPageNames.ancient[spellID],
+        content: createAncientMagickPageContent(spellID),
+      };
+    });
+    // Create item pages
+    bulkCreatePages(pageData, true);
+  } else {
+    console.error('Wiki data is not loaded.');
+  }
+}
+
+/**
+ * Callback for creating alt magic pages. Will not overwrite existing pages.
+ */
+function createAltMagicPages() {
+  if (wikiDataLoaded) {
+    const pageData = ALTMAGIC.map((_spell, spellID)=>{
+      return {name: wikiPageNames.altmagic[spellID],
+        content: createAltMagicPageContent(spellID),
+      };
+    });
+    // Create item pages
+    bulkCreatePages(pageData, true);
+  } else {
+    console.error('Wiki data is not loaded.');
+  }
+}
+
+/**
+ * Callback for creating pet pages. Will not overwrite existing pages.
+ */
+function createPetPages() {
+  if (wikiDataLoaded) {
+    const pageData = PETS.map((_pet, petID)=>{
+      return {name: wikiPageNames.pets[petID],
+        content: createPetPageContent(petID),
+      };
+    });
+    // Create item pages
+    console.log(pageData);
+    bulkCreatePages(pageData);
+  } else {
+    console.error('Wiki data is not loaded.');
+  }
+}
+
+/**
  * Callback for creating prayer pages. Will not overwrite existing pages.
  * @param {number} startIndex Starting index of PRAYER
  */
@@ -402,11 +501,44 @@ function uploadSpellImages() {
   if (wikiDataLoaded) {
     const spellImageSources = [];
     const spellImageFilenames = [];
-    for (let i = 0; i < SPELLS.length; i++) {
-      spellImageSources.push(GAMEURL + SPELLS[i].media);
-      spellImageFilenames.push(`${SPELLS[i].name} (spell).svg`);
-    }
+    SPELLS.forEach((spell)=>{
+      spellImageSources.push(GAMEURL + spell.media);
+      spellImageFilenames.push(`${spell.name} (spell).svg`);
+    });
+    CURSES.forEach((spell)=>{
+      spellImageSources.push(GAMEURL + spell.media);
+      spellImageFilenames.push(`${spell.name} (curse).svg`);
+    });
+    AURORAS.forEach((spell)=>{
+      spellImageSources.push(GAMEURL + spell.media);
+      spellImageFilenames.push(`${spell.name} (aurora).svg`);
+    });
+    ANCIENT.forEach((spell)=>{
+      spellImageSources.push(GAMEURL + spell.media);
+      spellImageFilenames.push(`${spell.name} (spell).svg`);
+    });
+    ALTMAGIC.forEach((spell)=>{
+      spellImageSources.push(GAMEURL + spell.media);
+      spellImageFilenames.push(`${spell.name} (spell).svg`);
+    });
     bulkUploadImages(spellImageFilenames, spellImageSources, '[[Category:Spells]]');
+  } else {
+    console.error('Wiki data is not loaded.');
+  }
+}
+
+/**
+ * Callback for uploading all pet images
+ */
+function uploadPetImages() {
+  if (wikiDataLoaded) {
+    const petImageSources = [];
+    const petImageFilenames = [];
+    PETS.forEach((pet)=>{
+      petImageSources.push(GAMEURL + pet.media);
+      petImageFilenames.push(`${pet.name} (pet)${getFileExtension(pet.media)}`);
+    });
+    bulkUploadImages(petImageFilenames, petImageSources, '[[Category:Pets]]');
   } else {
     console.error('Wiki data is not loaded.');
   }
@@ -562,6 +694,7 @@ async function updateItemPages(filterKey = '') {
               pagesToEdit.push({name: pageName, content: versionModifiedNew});
             } else {
               console.log(`Page: ${pageName}: Data Changed, but does not match generic. Manual Review Required.`);
+              console.log(newItemPage);
               pagesToEdit.push({name: pageName, content: newItemPage});
             }
           } else {

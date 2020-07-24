@@ -100,8 +100,71 @@ function createSpellPageContent(spellID) {
   pageContent += VERSIONTEMPLATE;
   pageContent += fillSpellTemplate(spellID);
   pageContent += '[[Category:Spells]]';
+  pageContent += '[[Category:Standard Magic]]';
   pageContent += '{{Menu}}';
   return pageContent;
+}
+
+/**
+ * @description Creates the wikitext for a curse page
+ * @param {number} curseID Index of CURSES
+ * @return {string}
+ */
+function createCursePageContent(curseID) {
+  return `${VERSIONTEMPLATE}
+${fillCurseTemplate(curseID)}
+[[Category:Spells]]
+[[Category:Curses]]
+{{Menu}}`;
+}
+
+/**
+ * @description Creates the wikitext for an aurora page
+ * @param {number} auroraID Index of AURORAS
+ * @return {string}
+ */
+function createAuroraPageContent(auroraID) {
+  return `${VERSIONTEMPLATE}
+${fillAuroraTemplate(auroraID)}
+[[Category:Spells]]
+[[Category:Auroras]]
+{{Menu}}`;
+}
+
+/**
+ * @description Creates the wikitext for an ancient magick page
+ * @param {number} spellID Index of ANCIENT
+ * @return {string}
+ */
+function createAncientMagickPageContent(spellID) {
+  return `${VERSIONTEMPLATE}
+${fillAncientTemplate(spellID)}
+[[Category:Spells]]
+[[Category:Ancient Magick]]
+{{Menu}}`;
+}
+/**
+ * @description Creates the wikitext for an individual pet page
+ * @param {number} petID Index of PETS
+ * @return {string}
+ */
+function createPetPageContent(petID) {
+  return `${VERSIONTEMPLATE}
+  ${fillPetTemplate(petID)}
+[[Category:Pets]]
+{{Menu}}`;
+}
+/**
+ * @description Creates the wikitext for an alt magic spell page
+ * @param {number} spellID Index of ALTMAGIC
+ * @return {string}
+ */
+function createAltMagicPageContent(spellID) {
+  return `${VERSIONTEMPLATE}
+${fillAltMagicSpellTemplate(spellID)}
+[[Category:Spells]]
+[[Category:Alt Magic]]
+{{Menu}}`;
 }
 
 /**

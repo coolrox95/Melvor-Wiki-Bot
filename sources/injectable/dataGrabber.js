@@ -55,6 +55,12 @@ const melvorWikiLoader = setInterval(() => {
       godDungeonID,
       godUpgradeData,
       glovesActions,
+      CURSES,
+      AURORAS,
+      ANCIENT,
+      ALTMAGIC,
+      PETS,
+      magicInterval,
     };
     console.log('Melvor Wiki Data Loaded');
   }

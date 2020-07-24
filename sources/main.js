@@ -160,12 +160,17 @@ menuDivA.appendChild(createButton('Log out', logoutButton));
 // menuDivA.appendChild(createButton('Test Upload Chest Page', () => uploadTestItemPage(382)));
 // menuDivA.appendChild(createButton('Test Upload Food Page', () => uploadTestItemPage(26)));
 // menuDivA.appendChild(createButton('Request Melvor Wiki', buttonOnClick));
-menuDivA.appendChild(createButton('Create Item Pages', () => createItemPages(684)));
+menuDivA.appendChild(createButton('Create Item Pages', () => createItemPages(820)));
 menuDivA.appendChild(createButton('Create Monster Pages', () => createMonsterPages(85)));
 menuDivA.appendChild(createButton('Create Combat Area Pages', () => createCombatAreaPages(0)));
 menuDivA.appendChild(createButton('Create Slayer Area Pages', () => createSlayerAreaPages(0)));
 menuDivA.appendChild(createButton('Create Dungeon Pages', () => createDungeonPages(8)));
-menuDivA.appendChild(createButton('Create Spell Pages', () => createSpellPages(0)));
+menuDivA.appendChild(createButton('Create Standard Spell Pages', () => createSpellPages(0)));
+menuDivA.appendChild(createButton('Create Curse Pages', createCursePages));
+menuDivA.appendChild(createButton('Create Aurora Pages', createAuroraPages));
+menuDivA.appendChild(createButton('Create Ancient Magick Pages', createAncientMagickPages));
+menuDivA.appendChild(createButton('Create Alt Magic Pages', createAltMagicPages));
+menuDivA.appendChild(createButton('Create Pet Pages', createPetPages));
 menuDivA.appendChild(createButton('Create Prayer Pages', () => createPrayerPages(25)));
 menuDivA.appendChild(createButton('Create Thieving Pages', () => createThievingPages(0)));
 menuDivA.appendChild(createButton('Create Upgrade Pages', createUpgradePages));
@@ -181,6 +186,7 @@ menuDivB.appendChild(createButton('Upload Monster Images', uploadMonsterImages))
 menuDivB.appendChild(createButton('Upload Spell Images', uploadSpellImages));
 menuDivB.appendChild(createButton('Upload Upgrade Images', uploadUpgradeImages));
 menuDivB.appendChild(createButton('Upload Prayer Images', uploadPrayerImages));
+menuDivB.appendChild(createButton('Upload Pet Images', uploadPetImages));
 
 menuDivA.appendChild(createButton('Request Wiki Page', buttonRequestPage));
 
@@ -198,7 +204,7 @@ menuDivA.appendChild(createButton('Test Generators', testGenerators));
 const menuDivD = document.createElement('div');
 menuDivD.className = 'mweMenuDiv';
 wikiMenuContent.appendChild(menuDivD);
-menuDivD.appendChild(createButton('Update Item Pages', updateItemPages));
+menuDivD.appendChild(createButton('Update Item Pages', ()=>updateItemPages()));
 menuDivD.appendChild(createButton('Update Bone Pages', ()=>updateItemPages('prayerPoints')));
 menuDivD.appendChild(createButton('Update Monster Page Templates', updateMonsterPageTemplates));
 menuDivD.appendChild(createButton('Update Dungeon Page Templates', updateDungeonPageTemplates));
@@ -347,12 +353,29 @@ let disambiguationData;
 let slayerAreas;
 let godUpgradeData;
 let godDungeonID;
-
+let CURSES;
+let AURORAS;
+let ANCIENT;
+let ALTMAGIC;
+let PETS;
+let magicInterval;
 // My Variables
 /** @type {number[]} */
 let shopMaterials;
 /** @type {number[]} */
 const openableItems = [];
+/** @type {number[]} */
+let smithingBars;
+/** @type {number[]} */
+let gemItems;
+const runecraftingCategoryNames = [
+  'Standard Runes',
+  'Combination Runes',
+  'Staves & Wands',
+  'Air Magic Gear',
+  'Water Magic Gear',
+  'Earth Magic Gear',
+  'Fire Magic Gear'];
 const godUpgradeDescriptions = [
   '20% Decreased Base Crafting & Fletching Interval',
   '20% Decreased Base Herblore & Runecrafting Interval',
@@ -365,8 +388,8 @@ let wikiDataLoaded = false;
 let imageUploadInProgress = false;
 const WIKURL = 'https://wiki.melvoridle.com/api.php';
 const GAMEURL = 'https://melvoridle.com/';
-const VERSIONTEMPLATE = '{{V0.15.4}}';
-const VERSIONCATEGORY = '[[Category:v0.15.4]]';
+const VERSIONTEMPLATE = '{{V0.16}}';
+const VERSIONCATEGORY = '[[Category:v0.16]]';
 const BOTCATEGORY = '[[Category:Bot Templates]]';
 const TABLEREGEX = /{\| class="wikitable sortable"(.|\n)*?\|}/g;
 const ITEMTEMPLATEREGEX = /{{Item\|name=(.|\n)*?\|description=(.|\n)*?\|id=(.|\n)*?\|category=(.|\n)*?\|type=(.|\n)*?\|sellsfor=(.|\n)*?\|customData=(.|\n)*?\|itemSources=(.|\n)*?\|itemUses=(.|\n)*?}}/;
@@ -385,8 +408,8 @@ const THIEVINGTARGETREGEX = /{{ThievingTarget\|name=(.|\n)*?\|level=(.|\n)*?\|xp
 const UPGRADETEMPLATEREGEX = /{{Upgrade\|name=(.|\n)*?\|upgradeEffect=(.|\n)*?\|upgradeRequirements=(.|\n)*?\|upgradeCost(.|\n)*?}}/;
 const EXTENSIONREGEX = /\..*$/;
 const EXTENSIONREGEX2 = /\?\d*$/;
-const OLDVERSIONREGEX = /{{V0\.15\.3}}/;
-const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.15\.3\]\]/;
+const OLDVERSIONREGEX = /{{V0\.15\.4}}/;
+const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.15\.4\]\]/;
 
 /**
  * Removes HTML from a string (currently only removes &apos; and replaces with ')
@@ -409,6 +432,7 @@ function createItemUses() {
   // Equipment bonus to a skill (All skills since skill capes) Skillcapes, Gloves, Some Amulets
   // Loot Source (Item can be opened)
   // Upgrade Ingredient (Item is used to upgrade other items)
+  // Alt. Magic Ingredient
   const itemUses = {
     Combat: {
       items: [],
@@ -486,7 +510,14 @@ function createItemUses() {
       items: [],
       format: `${formatSkillImageLink('Herblore', 25, 'middle')} ${formatPageLink('Herblore')}`,
     },
-
+    CombatMagic: {
+      items: [],
+      format: `${formatSkillImageLink('Magic', 25, 'middle')} ${formatPageLink('Magic')}`,
+    },
+    AltMagic: {
+      items: [],
+      format: `${formatSkillImageLink('Magic', 25, 'middle')} ${createPageLink('Alt. Magic', 'Alternative Magic')}`,
+    },
   };
   // Add Hard-Coded items
   itemUses.Woodcutting.items.push(CONSTANTS.item.Woodcutting_Skillcape);
@@ -646,14 +677,39 @@ function createItemUses() {
       }
     }
   }
-  // Parse spell array for potential uses
-  for (let i = 0; i < SPELLS.length; i++) {
-    for (let j = 0; j < SPELLS[i].runesRequired.length; j++) {
-      if (!isItemOnArray(SPELLS[i].runesRequired[j].id, itemUses.Combat.items)) {
-        itemUses.Combat.items.push(SPELLS[i].runesRequired[j].id);
+  const addSpellReq = (spell, useKey)=>{
+    spell.runesRequired.forEach((runeReq) => {
+      if (!itemUses[useKey].items.includes(runeReq.id)) {
+        itemUses[useKey].items.push(runeReq.id);
       }
+    });
+    if (spell.runesRequiredAlt !== undefined) {
+      spell.runesRequiredAlt.forEach((runeReq) => {
+        if (!itemUses[useKey].items.includes(runeReq.id)) {
+          itemUses[useKey].items.push(runeReq.id);
+        }
+      });
     }
-  }
+  };
+  // Parse spell arrays for potential uses
+  SPELLS.forEach((spell)=>addSpellReq(spell, 'CombatMagic'));
+  ALTMAGIC.forEach((spell)=>addSpellReq(spell, 'AltMagic'));
+  AURORAS.forEach((spell)=>addSpellReq(spell, 'CombatMagic'));
+  CURSES.forEach((spell)=>addSpellReq(spell, 'CombatMagic'));
+  ANCIENT.forEach((spell)=>addSpellReq(spell, 'CombatMagic'));
+  // Add Alt magic ingredients
+  junkItems.forEach((junkID)=>{
+    if (!itemUses.AltMagic.items.includes(junkID)) {
+      itemUses.AltMagic.items.push(junkID);
+    }
+  });
+  smithingBars.forEach((barID)=>{
+    items[barID].smithReq.forEach((req)=>{
+      if (!itemUses.AltMagic.items.includes(req.id)) {
+        itemUses.AltMagic.items.push(req.id);
+      }
+    });
+  });
   return itemUses;
 }
 
@@ -716,9 +772,20 @@ function processWikiData() {
         godDungeonID,
         godUpgradeData,
         glovesActions,
+        CURSES,
+        AURORAS,
+        ANCIENT,
+        ALTMAGIC,
+        PETS,
+        magicInterval,
       } = wikiData);
     }
-    shopMaterials = [CONSTANTS.item.Compost, CONSTANTS.item.Weird_Gloop, CONSTANTS.item.Bowstring, CONSTANTS.item.Leather, CONSTANTS.item.Green_Dragonhide, CONSTANTS.item.Blue_Dragonhide, CONSTANTS.item.Red_Dragonhide];
+    shopMaterials = [CONSTANTS.item.Feathers, CONSTANTS.item.Compost, CONSTANTS.item.Weird_Gloop, CONSTANTS.item.Bowstring, CONSTANTS.item.Leather, CONSTANTS.item.Green_Dragonhide, CONSTANTS.item.Blue_Dragonhide, CONSTANTS.item.Red_Dragonhide, CONSTANTS.item.Red_Party_Hat];
+    gemItems = [CONSTANTS.item.Topaz, CONSTANTS.item.Sapphire, CONSTANTS.item.Ruby, CONSTANTS.item.Emerald, CONSTANTS.item.Diamond];
+    const gemChances = [50, 17.5, 17.5, 10, 5];
+    gemItems.forEach((gemID, i)=>{
+      items[gemID].gemChance = gemChances[i];
+    });
     // Data Processing
     // Sanatize all names and descriptions:
     for (let i = 0; i < items.length; i++) {
@@ -739,6 +806,34 @@ function processWikiData() {
     for (let i = 0; i < SPELLS.length; i++) {
       SPELLS[i].name = sanatizeString(SPELLS[i].name);
     }
+    // Additional processing is done on these descriptions to remove HTML, and make them suitable for the wiki
+    CURSES.forEach((spell)=>{
+      spell.name = sanatizeString(spell.name);
+      spell.description = sanatizeString(spell.description);
+      // Remove first part of description, proc chance will be it's own field/column
+      spell.description = spell.description.replace(/^.*?<br>/, '');
+    });
+    AURORAS.forEach((spell)=>{
+      spell.name = sanatizeString(spell.name);
+      spell.description = sanatizeString(spell.description);
+      spell.description = spell.description.replace(/^.*?<br>/, '');
+    });
+    ANCIENT.forEach((spell)=>{
+      spell.name = sanatizeString(spell.name);
+      spell.description = sanatizeString(spell.description);
+    });
+    ALTMAGIC.forEach((spell)=>{
+      spell.name = sanatizeString(spell.name);
+      spell.description = sanatizeString(spell.description);
+      spell.description = spell.description.replace(/<br>.*?$/, '');
+    });
+    PETS.forEach((pet)=>{
+      pet.name = sanatizeString(pet.name);
+      pet.description = sanatizeString(pet.description);
+      pet.effect = pet.description.replace(/^<small>.*?<\/small><br>/, '');
+      pet.effect = pet.effect.replace(/<br>.*?$/, '');
+    });
+    console.log(PETS);
     for (let i = 0; i < tiers.length; i++) {
       tiers[i] = sanatizeString(tiers[i]);
     }
@@ -779,6 +874,13 @@ function processWikiData() {
     for (let i = 0; i < godUpgradeData.length; i++) {
       godUpgradeData[i].name = sanatizeString(godUpgradeData[i].name);
     }
+    // Add smithing bars
+    smithingBars = smithingItems.reduce((accumulator, item) => {
+      if (item.category === 0) {
+        accumulator.push(item.itemID);
+      }
+      return accumulator;
+    }, []);
     // Fix chest loot tables with quantity
     items.forEach((item)=>{
       if (item.canOpen) {
@@ -813,6 +915,7 @@ function processWikiData() {
       items[i].creationSources = []; // Skills/references to generation template
       items[i].upgradesFrom = [];
       items[i].shopSources = [];
+      items[i].fromAltMagic = false;
     }
     playerSpecialAttacks.forEach((specialAttack) => {
       specialAttack.weaponsWithAttack = [];
@@ -910,6 +1013,55 @@ function processWikiData() {
         items[items[i].trimmedItemID].upgradesFrom.push(i);
       }
     }
+    // Parse alt magic and add it's recipes as a creation source
+    ALTMAGIC.forEach((spell, spellID)=>{
+      switch (spell.selectItem) {
+        case -1:
+          // Creates either gems or convertTo value
+          if (spell.convertTo !== undefined) {
+            items[spell.convertTo].creationSources.push({
+              skill: 'Magic',
+              fillTemplate: (itemID)=>fillAltMagicTemplate(spellID, itemID),
+            });
+            items[spell.convertTo].fromAltMagic = true;
+          } else {
+            gemItems.forEach((gem)=>{
+              items[gem].creationSources.push({
+                skill: 'Magic',
+                fillTemplate: (itemID)=>fillAltMagicTemplate(spellID, itemID),
+              });
+              items[gem].fromAltMagic = true;
+            });
+          }
+          break;
+        case 0:
+          smithingBars.forEach((bar)=>{
+            items[bar].creationSources.push({
+              skill: 'Magic',
+              fillTemplate: (itemID)=>fillAltMagicTemplate(spellID, itemID),
+            });
+            items[bar].fromAltMagic = true;
+          });
+          break;
+        case 1:
+          if (spell.isJunk) {
+            gemItems.forEach((gem)=>{
+              items[gem].creationSources.push({
+                skill: 'Magic',
+                fillTemplate: (itemID)=>fillAltMagicTemplate(spellID, itemID),
+              });
+              items[gem].fromAltMagic = true;
+            });
+          } else if (!spell.isAlch) {
+            items[spell.convertTo].creationSources.push({
+              skill: 'Magic',
+              fillTemplate: (itemID)=>fillAltMagicTemplate(spellID, itemID),
+            });
+            items[spell.convertTo].fromAltMagic = true;
+          }
+          break;
+      }
+    });
     // Add missing data from herblore to items array
     for (let i = 0; i < herbloreItemData.length; i++) {
       for (let j = 0; j < herbloreItemData[i].itemID.length; j++) {
@@ -951,7 +1103,7 @@ function processWikiData() {
     }
     // Add Fishing data to items array
     for (let i = 0; i < fishingItems.length; i++) {
-      const itemID = fishingItems[i].itemID;
+      const {itemID} = fishingItems[i];
       items[itemID].creationSources.push({
         skill: 'Fishing',
         fillTemplate: fillItemProductionTemplateForFishing,
@@ -1790,6 +1942,38 @@ function processWikiData() {
         subsubsection: '',
         generate: createSpellTable,
       },
+      {
+        name: 'MagicCurseTable',
+        page: 'Magic',
+        section: 'Curses',
+        subsection: '',
+        subsubsection: '',
+        generate: createCurseTable,
+      },
+      {
+        name: 'MagicAuroraTable',
+        page: 'Magic',
+        section: 'Auroras',
+        subsection: '',
+        subsubsection: '',
+        generate: createAuroraTable,
+      },
+      {
+        name: 'MagicAncientTable',
+        page: 'Magic',
+        section: 'Ancient Magicks',
+        subsection: '',
+        subsubsection: '',
+        generate: createAncientMagickTable,
+      },
+      {
+        name: 'AltMagicTable',
+        page: 'Alternative Magic',
+        section: 'Spells',
+        subsection: '',
+        subsubsection: '',
+        generate: createAltMagicTable,
+      },
       // Runecrafting Page
       {
         name: 'RunecraftingRunesTable',
@@ -1797,7 +1981,55 @@ function processWikiData() {
         section: 'Runes',
         subsection: '',
         subsubsection: '',
-        generate: createRuneCraftingTable,
+        generate: ()=>createRuneCraftingTable(0),
+      },
+      {
+        name: 'RunecraftingWeaponTable',
+        page: 'Runecrafting',
+        section: 'Staves & Wands',
+        subsection: '',
+        subsubsection: '',
+        generate: ()=>createRuneCraftingTable(1),
+      },
+      {
+        name: 'RunecraftingAirGearTable',
+        page: 'Runecrafting',
+        section: 'Air Magic Gear',
+        subsection: '',
+        subsubsection: '',
+        generate: ()=>createRuneCraftingTable(2),
+      },
+      {
+        name: 'RunecraftingWaterGearTable',
+        page: 'Runecrafting',
+        section: 'Water Magic Gear',
+        subsection: '',
+        subsubsection: '',
+        generate: ()=>createRuneCraftingTable(3),
+      },
+      {
+        name: 'RunecraftingEarthGearTable',
+        page: 'Runecrafting',
+        section: 'Earth Magic Gear',
+        subsection: '',
+        subsubsection: '',
+        generate: ()=>createRuneCraftingTable(4),
+      },
+      {
+        name: 'RunecraftingFireGearTable',
+        page: 'Runecrafting',
+        section: 'Fire Magic Gear',
+        subsection: '',
+        subsubsection: '',
+        generate: ()=>createRuneCraftingTable(5),
+      },
+      {
+        name: 'RunecraftingComboRunesTable',
+        page: 'Runecrafting',
+        section: 'Combination Runes',
+        subsection: '',
+        subsubsection: '',
+        generate: ()=>createRuneCraftingTable(6),
       },
       // Monster Loot Tables Page
       {
@@ -2115,6 +2347,15 @@ function processWikiData() {
       dropDownValues.push(i);
     }
     tableDropdown = createDropdown(dropDownNames, dropDownValues, 'mweItemDropdown', itemChanged, '100%');
+    tableDropdown.style.marginBottom = '1%';
+    menuDivC.appendChild(tableDropdown);
+    dropDownNames = [];
+    dropDownValues = [];
+    items.forEach((item, i)=>{
+      dropDownNames.push(`Template:${item.name} Sources`);
+      dropDownValues.push(i);
+    });
+    tableDropdown = createDropdown(dropDownNames, dropDownValues, 'mweItemDropdown', itemSourceChanged, '100%');
     tableDropdown.style.marginBottom = '1%';
     menuDivC.appendChild(tableDropdown);
     wikiDataLoaded = true;

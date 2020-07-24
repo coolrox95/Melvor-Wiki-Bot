@@ -408,23 +408,23 @@ function getItemSourcesArray(itemID) {
   // Loot from chests/birdnests
   // Loot from thieving
   // Upgrading from another item
-  // Skills: Woodcutting, Fishing, Cooking, Mining, Smithing, Farming, Fletching, Crafting, Runecrafting
+  // Skills: Woodcutting, Fishing, Cooking, Mining, Smithing, Farming, Fletching, Crafting, Runecrafting, Alt-Magic
   const itemSources = [];
   // Search monster drops
-  let monsterList = '';
+  const monsterIDs = [];
   for (let i = 0; i < combatAreas.length; i++) {
     for (let j = 0; j < combatAreas[i].monsters.length; j++) {
       const monsterID = combatAreas[i].monsters[j];
       if (MONSTERS[monsterID].lootTable !== undefined) {
         for (let k = 0; k < MONSTERS[monsterID].lootTable.length; k++) {
           if (MONSTERS[monsterID].lootTable[k][0] === itemID) {
-            monsterList += `${formatMonsterIDAsImageLink(monsterID, 25, 'middle')}, `;
+            monsterIDs.push(monsterID);
             break;
           }
         }
       }
       if (MONSTERS[monsterID].bones === itemID) {
-        monsterList += `${formatMonsterIDAsImageLink(monsterID, 25, 'middle')}, `;
+        monsterIDs.push(monsterID);
       }
     }
   }
@@ -434,19 +434,32 @@ function getItemSourcesArray(itemID) {
       if (MONSTERS[monsterID].lootTable !== undefined) {
         for (let k = 0; k < MONSTERS[monsterID].lootTable.length; k++) {
           if (MONSTERS[monsterID].lootTable[k][0] === itemID) {
-            monsterList += `${formatMonsterIDAsImageLink(monsterID, 25, 'middle')}, `;
+            monsterIDs.push(monsterID);
             break;
           }
         }
       }
       if (MONSTERS[monsterID].bones === itemID) {
-        monsterList += `${formatMonsterIDAsImageLink(monsterID, 25, 'middle')}, `;
+        monsterIDs.push(monsterID);
       }
     }
   }
-
-  if (monsterList !== '') {
-    itemSources.push(`Killing: ${monsterList.slice(0, monsterList.length - 2)}`);
+  godDungeonID.forEach((godID)=>{
+    DUNGEONS[godID].condensedMonsters.forEach((monster)=>{
+      if (MONSTERS[monster.id].bones === itemID) {
+        monsterIDs.push(monster.id);
+      }
+    });
+  });
+  const mapMonstersIntoList = (monID, index)=>{
+    let text = formatMonsterIDAsImageLink(monID, 25, 'middle');
+    if (index % 3 === 0 && index !== 0) {
+      text = `<br>${text}`;
+    }
+    return text;
+  };
+  if (monsterIDs.length > 0) {
+    itemSources.push(`Killing: ${monsterIDs.map(mapMonstersIntoList).join(',')}`);
   }
   // Dungeons
   let dungeonList = '';
@@ -580,37 +593,46 @@ function getItemSourcesArray(itemID) {
   }
   // Shop
   // skillcapeItems,gloveID,
-  const shopItems = [CONSTANTS.item.Green_Dragonhide, CONSTANTS.item.Blue_Dragonhide, CONSTANTS.item.Red_Dragonhide, CONSTANTS.item.Cooking_Gloves, CONSTANTS.item.Mining_Gloves, CONSTANTS.item.Smithing_Gloves, CONSTANTS.item.Thieving_Gloves, CONSTANTS.item.Gem_Gloves, CONSTANTS.item.Bowstring, CONSTANTS.item.Compost, CONSTANTS.item.Leather, CONSTANTS.item.Weird_Gloop];
-  let inShop = false;
-  for (let i = 0; i < shopItems.length; i++) {
-    if (itemID === shopItems[i]) {
-      inShop = true;
-      break;
-    }
-  }
-  for (let i = 0; i < skillcapeItems.length; i++) {
-    if (itemID === skillcapeItems[i]) {
-      inShop = true;
-      break;
-    }
-  }
-  for (let i = 0; i < slayerItems.length; i++) {
-    if (itemID === slayerItems[i]) {
-      inShop = true;
-      break;
-    }
-  }
+  const inShop = gloveID.includes(itemID) || shopMaterials.includes(itemID) || skillcapeItems.includes(itemID) || slayerItems.includes(itemID);
   if (inShop) {
     itemSources.push('[[Shop]]');
   }
   if (itemID === CONSTANTS.item.Signet_Ring_Half_B) {
-    itemSources.push('Killing any [[Monsters|Monster]]');
+    itemSources.push(`Killing any [[Monsters|Monster]],<br> while wearing ${formatItemIDAsImageLink(CONSTANTS.item.Gold_Topaz_Ring)}`);
   }
   if (itemID === CONSTANTS.item.Signet_Ring_Half_A) {
-    itemSources.push('Any non-combat [[:Category:Skills|Skill]] action');
+    itemSources.push(`Any non-combat [[:Category:Skills|Skill]] action,<br> while wearing ${formatItemIDAsImageLink(CONSTANTS.item.Gold_Topaz_Ring)}`);
   }
   if (itemID === CONSTANTS.item.Amulet_of_Calculated_Promotion || itemID === CONSTANTS.item.Clue_Chasers_Insignia || itemID === CONSTANTS.item.Lemon) {
     itemSources.push('[[Easter Eggs]]');
+  }
+  // 8
+  if (itemID === CONSTANTS.item.Eight) {
+    itemSources.push(formatItemIDAsImageLink(CONSTANTS.item.Eight));
+  }
+  const gemSkills = [CONSTANTS.skill.Firemaking, CONSTANTS.skill.Cooking, CONSTANTS.skill.Smithing, CONSTANTS.skill.Fletching, CONSTANTS.skill.Crafting, CONSTANTS.skill.Runecrafting, CONSTANTS.skill.Herblore];
+  const circletSkills = [CONSTANTS.skill.Woodcutting, CONSTANTS.skill.Fishing, CONSTANTS.skill.Mining, CONSTANTS.skill.Thieving, CONSTANTS.skill.Farming];
+  const stoneSkills = [...gemSkills, ...circletSkills];
+  const mapSkillsIntoList = (skillID, index, array)=>{
+    let text = formatSkillImageLink(skillName[skillID], 25, 'middle');
+    if (index % 3 === 0 && index !== 0) {
+      text = `<br>${text}`;
+    }
+    return text;
+  };
+  // Crown component sources
+  if (itemID === CONSTANTS.item.Circlet_of_Rhaelyx) {
+    itemSources.push(`Any action in:${circletSkills.map(mapSkillsIntoList).join(',')}`);
+  }
+  if (itemID === CONSTANTS.item.Jewel_of_Rhaelyx) {
+    itemSources.push(`Any action in: ${gemSkills.map(mapSkillsIntoList).join(',')}`);
+  }
+  if (itemID === CONSTANTS.item.Mysterious_Stone) {
+    itemSources.push(`Any action in: ${stoneSkills.map(mapSkillsIntoList).join(',')}<br>after finding ${formatItemIDAsImageLink(CONSTANTS.item.Crown_of_Rhaelyx)}`);
+  }
+  // Alt. Magic Sources
+  if (items[itemID].fromAltMagic) {
+    itemSources.push(`${formatSkillImageLink('Magic', 25, 'middle')} ${createPageLink('Alt. Magic', 'Alternative Magic')}`);
   }
   if (itemSources.length === 0) {
     itemSources.push('None');
@@ -749,6 +771,11 @@ function findDuplicatePageNames() {
     eatUpgrades: ' (upgrade)',
     miscUpgrades: ' (upgrade)',
     godUpgrades: ' (upgrade)',
+    pets: ' (pet)',
+    curses: ' (curse)',
+    auroras: ' (aurora)',
+    ancient: ' (spell)',
+    altmagic: ' (spell)',
   };
   const pageNames = { // Arrays with unique page names to generate links/create pages with
     items: [],
@@ -766,6 +793,11 @@ function findDuplicatePageNames() {
     eatUpgrades: [],
     miscUpgrades: [],
     godUpgrades: [],
+    pets: [],
+    curses: [],
+    auroras: [],
+    ancient: [],
+    altmagic: [],
   };
 
   // Start populating base names
@@ -805,6 +837,26 @@ function findDuplicatePageNames() {
   for (let i = 0; i < PRAYER.length; i++) {
     pageNames.prayers.push(PRAYER[i].name);
     addNameToDupeData(dupeData, PRAYER[i].name);
+  }
+  for (let i = 0; i < PETS.length; i++) {
+    pageNames.pets.push(PETS[i].name);
+    addNameToDupeData(dupeData, PETS[i].name);
+  }
+  for (let i = 0; i < CURSES.length; i++) {
+    pageNames.curses.push(CURSES[i].name);
+    addNameToDupeData(dupeData, CURSES[i].name);
+  }
+  for (let i = 0; i < AURORAS.length; i++) {
+    pageNames.auroras.push(AURORAS[i].name);
+    addNameToDupeData(dupeData, AURORAS[i].name);
+  }
+  for (let i = 0; i < ANCIENT.length; i++) {
+    pageNames.ancient.push(ANCIENT[i].name);
+    addNameToDupeData(dupeData, ANCIENT[i].name);
+  }
+  for (let i = 0; i < ALTMAGIC.length; i++) {
+    pageNames.altmagic.push(ALTMAGIC[i].name);
+    addNameToDupeData(dupeData, ALTMAGIC[i].name);
   }
   // Upgrade Names
   for (let i = 0; i < tiers.length; i++) {

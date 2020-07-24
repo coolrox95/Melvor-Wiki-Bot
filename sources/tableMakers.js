@@ -574,30 +574,98 @@ function createSpellTable() {
   tabSpec.appendColumn('Name', 'left', 'name', '', formatPageLink);
   tabSpec.appendColumn('Magic Level', 'right', 'magicLevelRequired', 0, formatAsInt);
   tabSpec.appendColumn('Max Hit', 'right', 'maxHit', 0, (x) => formatAsInt(x * numberMultiplier));
-  tabSpec.appendColumn('Runes', 'right', 'runesRequired', 0, (runes) => formatCraftReq(runes));
+  tabSpec.appendColumn('Runes', 'right', ['runesRequired', 'runesRequiredAlt'], [undefined, undefined], (x)=>formatSpellAsRuneRequirements({runesRequired: x[0], runesRequiredAlt: x[1]}, formatArrayAsNewlines));
   return formatObjectArrayAsTable(SPELLS, tabSpec.tableSpec);
+}
+/**
+ * @description Creates a table of curses
+ * @return {string}
+ */
+function createCurseTable() {
+  const tabSpec = new TableSpecMaker();
+  tabSpec.appendColumn('Curse', 'left', 'name', '', (name) => formatCurseImage(name, 50, 'center'));
+  tabSpec.appendColumn('Name', 'left', 'name', '', formatPageLink);
+  tabSpec.appendColumn('Magic Level', 'right', 'magicLevelRequired', 0, formatAsInt);
+  tabSpec.appendColumn('Effect Chance', 'right', 'chance', 0, (chance)=>formatNumberPerc(chance, 0));
+  tabSpec.appendColumn('Effect', 'right;width: 200px', 'description', '', returnSelf);
+  tabSpec.appendColumn('Runes', 'right', ['runesRequired', 'runesRequiredAlt'], [undefined, undefined], (x)=>formatSpellAsRuneRequirements({runesRequired: x[0], runesRequiredAlt: x[1]}, formatArrayAsNewlines));
+  return formatObjectArrayAsTable(CURSES, tabSpec.tableSpec);
 }
 
 /**
- * @description Creates a table of runes for the runecrafting page
+ * @description Creates a table of auroras
  * @return {string}
  */
-function createRuneCraftingTable() {
+function createAuroraTable() {
   const tabSpec = new TableSpecMaker();
-  tabSpec.appendColumn('Rune', 'left', 'itemID', 0, (id) => formatItemIDAsImageLink(id, 50, 'middle'));
-  tabSpec.appendColumn('Name', 'left', 'itemID', 0, formatItemIDAsLink);
-  tabSpec.appendColumn('Runecrafting Level', 'right', 'runecraftingLevel', 1, formatAsInt);
-  tabSpec.appendColumn('Experience', 'right', 'itemID', 0, (id) => {
-    return formatAsInt(items[id].runecraftingXP);
+  tabSpec.appendColumn('Aurora', 'left', 'name', '', (name) => formatAuroraImage(name, 50, 'center'));
+  tabSpec.appendColumn('Name', 'left', 'name', '', formatPageLink);
+  tabSpec.appendColumn('Magic Level', 'right', 'magicLevelRequired', 0, formatAsInt);
+  tabSpec.appendColumn('Item Required', 'right', 'requiredItem', -1, (itemID)=>{
+    if (itemID === -1) {
+      return 'None';
+    }
+    return `${formatItemIDAsImageLink(itemID, 25, 'middle')} ${formatItemIDAsLink(itemID)}`;
   });
-  tabSpec.appendColumn('Rune Price', 'right', 'itemID', 0, formatItemIDasPrice);
-  tabSpec.appendColumn('XP/s', 'right', 'itemID', 0, (id) => {
+  tabSpec.appendColumn('Effect', 'right;width: 200px', 'description', '', returnSelf);
+  tabSpec.appendColumn('Runes', 'right', ['runesRequired', 'runesRequiredAlt'], [undefined, undefined], (x)=>formatSpellAsRuneRequirements({runesRequired: x[0], runesRequiredAlt: x[1]}, formatArrayAsNewlines));
+  return formatObjectArrayAsTable(AURORAS, tabSpec.tableSpec);
+}
+/**
+ * @description Creates a table of ancient magicks
+ * @return {string}
+ */
+function createAncientMagickTable() {
+  const tabSpec = new TableSpecMaker();
+  tabSpec.appendColumn('Magick', 'left', 'name', '', (name) => formatSpellImage(name, 50, 'center'));
+  tabSpec.appendColumn('Name', 'left', 'name', '', formatPageLink);
+  tabSpec.appendColumn('Magic Level', 'right', 'magicLevelRequired', 0, formatAsInt);
+  tabSpec.appendColumn('Unlocks After', 'right', 'requiredDungeonCompletion', [0, 100], (x)=>{
+    return `${x[1]} ${formatDungeonIDAsImageLink(x[0], 25, 'middle')} ${formatDungeonIDAsLink(x[0])} clears`;
+  });
+  tabSpec.appendColumn('Max Hit', 'right', 'maxHit', 0, (x) => formatAsInt(x * numberMultiplier));
+  tabSpec.appendColumn('Description', 'right;width: 200px', 'description', 0, returnSelf);
+  tabSpec.appendColumn('Runes', 'right', ['runesRequired', 'runesRequiredAlt'], [undefined, undefined], (x)=>formatSpellAsRuneRequirements({runesRequired: x[0], runesRequiredAlt: x[1]}, formatArrayAsNewlines));
+  return formatObjectArrayAsTable(ANCIENT, tabSpec.tableSpec);
+}
+/**
+ * @description Creates a table of alt magic
+ * @return {string}
+ */
+function createAltMagicTable() {
+  const tabSpec = new TableSpecMaker();
+  tabSpec.appendColumn('Spell', 'left', 'name', '', (name) => formatSpellImage(name, 50, 'center'));
+  tabSpec.appendColumn('Name', 'left', 'name', '', formatPageLink);
+  tabSpec.appendColumn('Magic Level', 'right', 'magicLevelRequired', 0, formatAsInt);
+  tabSpec.appendColumn('Description', 'right;width: 200px', 'description', 0, returnSelf);
+  tabSpec.appendColumn('Runes', 'right', ['runesRequired', 'runesRequiredAlt'], [undefined, undefined], (x)=>formatSpellAsRuneRequirements({runesRequired: x[0], runesRequiredAlt: x[1]}, formatArrayAsNewlines));
+  return formatObjectArrayAsTable(ALTMAGIC, tabSpec.tableSpec);
+}
+/**
+ * @description Creates a table of runes for the runecrafting page
+ * @param {number} category
+ * @return {string}
+ */
+function createRuneCraftingTable(category) {
+  const tabSpec = new TableSpecMaker();
+  tabSpec.appendColumn('Item', 'left', 'id', 0, (id) => formatItemIDAsImageLink(id, 50, 'middle'));
+  tabSpec.appendColumn('Name', 'left', 'id', 0, formatItemIDAsLink);
+  tabSpec.appendColumn('Runecrafting Level', 'right', 'runecraftingLevel', 1, formatAsInt);
+  tabSpec.appendColumn('Experience', 'right', 'runecraftingXP', 0, formatAsInt);
+  tabSpec.appendColumn('Item Price', 'right', 'sellsFor', 0, formatAsInt);
+  tabSpec.appendColumn('Ingredients', 'right', 'runecraftReq', 0, formatCraftReq);
+  tabSpec.appendColumn('XP/s', 'right', 'id', 0, (id) => {
     return formatNumberDec(items[id].runecraftingXP / runecraftInterval * 1000, 2);
   });
-  tabSpec.appendColumn('GP/s', 'right', 'itemID', 0, (id) => {
+  tabSpec.appendColumn('GP/s', 'right', 'id', 0, (id) => {
     return formatNumberDec(items[id].sellsFor / runecraftInterval * 1000, 2);
   });
-  return formatObjectArrayAsTable(runecraftingItems, tabSpec.tableSpec);
+  const subArray = runecraftingItems.filter((item)=>{
+    return item.runecraftingCategory === category;
+  }).map((item)=>{
+    return items[item.itemID];
+  });
+  return formatObjectArrayAsTable(subArray, tabSpec.tableSpec);
 }
 
 /**
@@ -1277,5 +1345,7 @@ function createPlayerSpecialAttacksTable() {
   tabSpec.appendColumn('Name', 'right', 'name', '', returnSelf);
   tabSpec.appendColumn('Chance', 'right', 'chance', 0, (chance) => formatNumberPerc(chance, 0));
   tabSpec.appendColumn('Effect', 'right', 'description', '', returnSelf);
-  return formatObjectArrayAsTable(playerSpecialAttacks, tabSpec.tableSpec);
+  return formatObjectArrayAsTable(playerSpecialAttacks.filter((attack)=>{
+    return attack.weaponsWithAttack.length > 0;
+  }), tabSpec.tableSpec);
 }

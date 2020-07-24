@@ -113,7 +113,7 @@ function getFireUpgradeName(tier) {
  * @param {string} alignment Alignment of image
  * @return {string}
  */
-function formatItemIDAsImageLink(id, size, alignment) {
+function formatItemIDAsImageLink(id, size = 25, alignment = 'middle') {
   return createImageLink(`${items[id].name} (item)${getFileExtension(items[id].media)}`, wikiPageNames.items[id], size, alignment);
 }
 /**
@@ -840,6 +840,29 @@ function formatBoolAsYesNo(bool) {
 function formatSpellImage(name, size, alignment) {
   return `[[File:${name} (spell).svg|${size}px|${alignment}]]`;
 }
+
+/**
+ * @description Formats a curse name as a curse image
+ * @param {string} name The name of the spell
+ * @param {number} size The size of the image in pixels
+ * @param {string} alignment The alignment of the image
+ * @return {string}
+ */
+function formatCurseImage(name, size, alignment) {
+  return `[[File:${name} (curse).svg|${size}px|${alignment}]]`;
+}
+
+/**
+ * @description Formats an aurora name as an aurora image
+ * @param {string} name The name of the spell
+ * @param {number} size The size of the image in pixels
+ * @param {string} alignment The alignment of the image
+ * @return {string}
+ */
+function formatAuroraImage(name, size, alignment) {
+  return `[[File:${name} (aurora).svg|${size}px|${alignment}]]`;
+}
+
 /**
  * @description Formats a string array into a bullet list
  * @param {string[]} sourceArray
@@ -1263,15 +1286,44 @@ function getDungeonMonsterArray(condensedMonsters) {
 
 /**
  * @description Creates an array of the spell requirements with image, qty and name link
- * @param {number} spellID Index of SPELLS array
+ * @param {number} spellID Index of spellArray array
+ * @param {Array} spellArray Spell array to get cost from
+ * @param {boolean} alt Get combo rune recipe
  * @return {string[]}
  */
-function getSpellRuneArray(spellID) {
-  const spellArray = [];
-  for (let i = 0; i < SPELLS[spellID].runesRequired.length; i++) {
-    spellArray.push(`${formatItemIDAsImageLink(SPELLS[spellID].runesRequired[i].id, 25, 'middle')} ${formatAsInt(SPELLS[spellID].runesRequired[i].qty)} ${formatItemIDAsLink(SPELLS[spellID].runesRequired[i].id)}`);
+function getSpellRuneArray(spellID, spellArray = SPELLS, alt = false) {
+  const runeArray = [];
+  if (alt) {
+    spellArray[spellID].runesRequiredAlt.forEach((rune)=>{
+      runeArray.push(`${formatItemIDAsImageLink(rune.id, 25, 'middle')} ${formatAsInt(rune.qty)} ${formatItemIDAsLink(rune.id)}`);
+    });
+  } else {
+    spellArray[spellID].runesRequired.forEach((rune)=>{
+      runeArray.push(`${formatItemIDAsImageLink(rune.id, 25, 'middle')} ${formatAsInt(rune.qty)} ${formatItemIDAsLink(rune.id)}`);
+    });
   }
-  return spellArray;
+  return runeArray;
+}
+
+/**
+ * Formats the rune requriements of a spell
+ * @param {Object} spell spell object from one of the spell arrays
+ * @param {Array} spell.runesRequired normal recipe
+ * @param {Array} spell.runesRequiredAlt alt recipe
+ * @param {Function} arrayFormat function to join the array
+ * @return {string}
+ */
+function formatSpellAsRuneRequirements(spell, arrayFormat) {
+  const formatRune = (rune) => {
+    return `${formatItemIDAsImageLink(rune.id, 25, 'middle')} ${formatAsInt(rune.qty)} ${formatItemIDAsLink(rune.id)}`;
+  };
+  // Format Normal cost
+  let runeReq = arrayFormat(spell.runesRequired.map(formatRune));
+  // Check for alt cost, and check if alt cost is identical
+  if (spell.runesRequiredAlt !== undefined && JSON.stringify(spell.runesRequired) !== JSON.stringify(spell.runesRequiredAlt)) {
+    runeReq += `<br>'''Or:'''<br>\n${arrayFormat(spell.runesRequiredAlt.map(formatRune))}`;
+  }
+  return runeReq;
 }
 
 /**
