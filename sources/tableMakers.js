@@ -638,6 +638,7 @@ function createAltMagicTable() {
   tabSpec.appendColumn('Name', 'left', 'name', '', formatPageLink);
   tabSpec.appendColumn('Magic Level', 'right', 'magicLevelRequired', 0, formatAsInt);
   tabSpec.appendColumn('Description', 'right;width: 200px', 'description', 0, returnSelf);
+  tabSpec.appendColumn('Experience', 'right', 'magicXP', 0, formatAsInt);
   tabSpec.appendColumn('Runes', 'right', ['runesRequired', 'runesRequiredAlt'], [undefined, undefined], (x)=>formatSpellAsRuneRequirements({runesRequired: x[0], runesRequiredAlt: x[1]}, formatArrayAsNewlines));
   return formatObjectArrayAsTable(ALTMAGIC, tabSpec.tableSpec);
 }

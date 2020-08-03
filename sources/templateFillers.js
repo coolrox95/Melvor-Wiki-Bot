@@ -234,6 +234,7 @@ function fillAltMagicSpellTemplate(spellID) {
   template += `|id=${spellID}`;
   template += `|level=${spell.magicLevelRequired}`;
   template += `|effect=${spell.description}`;
+  template += `|xp=${spell.magicXP}`;
   template += `|runeList=${formatSpellAsRuneRequirements(spell, formatArrayAsBulletList)}`;
   template += '}}';
   return template;

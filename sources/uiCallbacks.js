@@ -719,94 +719,6 @@ async function updateItemPages(filterKey = '') {
 }
 
 /**
- * Callback for updating monster page monster templates.
- */
-async function updateMonsterPageTemplates() {
-  if (wikiDataLoaded) {
-    const pagesToEdit = [];
-    let numChanged = 0;
-    for (let i = 0; i < MONSTERS.length; i++) {
-      const pageName = wikiPageNames.monsters[i];
-      const pullResult = await getFullWikiPage(pageName, 0);
-      if (pullResult.success) {
-        const oldItemPage = pullResult.text;
-        let newItemPage = oldItemPage.replace(MONSTERTEMPLATEREGEX, fillMonsterTemplate(i));
-        if (oldItemPage === newItemPage) {
-          newItemPage = oldItemPage.replace(OLDVERSIONREGEX, VERSIONTEMPLATE);
-          if (oldItemPage === newItemPage) {
-            console.log(`Page: ${pageName}: No Changes`);
-          } else {
-            console.log(`Page: ${pageName}: No Template Changes, Auto Updating Version`);
-            pagesToEdit.push({name: pageName, content: newItemPage});
-            numChanged++;
-          }
-        } else {
-          console.log(`Page: ${pageName}: Monster Template Changed`);
-          pagesToEdit.push({name: pageName, content: newItemPage});
-          numChanged++;
-        }
-      } else {
-        console.warn(`Cannot update page: ${pageName}. ${pullResult.error}.`);
-      }
-    }
-    console.log(`${numChanged} Pages changed and ready to update.`);
-    if (numChanged > 0) {
-      console.log(pagesToEdit);
-      bulkEditPages(pagesToEdit, 'Automatic update of Monster Page.');
-    }
-  } else {
-    console.error('Wiki data is not loaded.');
-  }
-}
-
-/**
- * Callback for updating dungeon page templates
- */
-async function updateDungeonPageTemplates() {
-  if (wikiDataLoaded) {
-    const pagesToEdit = [];
-    let numChanged = 0;
-    for (let i = 0; i < DUNGEONS.length; i++) {
-      const pageName = wikiPageNames.dungeons[i];
-      const pullResult = await getFullWikiPage(pageName, 0);
-      if (pullResult.success) {
-        const oldItemPage = pullResult.text;
-        let newItemPage = oldItemPage.replace(DUNGEONTEMPLATEREGEX, fillDungeonTemplate(i));
-        if (oldItemPage === newItemPage) {
-          newItemPage = oldItemPage.replace(OLDVERSIONREGEX, VERSIONTEMPLATE);
-          if (oldItemPage === newItemPage) {
-            console.log(`Page: ${pageName}: No Changes`);
-          } else {
-            console.log(`Page: ${pageName}: No Template Changes, Auto Updating Version`);
-            pagesToEdit.push({name: pageName, content: newItemPage});
-            numChanged++;
-          }
-        } else {
-          const versionReplacedPage = newItemPage.replace(OLDVERSIONREGEX, VERSIONTEMPLATE);
-          if (versionReplacedPage === createDungeonPageContent(i)) {
-            console.log(`Page: ${pageName}: Dungeon Template Changed, But page is same as Default`);
-            pagesToEdit.push({name: pageName, content: versionReplacedPage});
-          } else {
-            console.log(`Page: ${pageName}: Dungeon Template Changed, User Data may be inaccurate`);
-            pagesToEdit.push({name: pageName, content: newItemPage});
-          }
-          numChanged++;
-        }
-      } else {
-        console.warn(`Cannot update page: ${pageName}. ${pullResult.error}.`);
-      }
-    }
-    console.log(`${numChanged} Pages changed and ready to update.`);
-    if (numChanged > 0) {
-      console.log(pagesToEdit);
-      bulkEditPages(pagesToEdit, 'Automatic update of Dungeon page.');
-    }
-  } else {
-    console.error('Wiki data is not loaded.');
-  }
-}
-
-/**
  * Updates pages by replacing the template found by templateRegex with the output of templateGenerator.
  * Will automatically update page version template if there are no changes
  * @param {Array} pageArray Array to loop through
@@ -861,6 +773,20 @@ async function updatePageTemplates(pageArray, pageNameKey, templateRegex, templa
 }
 
 /**
+ * Callback for updating monster page monster templates.
+ */
+async function updateMonsterPageTemplates() {
+  await updatePageTemplates(MONSTERS, 'monsters', MONSTERTEMPLATEREGEX, fillMonsterTemplate, (i) => createMonsterPageContent(i), 0);
+}
+
+/**
+ * Callback for updating dungeon page templates
+ */
+async function updateDungeonPageTemplates() {
+  await updatePageTemplates(DUNGEONS, 'dungeons', DUNGEONTEMPLATEREGEX, fillDungeonTemplate, (i) => createDungeonPageContent(i), 0);
+}
+
+/**
  * Callback for updating upgrade page templates
  */
 async function updateUpgradePages() {
@@ -893,8 +819,18 @@ function updatePrayerPageTemplates() {
 /**
  * Callback for updating spell page templates
  */
-function updateSpellPageTemplates() {
-  updatePageTemplates(SPELLS, 'spells', SPELLTEMPLATEREGEX, fillSpellTemplate, createSpellPageContent);
+async function updateSpellPageTemplates() {
+  await updatePageTemplates(SPELLS, 'spells', SPELLTEMPLATEREGEX, fillSpellTemplate, createSpellPageContent);
+  await updatePageTemplates(AURORAS, 'auroras', AURORATEMPLATEREGEX, fillAuroraTemplate, createAuroraPageContent);
+  await updatePageTemplates(ANCIENT, 'ancient', ANCIENTTEMPLATEREGEX, fillAncientTemplate, createAncientMagickPageContent);
+  await updatePageTemplates(CURSES, 'curses', CURSETEMPLATEREGEX, fillCurseTemplate, createCursePageContent);
+  await updatePageTemplates(ALTMAGIC, 'altmagic', ALTMAGICTEMPLATEREGEX, fillAltMagicSpellTemplate, createAltMagicPageContent);
+}
+/**
+ * Callback for updating pet page templates
+ */
+function updatePetPageTemplates() {
+  updatePageTemplates(PETS, 'pets', PETTEMPLATEREGEX, fillPetTemplate, createPetPageContent);
 }
 /**
  * Callback for updating thieving target page templates

@@ -106,15 +106,16 @@ function selectArmourItem(item, equipmentSlot, type, ammoType) {
   let match = false;
   if (item.equipmentSlot === equipmentSlot) {
     if (type === 'Melee') {
-      match = (item.defenceLevelRequired !== undefined || isItemOnArray(item.id, slayerMeleeArmour));
+      match = (item.defenceLevelRequired !== undefined || forceMeleeArmour.includes(item.id));
     } else if (type === 'Ranged') {
-      match = (item.rangedLevelRequired !== undefined || isItemOnArray(item.id, slayerRangedArmour));
+      match = (item.rangedLevelRequired !== undefined || forceRangedArmour.includes(item.id));
     } else if (type === 'Magic') {
-      match = (item.magicLevelRequired !== undefined || isItemOnArray(item.id, slayerMagicArmour));
+      match = (item.magicLevelRequired !== undefined || forceMagicArmour.includes(item.id));
     } else if (type === 'All') {
       match = true;
     } else if (type === 'None') {
       match = (item.defenceLevelRequired === undefined) && (item.rangedLevelRequired === undefined) && (item.magicLevelRequired === undefined);
+      match = match && !(forceMeleeArmour.includes(item.id) || forceRangedArmour.includes(item.id) || forceMagicArmour.includes(item.id));
     }
   }
   if (ammoType !== -1) {// Arrows: 0, Bolts: 1, Javelins: 2, Knives: 3

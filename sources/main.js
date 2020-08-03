@@ -214,13 +214,14 @@ menuDivD.appendChild(createButton('Update Prayer Page Templates', updatePrayerPa
 menuDivD.appendChild(createButton('Update Spell Page Templates', updateSpellPageTemplates));
 menuDivD.appendChild(createButton('Update Thieving Target Templates', updateThievingPageTemplates));
 menuDivD.appendChild(createButton('Update Upgrade Templates', updateUpgradePages));
+menuDivD.appendChild(createButton('Update Pet Templates', updatePetPageTemplates));
 
 menuDivD.appendChild(createButton('Update Weapon Stat Templates', updateWeaponPageStats));
 menuDivD.appendChild(createButton('Update Armour Stat Templates', updateArmourPageStats));
 menuDivD.appendChild(createButton('Update Item Page Item Templates', updateItemPageItemTemplates));
 menuDivD.appendChild(createButton('Update Source Template Subset', updateSpecificSourceTemplates));
 
-menuDivD.appendChild(createButton('Manually Review Previous Version', () => manualVersionReview('v0.15.3')));
+menuDivD.appendChild(createButton('Manually Review Previous Version', () => manualVersionReview('v0.16')));
 
 menuDivD.appendChild(createButton('Log Empty Sources', showEmptySourceTemplates));
 
@@ -345,9 +346,9 @@ let specialItems;
 let fishingAreas;
 let enemySpecialAttacks;
 let playerSpecialAttacks;
-let slayerRangedArmour;
-let slayerMeleeArmour;
-let slayerMagicArmour;
+let forceRangedArmour;
+let forceMeleeArmour;
+let forceMagicArmour;
 let wikiPageNames;
 let disambiguationData;
 let slayerAreas;
@@ -388,8 +389,8 @@ let wikiDataLoaded = false;
 let imageUploadInProgress = false;
 const WIKURL = 'https://wiki.melvoridle.com/api.php';
 const GAMEURL = 'https://melvoridle.com/';
-const VERSIONTEMPLATE = '{{V0.16}}';
-const VERSIONCATEGORY = '[[Category:v0.16]]';
+const VERSIONTEMPLATE = '{{V0.16.1}}';
+const VERSIONCATEGORY = '[[Category:v0.16.1]]';
 const BOTCATEGORY = '[[Category:Bot Templates]]';
 const TABLEREGEX = /{\| class="wikitable sortable"(.|\n)*?\|}/g;
 const ITEMTEMPLATEREGEX = /{{Item\|name=(.|\n)*?\|description=(.|\n)*?\|id=(.|\n)*?\|category=(.|\n)*?\|type=(.|\n)*?\|sellsfor=(.|\n)*?\|customData=(.|\n)*?\|itemSources=(.|\n)*?\|itemUses=(.|\n)*?}}/;
@@ -399,17 +400,22 @@ const SLAYERAREATEMPLATEREGEX = /{{SlayerArea\|name=(.|\n)*?\|id=(.|\n)*?\|slaye
 const COMBATAREATEMPLATEREGEX = /{{CombatArea\|name=(.|\n)*?\|id=(.|\n)*?\|monsterList=(.|\n)*?}}/;
 const PRAYERTEMPLATEREGEX = /{{Prayer\|name=(.|\n)*?\|id=(.|\n)*?\|level=(.|\n)*?\|prayerEffects=(.|\n)*?\|prayerCosts=(.|\n)*?}}/;
 const SPELLTEMPLATEREGEX = /{{Spell\|name=(.|\n)*?\|id=(.|\n)*?\|level=(.|\n)*?\|maxHit=(.|\n)*?\|runeList=(.|\n)*?}}/;
+const AURORATEMPLATEREGEX = /{{Aurora\|name=(.|\n)*?\|id=(.|\n)*?\|level=(.|\n)*?\|itemRequired=(.|\n)*?\|effect=(.|\n)*?\|runeList=(.|\n)*?}}/;
+const CURSETEMPLATEREGEX = /{{Curse\|name=(.|\n)*?\|id=(.|\n)*?\|level=(.|\n)*?\|chance=(.|\n)*?\|effect=(.|\n)*?\|runeList=(.|\n)*?}}/;
+const ANCIENTTEMPLATEREGEX = /{{AncientMagick\|name=(.|\n)*?\|id=(.|\n)*?\|level=(.|\n)*?\|unlockReq=(.|\n)*?\|maxHit=(.|\n)*?\|description=(.|\n)*?\|runeList=(.|\n)*?}}/;
+const ALTMAGICTEMPLATEREGEX = /{{AltMagic\|name=(.|\n)*?\|id=(.|\n)*?\|level=(.|\n)*?\|effect=(.|\n)*?\|xp=(.|\n)*?\|runeList=(.|\n)*?}}/;
+const PETTEMPLATEREGEX = /{{Pet\|name=(.|\n)*?\|id=(.|\n)*?\|skill=(.|\n)*?\|effect=(.|\n)*?}}/;
 const ITEMPRODUCTIONREGEX = /{{ItemProduction\|requirements=(.|\n)*?\|quantity=(.|\n)*?\|experience=(.|\n)*?\|creationTime=(.|\n)*?}}/;
 const ITEMCREATIONREGEX = /{{ItemCreation\|requirements=(.|\n)*?\|materials=(.|\n)*?\|quantity=(.|\n)*?\|experience=(.|\n)*?\|creationTime=(.|\n)*?}}/;
-const CURRENTVERSIONREGEX = /{{V0\.15\.4}}/;
+const CURRENTVERSIONREGEX = /{{V0\.16\.1}}/;
 const WEAPONSTATSREGEX = /{{WeaponStats\|attackSpeed=(.|\n)*?\|attackType=(.|\n)*?\|isTwoHanded=(.|\n)*?\|stabAttackBonus=(.|\n)*?\|slashAttackBonus=(.|\n)*?\|blockAttackBonus=(.|\n)*?\|rangedAttackBonus=(.|\n)*?\|magicAttackBonus=(.|\n)*?\|strengthBonus=(.|\n)*?\|rangedStrengthBonus=(.|\n)*?\|magicDamageBonus=(.|\n)*?\|defenceBonus=(.|\n)*?\|rangedDefenceBonus=(.|\n)*?\|magicDefenceBonus=(.|\n)*?\|damageReduction=(.|\n)*?\|attackLevelRequired=(.|\n)*?\|rangedLevelRequired=(.|\n)*?\|magicLevelRequired=(.|\n)*?\|slayerBonusXP=(.|\n)*?}}/;
 const ARMOURSTATSREGEX = /{{ArmourStats\|stabAttackBonus=(.|\n)*?\|slashAttackBonus=(.|\n)*?\|blockAttackBonus=(.|\n)*?\|rangedAttackBonus=(.|\n)*?\|magicAttackBonus=(.|\n)*?\|strengthBonus=(.|\n)*?\|rangedStrengthBonus=(.|\n)*?\|magicDamageBonus=(.|\n)*?\|defenceBonus=(.|\n)*?\|rangedDefenceBonus=(.|\n)*?\|magicDefenceBonus=(.|\n)*?\|damageReduction=(.|\n)*?\|defenceLevelRequired=(.|\n)*?\|rangedLevelRequired=(.|\n)*?\|magicLevelRequired=(.|\n)*?\|slayerBonusXP=(.|\n)*?}}/;
 const THIEVINGTARGETREGEX = /{{ThievingTarget\|name=(.|\n)*?\|level=(.|\n)*?\|xp=(.|\n)*?\|drops=(.|\n)*?}}/;
 const UPGRADETEMPLATEREGEX = /{{Upgrade\|name=(.|\n)*?\|upgradeEffect=(.|\n)*?\|upgradeRequirements=(.|\n)*?\|upgradeCost(.|\n)*?}}/;
 const EXTENSIONREGEX = /\..*$/;
 const EXTENSIONREGEX2 = /\?\d*$/;
-const OLDVERSIONREGEX = /{{V0\.15\.4}}/;
-const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.15\.4\]\]/;
+const OLDVERSIONREGEX = /{{V0\.16}}/;
+const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.16]\]/;
 
 /**
  * Removes HTML from a string (currently only removes &apos; and replaces with ')
@@ -1352,9 +1358,9 @@ function processWikiData() {
     disambiguationData = pageNameData.disambiguationData;
     itemUses = createItemUses();
     // Item subsets for slayer armour for specific combat types
-    slayerMeleeArmour = [CONSTANTS.item.Slayer_Helmet_Basic, CONSTANTS.item.Slayer_Helmet_Strong, CONSTANTS.item.Slayer_Helmet_Elite, CONSTANTS.item.Slayer_Platebody_Basic, CONSTANTS.item.Slayer_Platebody_Strong, CONSTANTS.item.Slayer_Platebody_Elite];
-    slayerRangedArmour = [CONSTANTS.item.Slayer_Cowl_Basic, CONSTANTS.item.Slayer_Cowl_Elite, CONSTANTS.item.Slayer_Cowl_Strong, CONSTANTS.item.Slayer_Leather_Body_Basic, CONSTANTS.item.Slayer_Leather_Body_Strong, CONSTANTS.item.Slayer_Leather_Body_Elite];
-    slayerMagicArmour = [CONSTANTS.item.Slayer_Wizard_Hat_Basic, CONSTANTS.item.Slayer_Wizard_Hat_Strong, CONSTANTS.item.Slayer_Wizard_Hat_Elite, CONSTANTS.item.Slayer_Wizard_Robes_Basic, CONSTANTS.item.Slayer_Wizard_Robes_Strong, CONSTANTS.item.Slayer_Wizard_Robes_Elite];
+    forceMeleeArmour = [CONSTANTS.item.Slayer_Helmet_Basic, CONSTANTS.item.Slayer_Platebody_Basic];
+    forceRangedArmour = [CONSTANTS.item.Slayer_Cowl_Basic, CONSTANTS.item.Slayer_Leather_Body_Basic];
+    forceMagicArmour = [CONSTANTS.item.Slayer_Wizard_Hat_Basic, CONSTANTS.item.Slayer_Wizard_Robes_Basic, CONSTANTS.item.Enchanted_Shield];
     // Master table containing the page and sections as well as the generating function for all tables/pages
     // Functions that generate entire pages are marked by isPageContent: true.
     masterTable = [
