@@ -300,7 +300,7 @@ function createMonsterTable() {
     return (x[0] + x[1]) / 2;
   });
   tabSpec.appendColumn('Bones', 'right', ['bones', 'canDropBones'], [0, false], (boneData) => {
-    if (boneData[1]) {
+    if (boneData[1] && boneData[0] !== null) {
       return formatItemIDAsImageLink(boneData[0], 25, 'middle');
     }
     return 'None';

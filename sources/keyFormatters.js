@@ -1141,8 +1141,10 @@ function formatMonsterDrops(monsterID) {
       outputStr += 'None';
     }
   } else {
-    outputStr += '100% chance for: \n';
-    outputStr += `* ${formatItemIDAsImageLink(MONSTERS[monsterID].bones, 25, 'middle')} 1 ${formatItemIDAsLink(MONSTERS[monsterID].bones)}\n`;
+    if (MONSTERS[monsterID].bones !== null) {
+      outputStr += '100% chance for: \n';
+      outputStr += `* ${formatItemIDAsImageLink(MONSTERS[monsterID].bones, 25, 'middle')} 1 ${formatItemIDAsLink(MONSTERS[monsterID].bones)}\n`;
+    }
     outputStr += `${formatMonsterLootChance(monsterID)} chance for: \n`;
     outputStr += `* [[File:Coins.svg|25px|middle|link=GP]] ${MONSTERS[monsterID].dropCoins[0]}-${MONSTERS[monsterID].dropCoins[1]}\n`;
     if (MONSTERS[monsterID].lootTable.length > 0) {

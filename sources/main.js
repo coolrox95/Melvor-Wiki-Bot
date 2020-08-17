@@ -161,7 +161,7 @@ menuDivA.appendChild(createButton('Log out', logoutButton));
 // menuDivA.appendChild(createButton('Test Upload Food Page', () => uploadTestItemPage(26)));
 // menuDivA.appendChild(createButton('Request Melvor Wiki', buttonOnClick));
 menuDivA.appendChild(createButton('Create Item Pages', () => createItemPages(820)));
-menuDivA.appendChild(createButton('Create Monster Pages', () => createMonsterPages(85)));
+menuDivA.appendChild(createButton('Create Monster Pages', () => createMonsterPages(111)));
 menuDivA.appendChild(createButton('Create Combat Area Pages', () => createCombatAreaPages(0)));
 menuDivA.appendChild(createButton('Create Slayer Area Pages', () => createSlayerAreaPages(0)));
 menuDivA.appendChild(createButton('Create Dungeon Pages', () => createDungeonPages(8)));
@@ -221,7 +221,7 @@ menuDivD.appendChild(createButton('Update Armour Stat Templates', updateArmourPa
 menuDivD.appendChild(createButton('Update Item Page Item Templates', updateItemPageItemTemplates));
 menuDivD.appendChild(createButton('Update Source Template Subset', updateSpecificSourceTemplates));
 
-menuDivD.appendChild(createButton('Manually Review Previous Version', () => manualVersionReview('v0.16')));
+menuDivD.appendChild(createButton('Manually Review Previous Version', () => manualVersionReview('v0.16.1')));
 
 menuDivD.appendChild(createButton('Log Empty Sources', showEmptySourceTemplates));
 
@@ -389,8 +389,8 @@ let wikiDataLoaded = false;
 let imageUploadInProgress = false;
 const WIKURL = 'https://wiki.melvoridle.com/api.php';
 const GAMEURL = 'https://melvoridle.com/';
-const VERSIONTEMPLATE = '{{V0.16.1}}';
-const VERSIONCATEGORY = '[[Category:v0.16.1]]';
+const VERSIONTEMPLATE = '{{V0.16.2}}';
+const VERSIONCATEGORY = '[[Category:v0.16.2]]';
 const BOTCATEGORY = '[[Category:Bot Templates]]';
 const TABLEREGEX = /{\| class="wikitable sortable"(.|\n)*?\|}/g;
 const ITEMTEMPLATEREGEX = /{{Item\|name=(.|\n)*?\|description=(.|\n)*?\|id=(.|\n)*?\|category=(.|\n)*?\|type=(.|\n)*?\|sellsfor=(.|\n)*?\|customData=(.|\n)*?\|itemSources=(.|\n)*?\|itemUses=(.|\n)*?}}/;
@@ -414,8 +414,8 @@ const THIEVINGTARGETREGEX = /{{ThievingTarget\|name=(.|\n)*?\|level=(.|\n)*?\|xp
 const UPGRADETEMPLATEREGEX = /{{Upgrade\|name=(.|\n)*?\|upgradeEffect=(.|\n)*?\|upgradeRequirements=(.|\n)*?\|upgradeCost(.|\n)*?}}/;
 const EXTENSIONREGEX = /\..*$/;
 const EXTENSIONREGEX2 = /\?\d*$/;
-const OLDVERSIONREGEX = /{{V0\.16}}/;
-const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.16]\]/;
+const OLDVERSIONREGEX = /{{V0\.16\.1}}/;
+const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.16\.1]\]/;
 
 /**
  * Removes HTML from a string (currently only removes &apos; and replaces with ')
