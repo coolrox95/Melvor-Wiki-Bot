@@ -6,34 +6,20 @@
  * @return {string}
  */
 function createItemPageContent(itemID) {
-  let pageContent = '';
-  pageContent += VERSIONTEMPLATE;
-  pageContent += `${fillItemTemplate(itemID)}\n`; // linebreak is only there sometimes?
-  // pageContent += createItemDescription(itemID); Too difficult to do, I give up
-  if (items[itemID].canOpen) {
-    pageContent += createSection('Loot Table');
-    pageContent += `{{${items[itemID].name}LootTable}}` + '\n';
-  }
+  let content = '{{V}}{{ItemBox}}';
   if (items[itemID].equipmentSlot !== undefined) {
-    if (items[itemID].equipmentSlot === 4) {
-      pageContent += `${fillWeaponStatsTemplate(itemID)}\n`;
+    content += `==Stats==\n`;
+    if (items[itemID].equipmentSlot === CONSTANTS.equipmentSlot.Weapon) {
+      content += '{{AutoWeaponStats}}\n';
     } else {
-      if (items[itemID].equipmentSlot === CONSTANTS.equipmentSlot.Quiver && (items[itemID].ammoType === 2 || items[itemID].ammoType === 3)) {
-        pageContent += `${fillWeaponStatsTemplate(itemID)}\n`;
-      } else {
-        pageContent += `${fillArmourStatsTemplate(itemID)}\n`;
-      }
+      content += '{{AutoArmourStats}}\n';
     }
   }
-  // Creation Template
-  pageContent += createSection('Item Sources');
-  pageContent += `{{${items[itemID].name} Sources}}`;
-  pageContent += '[[Category:Items]]';
-  if (itemID > 683 && itemID < 820) {
-    pageContent += '[[Category:Released in v0.15]]';
-  }
-  pageContent += '\n{{Menu}}';
-  return pageContent;
+  content += `==Item Sources==
+{{ItemSources}}
+{{ItemUses}}[[Category:Items]]
+{{Menu}}`;
+  return content;
 }
 
 /**

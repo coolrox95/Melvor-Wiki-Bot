@@ -295,9 +295,10 @@ function createMonsterTable() {
   tabSpec.appendSpan('|', 4); // Drop chance, coins, bones, locations
   tabSpec.appendColumn('Drop Chance', 'right', 'parentIndex', 0, formatMonsterIDAsDropChance);
   tabSpec.appendColumn('Coins', 'right', 'dropCoins', [0, 0], (x) => {
-    return `${x[0]}-${x[1]}`;
+    if (x[1] > 1) return `{{GP|${x[0]}|${x[1] - 1}}}`;
+    return 'None';
   }, (x)=>{
-    return (x[0] + x[1]) / 2;
+    return (x[0] + x[1] - 1) / 2;
   });
   tabSpec.appendColumn('Bones', 'right', ['bones', 'canDropBones'], [0, false], (boneData) => {
     if (boneData[1] && boneData[0] !== null) {

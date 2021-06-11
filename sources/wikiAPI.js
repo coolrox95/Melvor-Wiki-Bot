@@ -444,6 +444,42 @@ async function rollBackPage(pageTitle, user, summary) {
 }
 
 /**
+ * Attempts to create a wiki page
+ * @param {string} pageTitle The title of the page to create
+ * @param {string} reason Reason for deleting page
+ * @param {string} token A valid CRSF token
+ * @async
+ */
+async function deleteWikiPage(pageTitle, reason, token) {
+  // Generate the request data
+  const params = {
+    action: 'delete',
+    format: 'json',
+  };
+    // Create form data and append values
+  const pageForm = new FormData();
+  pageForm.append('title', pageTitle);
+  // pageForm.append('section', '0');
+  pageForm.append('reason', reason);
+  pageForm.append('notminor', '1');
+  pageForm.append('bot', '1');
+  pageForm.append('contentformat', 'text/x-wiki');
+  pageForm.append('contentmodel', 'wikitext');
+  pageForm.append('token', token);
+  // Create request URL
+  const endpoint = WIKURL + createQueryString(params);
+  // Send the request
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    body: pageForm,
+  });
+    // Parse the results
+  const data = await response.json();
+  // Log the results
+  return data;
+}
+
+/**
  * Attempts to edit an existing wiki page
  * @param {string} pageTitle The title of the page to edit
  * @param {string} newContent The new wikitext of the page

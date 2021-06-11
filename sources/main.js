@@ -160,7 +160,11 @@ menuDivA.appendChild(createButton('Log out', logoutButton));
 // menuDivA.appendChild(createButton('Test Upload Chest Page', () => uploadTestItemPage(382)));
 // menuDivA.appendChild(createButton('Test Upload Food Page', () => uploadTestItemPage(26)));
 // menuDivA.appendChild(createButton('Request Melvor Wiki', buttonOnClick));
-menuDivA.appendChild(createButton('Create Item Pages', () => createItemPages(820)));
+menuDivA.appendChild(createButton('Delete Source Templates', deleteItemSourceTemplates));
+menuDivA.appendChild(createButton('Delete Monster Drop Templates', deleteMonsterDropTemplates));
+menuDivA.appendChild(createButton('Delete Chest Drop Templates', deleteChestLootTables));
+menuDivB.appendChild(createButton('Create Item Pages', () => createItemPages(1005)));
+/*
 menuDivA.appendChild(createButton('Create Monster Pages', () => createMonsterPages(111)));
 menuDivA.appendChild(createButton('Create Combat Area Pages', () => createCombatAreaPages(0)));
 menuDivA.appendChild(createButton('Create Slayer Area Pages', () => createSlayerAreaPages(0)));
@@ -177,17 +181,20 @@ menuDivA.appendChild(createButton('Create Upgrade Pages', createUpgradePages));
 menuDivA.appendChild(createButton('Create Table Template Pages', createTableTemplates));
 menuDivA.appendChild(createButton('Create Item Source Template Pages', createItemSourceTemplates));
 menuDivA.appendChild(createButton('Create God Upgrade Pages', createGodUpgradePages));
-
+*/
+/*
 menuDivB.appendChild(createButton('Upload Dungeon Images', uploadDungeonImages));
 menuDivB.appendChild(createButton('Upload Combat Area Images', uploadCombatAreaImages));
 menuDivB.appendChild(createButton('Upload Item Images', uploadItemImages));
-menuDivB.appendChild(createButton('Upload New Item Images', () => uploadNewItemImages(680)));
+*/
+menuDivB.appendChild(createButton('Upload New Item Images', () => uploadNewItemImages(970)));
+/*
 menuDivB.appendChild(createButton('Upload Monster Images', uploadMonsterImages));
 menuDivB.appendChild(createButton('Upload Spell Images', uploadSpellImages));
 menuDivB.appendChild(createButton('Upload Upgrade Images', uploadUpgradeImages));
 menuDivB.appendChild(createButton('Upload Prayer Images', uploadPrayerImages));
 menuDivB.appendChild(createButton('Upload Pet Images', uploadPetImages));
-
+*/
 menuDivA.appendChild(createButton('Request Wiki Page', buttonRequestPage));
 
 menuDivA.appendChild(createButton('Show Dupe Pages', () => {
@@ -204,6 +211,7 @@ menuDivA.appendChild(createButton('Test Generators', testGenerators));
 const menuDivD = document.createElement('div');
 menuDivD.className = 'mweMenuDiv';
 wikiMenuContent.appendChild(menuDivD);
+/*
 menuDivD.appendChild(createButton('Update Item Pages', ()=>updateItemPages()));
 menuDivD.appendChild(createButton('Update Bone Pages', ()=>updateItemPages('prayerPoints')));
 menuDivD.appendChild(createButton('Update Monster Page Templates', updateMonsterPageTemplates));
@@ -224,7 +232,7 @@ menuDivD.appendChild(createButton('Update Source Template Subset', updateSpecifi
 menuDivD.appendChild(createButton('Manually Review Previous Version', () => manualVersionReview('v0.16.1')));
 
 menuDivD.appendChild(createButton('Log Empty Sources', showEmptySourceTemplates));
-
+*/
 // menuDivD.appendChild(createButton('Change Chest Templates', changeChestTablesToTemplates));
 // menuDivD.appendChild(createButton('Change Knife and Javelin Templates', changeKnifeJavelinTemplates));
 // menuDivD.appendChild(createButton('Update Monster Page Versions', fixMonsterPageVersions));
@@ -245,7 +253,7 @@ const wikiTableOutput = document.createElement('textarea');
 wikiTableOutput.className = 'mweTextOutput';
 menuDivC.appendChild(wikiTableOutput);
 
-document.getElementById('page-container').appendChild(wikiMenu);
+document.body.appendChild(wikiMenu);
 
 createLoginScreen();
 createVersionUpdateAssistScreen();
@@ -302,7 +310,6 @@ let MONSTERS;
 let DUNGEONS;
 let combatAreas;
 let SPELLS;
-let tiers;
 let cookingFireData;
 let thievingNPC;
 let trees;
@@ -312,26 +319,14 @@ let numberMultiplier;
 let miningData;
 let smithingItems;
 let runecraftingItems;
-let axeLevels;
-let rodLevels;
-let pickaxeLevels;
 let gloveID;
 let skillcapeItems;
 let CONSTANTS;
 let baseMiningInterval;
-let axeCost;
-let rodCost;
-let pickaxeCost;
-let glovesCost;
 let glovesActions;
 let runecraftInterval;
-let axeBonusSpeed;
-let rodBonusSpeed;
-let pickaxeBonus;
-let pickaxeBonusSpeed;
 let logsData;
 let PRAYER;
-let slayerItems;
 let herbloreItemData;
 let skillName;
 let newFarmingAreas;
@@ -423,7 +418,8 @@ const OLDVERSIONCATEGORYREGEX = /\[\[Category:v0\.16\.1]\]/;
  * @return {string}
  */
 function sanatizeString(stringToClean) {
-  return stringToClean.replace(/&apos;/g, '\'');
+  stringToClean = stringToClean.replace(/&apos;/g, '\'');
+  return stringToClean.replace(/#/g, '');
 }
 
 /**
@@ -683,7 +679,7 @@ function createItemUses() {
       }
     }
   }
-  const addSpellReq = (spell, useKey)=>{
+  const addSpellReq = (spell, useKey) => {
     spell.runesRequired.forEach((runeReq) => {
       if (!itemUses[useKey].items.includes(runeReq.id)) {
         itemUses[useKey].items.push(runeReq.id);
@@ -698,19 +694,19 @@ function createItemUses() {
     }
   };
   // Parse spell arrays for potential uses
-  SPELLS.forEach((spell)=>addSpellReq(spell, 'CombatMagic'));
-  ALTMAGIC.forEach((spell)=>addSpellReq(spell, 'AltMagic'));
-  AURORAS.forEach((spell)=>addSpellReq(spell, 'CombatMagic'));
-  CURSES.forEach((spell)=>addSpellReq(spell, 'CombatMagic'));
-  ANCIENT.forEach((spell)=>addSpellReq(spell, 'CombatMagic'));
+  SPELLS.forEach((spell) => addSpellReq(spell, 'CombatMagic'));
+  ALTMAGIC.forEach((spell) => addSpellReq(spell, 'AltMagic'));
+  AURORAS.forEach((spell) => addSpellReq(spell, 'CombatMagic'));
+  CURSES.forEach((spell) => addSpellReq(spell, 'CombatMagic'));
+  ANCIENT.forEach((spell) => addSpellReq(spell, 'CombatMagic'));
   // Add Alt magic ingredients
-  junkItems.forEach((junkID)=>{
+  junkItems.forEach((junkID) => {
     if (!itemUses.AltMagic.items.includes(junkID)) {
       itemUses.AltMagic.items.push(junkID);
     }
   });
-  smithingBars.forEach((barID)=>{
-    items[barID].smithReq.forEach((req)=>{
+  smithingBars.forEach((barID) => {
+    items[barID].smithReq.forEach((req) => {
       if (!itemUses.AltMagic.items.includes(req.id)) {
         itemUses.AltMagic.items.push(req.id);
       }
@@ -732,7 +728,6 @@ function processWikiData() {
         DUNGEONS,
         combatAreas,
         SPELLS,
-        tiers,
         cookingFireData,
         thievingNPC,
         trees,
@@ -742,24 +737,11 @@ function processWikiData() {
         miningData,
         smithingItems,
         runecraftingItems,
-        axeLevels,
-        rodLevels,
-        pickaxeLevels,
         gloveID,
-        skillcapeItems,
         baseMiningInterval,
-        axeCost,
-        rodCost,
-        pickaxeCost,
-        glovesCost,
         runecraftInterval,
-        axeBonusSpeed,
-        rodBonusSpeed,
-        pickaxeBonus,
-        pickaxeBonusSpeed,
         logsData,
         PRAYER,
-        slayerItems,
         herbloreItemData,
         skillName,
         newFarmingAreas,
@@ -769,10 +751,10 @@ function processWikiData() {
         fletchInterval,
         craftInterval,
         herbloreInterval,
+        fishingAreas,
         fishingItems,
         junkItems,
         specialItems,
-        fishingAreas,
         enemySpecialAttacks,
         playerSpecialAttacks,
         godDungeonID,
@@ -789,7 +771,7 @@ function processWikiData() {
     shopMaterials = [CONSTANTS.item.Feathers, CONSTANTS.item.Compost, CONSTANTS.item.Weird_Gloop, CONSTANTS.item.Bowstring, CONSTANTS.item.Leather, CONSTANTS.item.Green_Dragonhide, CONSTANTS.item.Blue_Dragonhide, CONSTANTS.item.Red_Dragonhide, CONSTANTS.item.Red_Party_Hat];
     gemItems = [CONSTANTS.item.Topaz, CONSTANTS.item.Sapphire, CONSTANTS.item.Ruby, CONSTANTS.item.Emerald, CONSTANTS.item.Diamond];
     const gemChances = [50, 17.5, 17.5, 10, 5];
-    gemItems.forEach((gemID, i)=>{
+    gemItems.forEach((gemID, i) => {
       items[gemID].gemChance = gemChances[i];
     });
     // Data Processing
@@ -813,36 +795,32 @@ function processWikiData() {
       SPELLS[i].name = sanatizeString(SPELLS[i].name);
     }
     // Additional processing is done on these descriptions to remove HTML, and make them suitable for the wiki
-    CURSES.forEach((spell)=>{
+    CURSES.forEach((spell) => {
       spell.name = sanatizeString(spell.name);
       spell.description = sanatizeString(spell.description);
       // Remove first part of description, proc chance will be it's own field/column
       spell.description = spell.description.replace(/^.*?<br>/, '');
     });
-    AURORAS.forEach((spell)=>{
+    AURORAS.forEach((spell) => {
       spell.name = sanatizeString(spell.name);
       spell.description = sanatizeString(spell.description);
       spell.description = spell.description.replace(/^.*?<br>/, '');
     });
-    ANCIENT.forEach((spell)=>{
+    ANCIENT.forEach((spell) => {
       spell.name = sanatizeString(spell.name);
       spell.description = sanatizeString(spell.description);
     });
-    ALTMAGIC.forEach((spell)=>{
+    ALTMAGIC.forEach((spell) => {
       spell.name = sanatizeString(spell.name);
       spell.description = sanatizeString(spell.description);
       spell.description = spell.description.replace(/<br>.*?$/, '');
     });
-    PETS.forEach((pet)=>{
+    PETS.forEach((pet) => {
       pet.name = sanatizeString(pet.name);
       pet.description = sanatizeString(pet.description);
       pet.effect = pet.description.replace(/^<small>.*?<\/small><br>/, '');
       pet.effect = pet.effect.replace(/<br>.*?$/, '');
     });
-    console.log(PETS);
-    for (let i = 0; i < tiers.length; i++) {
-      tiers[i] = sanatizeString(tiers[i]);
-    }
     for (let i = 0; i < cookingFireData.length; i++) {
       cookingFireData[i].tier = sanatizeString(cookingFireData[i].tier);
     }
@@ -888,23 +866,23 @@ function processWikiData() {
       return accumulator;
     }, []);
     // Fix chest loot tables with quantity
-    items.forEach((item)=>{
+    items.forEach((item) => {
       if (item.canOpen) {
-        item.dropTable.forEach((drop, i)=>{
+        item.dropTable.forEach((drop, i) => {
           drop.push(item.dropQty[i]);
         });
       }
     });
     // Sort Loot Tables
-    MONSTERS.forEach((monster)=>{
+    MONSTERS.forEach((monster) => {
       if (monster.lootTable !== undefined) {
         monster.lootTable = monster.lootTable.sort(sortByDropWeight);
       }
     });
-    thievingNPC.forEach((npc)=>{
+    thievingNPC.forEach((npc) => {
       npc.lootTable = npc.lootTable.sort(sortByDropWeight);
     });
-    items.forEach((item)=>{
+    items.forEach((item) => {
       if (item.canOpen) {
         item.dropTable = item.dropTable.sort(sortByDropWeight);
       }
@@ -944,7 +922,7 @@ function processWikiData() {
           skill: 'Cooking',
           fillTemplate: fillItemCreationTemplateForCooking,
         });
-        items[items[i].burntItemID].cookingReq = [{id: i, qty: 1}];
+        items[items[i].burntItemID].cookingReq = [{ id: i, qty: 1 }];
         items[items[i].burntItemID].cookingLevel = items[i].cookingLevel;
         items[items[i].burntItemID].cookingXP = 1;
         items[items[i].burntItemID].creationSources.push({
@@ -954,7 +932,7 @@ function processWikiData() {
       }
       // Farming Items
       if (items[i].tier === 'Allotment') {
-        items[items[i].grownItemID].farmingReq = [{id: i, qty: 3}];
+        items[items[i].grownItemID].farmingReq = [{ id: i, qty: 3 }];
         items[items[i].grownItemID].farmingLevel = items[i].farmingLevel;
         items[items[i].grownItemID].farmingXP = items[i].farmingXP;
         items[items[i].grownItemID].growthTime = items[i].timeToGrow;
@@ -964,7 +942,7 @@ function processWikiData() {
         });
       }
       if (items[i].tier === 'Herb') {
-        items[items[i].grownItemID].farmingReq = [{id: i, qty: 2}];
+        items[items[i].grownItemID].farmingReq = [{ id: i, qty: 2 }];
         items[items[i].grownItemID].farmingLevel = items[i].farmingLevel;
         items[items[i].grownItemID].farmingXP = items[i].farmingXP;
         items[items[i].grownItemID].growthTime = items[i].timeToGrow;
@@ -974,7 +952,7 @@ function processWikiData() {
         });
       }
       if (items[i].tier === 'Tree') {
-        items[items[i].grownItemID].farmingReq = [{id: i, qty: 1}];
+        items[items[i].grownItemID].farmingReq = [{ id: i, qty: 1 }];
         items[items[i].grownItemID].farmingLevel = items[i].farmingLevel;
         items[items[i].grownItemID].farmingXP = items[i].farmingXP;
         items[items[i].grownItemID].growthTime = items[i].timeToGrow;
@@ -1020,48 +998,48 @@ function processWikiData() {
       }
     }
     // Parse alt magic and add it's recipes as a creation source
-    ALTMAGIC.forEach((spell, spellID)=>{
+    ALTMAGIC.forEach((spell, spellID) => {
       switch (spell.selectItem) {
         case -1:
           // Creates either gems or convertTo value
           if (spell.convertTo !== undefined) {
             items[spell.convertTo].creationSources.push({
               skill: 'Magic',
-              fillTemplate: (itemID)=>fillAltMagicTemplate(spellID, itemID),
+              fillTemplate: (itemID) => fillAltMagicTemplate(spellID, itemID),
             });
             items[spell.convertTo].fromAltMagic = true;
           } else {
-            gemItems.forEach((gem)=>{
+            gemItems.forEach((gem) => {
               items[gem].creationSources.push({
                 skill: 'Magic',
-                fillTemplate: (itemID)=>fillAltMagicTemplate(spellID, itemID),
+                fillTemplate: (itemID) => fillAltMagicTemplate(spellID, itemID),
               });
               items[gem].fromAltMagic = true;
             });
           }
           break;
         case 0:
-          smithingBars.forEach((bar)=>{
+          smithingBars.forEach((bar) => {
             items[bar].creationSources.push({
               skill: 'Magic',
-              fillTemplate: (itemID)=>fillAltMagicTemplate(spellID, itemID),
+              fillTemplate: (itemID) => fillAltMagicTemplate(spellID, itemID),
             });
             items[bar].fromAltMagic = true;
           });
           break;
         case 1:
           if (spell.isJunk) {
-            gemItems.forEach((gem)=>{
+            gemItems.forEach((gem) => {
               items[gem].creationSources.push({
                 skill: 'Magic',
-                fillTemplate: (itemID)=>fillAltMagicTemplate(spellID, itemID),
+                fillTemplate: (itemID) => fillAltMagicTemplate(spellID, itemID),
               });
               items[gem].fromAltMagic = true;
             });
           } else if (!spell.isAlch) {
             items[spell.convertTo].creationSources.push({
               skill: 'Magic',
-              fillTemplate: (itemID)=>fillAltMagicTemplate(spellID, itemID),
+              fillTemplate: (itemID) => fillAltMagicTemplate(spellID, itemID),
             });
             items[spell.convertTo].fromAltMagic = true;
           }
@@ -1109,7 +1087,7 @@ function processWikiData() {
     }
     // Add Fishing data to items array
     for (let i = 0; i < fishingItems.length; i++) {
-      const {itemID} = fishingItems[i];
+      const { itemID } = fishingItems[i];
       items[itemID].creationSources.push({
         skill: 'Fishing',
         fillTemplate: fillItemProductionTemplateForFishing,
@@ -1205,50 +1183,8 @@ function processWikiData() {
       }
     }
     // Gloves
-    for (let i = 0; i < gloveID.length; i++) {
-      items[gloveID[i]].shopSources.push({
-        gpCost: glovesCost[i],
-        scCost: 0,
-        itemCost: [],
-        requirements: 'None',
-        quantity: `+${glovesActions[i]} charges`,
-      });
-    }
     // Slayer Items
-    slayerItems.forEach((itemID)=>{
-      items[itemID].shopSources.push({
-        gpCost: 0,
-        scCost: items[itemID].slayerCost,
-        itemCost: [],
-        requirements: 'None',
-        quantity: '1',
-      });
-    });
     // Materials
-    shopMaterials.forEach((itemID)=>{
-      const materialCost = [];
-      if (items[itemID].buysForLeather !== undefined) {
-        materialCost.push({
-          itemID: CONSTANTS.item.Leather,
-          quantity: items[itemID].buysForLeather,
-        });
-      }
-      if (items[itemID].buysForItems !== undefined) {
-        items[itemID].buysForItems.forEach((buyItem)=>{
-          materialCost.push({
-            itemID: buyItem[0],
-            quantity: buyItem[1],
-          });
-        });
-      }
-      items[itemID].shopSources.push({
-        gpCost: (items[itemID].buysFor !== undefined) ? items[itemID].buysFor : 0,
-        scCost: 0,
-        itemCost: materialCost,
-        requirements: 'None',
-        quantity: '1',
-      });
-    });
     // Fill loot sources arrays
     // Monsters
     for (let i = 0; i < combatAreas.length; i++) {
@@ -1259,11 +1195,11 @@ function processWikiData() {
         if (MONSTERS[monID].lootTable !== undefined) {
           for (let k = 0; k < MONSTERS[monID].lootTable.length; k++) {
             items[MONSTERS[monID].lootTable[k][0]].monsterSources.push(
-                {
-                  id: monID,
-                  chance: getMonsterLootChance(monID) * MONSTERS[monID].lootTable[k][1] / MONSTERS[monID].totalWeight,
-                  maxQty: MONSTERS[monID].lootTable[k][2],
-                },
+              {
+                id: monID,
+                chance: getMonsterLootChance(monID) * MONSTERS[monID].lootTable[k][1] / MONSTERS[monID].totalWeight,
+                maxQty: MONSTERS[monID].lootTable[k][2],
+              },
             );
           }
         }
@@ -1277,11 +1213,11 @@ function processWikiData() {
         if (MONSTERS[monID].lootTable !== undefined) {
           for (let k = 0; k < MONSTERS[monID].lootTable.length; k++) {
             items[MONSTERS[monID].lootTable[k][0]].monsterSources.push(
-                {
-                  id: monID,
-                  chance: getMonsterLootChance(monID) * MONSTERS[monID].lootTable[k][1] / MONSTERS[monID].totalWeight,
-                  maxQty: MONSTERS[monID].lootTable[k][2],
-                },
+              {
+                id: monID,
+                chance: getMonsterLootChance(monID) * MONSTERS[monID].lootTable[k][1] / MONSTERS[monID].totalWeight,
+                maxQty: MONSTERS[monID].lootTable[k][2],
+              },
             );
           }
         }
@@ -1314,11 +1250,11 @@ function processWikiData() {
       const monID = DUNGEONS[i].monsters[DUNGEONS[i].monsters.length - 1];
       for (let k = 0; k < MONSTERS[monID].lootTable.length; k++) {
         items[MONSTERS[monID].lootTable[k][0]].dungeonSources.push(
-            {
-              id: i,
-              chance: getMonsterLootChance(monID) * MONSTERS[monID].lootTable[k][1] / MONSTERS[monID].totalWeight,
-              maxQty: MONSTERS[monID].lootTable[k][2],
-            },
+          {
+            id: i,
+            chance: getMonsterLootChance(monID) * MONSTERS[monID].lootTable[k][1] / MONSTERS[monID].totalWeight,
+            maxQty: MONSTERS[monID].lootTable[k][2],
+          },
         );
       }
       if (i === CONSTANTS.dungeon.Volcanic_Cave) {
@@ -1332,12 +1268,12 @@ function processWikiData() {
       if (godDungeonID.includes(i)) {
         DUNGEONS[i].condensedMonsters.forEach((monster) => {
           items[MONSTERS[monster.id].bones].monsterSources.push(
-              {
-                id: monster.id,
-                chance: 100,
-                maxQty: (MONSTERS[monster.id].boneQty) ? MONSTERS[monster.id].boneQty : 1,
-                minQty: (MONSTERS[monster.id].boneQty) ? MONSTERS[monster.id].boneQty : 1,
-              },
+            {
+              id: monster.id,
+              chance: 100,
+              maxQty: (MONSTERS[monster.id].boneQty) ? MONSTERS[monster.id].boneQty : 1,
+              minQty: (MONSTERS[monster.id].boneQty) ? MONSTERS[monster.id].boneQty : 1,
+            },
           );
           MONSTERS[monster.id].canDropBones = true;
           MONSTERS[monster.id].isGodMonster = true;
@@ -1353,9 +1289,11 @@ function processWikiData() {
       }
     }
     // Create pageNames
+    /*
     const pageNameData = findDuplicatePageNames();
     wikiPageNames = pageNameData.pageNames;
     disambiguationData = pageNameData.disambiguationData;
+    */
     itemUses = createItemUses();
     // Item subsets for slayer armour for specific combat types
     forceMeleeArmour = [CONSTANTS.item.Slayer_Helmet_Basic, CONSTANTS.item.Slayer_Platebody_Basic];
@@ -1987,7 +1925,7 @@ function processWikiData() {
         section: 'Runes',
         subsection: '',
         subsubsection: '',
-        generate: ()=>createRuneCraftingTable(0),
+        generate: () => createRuneCraftingTable(0),
       },
       {
         name: 'RunecraftingWeaponTable',
@@ -1995,7 +1933,7 @@ function processWikiData() {
         section: 'Staves & Wands',
         subsection: '',
         subsubsection: '',
-        generate: ()=>createRuneCraftingTable(1),
+        generate: () => createRuneCraftingTable(1),
       },
       {
         name: 'RunecraftingAirGearTable',
@@ -2003,7 +1941,7 @@ function processWikiData() {
         section: 'Air Magic Gear',
         subsection: '',
         subsubsection: '',
-        generate: ()=>createRuneCraftingTable(2),
+        generate: () => createRuneCraftingTable(2),
       },
       {
         name: 'RunecraftingWaterGearTable',
@@ -2011,7 +1949,7 @@ function processWikiData() {
         section: 'Water Magic Gear',
         subsection: '',
         subsubsection: '',
-        generate: ()=>createRuneCraftingTable(3),
+        generate: () => createRuneCraftingTable(3),
       },
       {
         name: 'RunecraftingEarthGearTable',
@@ -2019,7 +1957,7 @@ function processWikiData() {
         section: 'Earth Magic Gear',
         subsection: '',
         subsubsection: '',
-        generate: ()=>createRuneCraftingTable(4),
+        generate: () => createRuneCraftingTable(4),
       },
       {
         name: 'RunecraftingFireGearTable',
@@ -2027,7 +1965,7 @@ function processWikiData() {
         section: 'Fire Magic Gear',
         subsection: '',
         subsubsection: '',
-        generate: ()=>createRuneCraftingTable(5),
+        generate: () => createRuneCraftingTable(5),
       },
       {
         name: 'RunecraftingComboRunesTable',
@@ -2035,7 +1973,7 @@ function processWikiData() {
         section: 'Combination Runes',
         subsection: '',
         subsubsection: '',
-        generate: ()=>createRuneCraftingTable(6),
+        generate: () => createRuneCraftingTable(6),
       },
       // Monster Loot Tables Page
       {
@@ -2337,6 +2275,7 @@ function processWikiData() {
       return 0;
     });
     // Create master table droplist
+    /*
     let dropDownNames = [];
     let dropDownValues = [];
     for (let i = 0; i < masterTable.length; i++) {
@@ -2357,13 +2296,14 @@ function processWikiData() {
     menuDivC.appendChild(tableDropdown);
     dropDownNames = [];
     dropDownValues = [];
-    items.forEach((item, i)=>{
+    items.forEach((item, i) => {
       dropDownNames.push(`Template:${item.name} Sources`);
       dropDownValues.push(i);
     });
     tableDropdown = createDropdown(dropDownNames, dropDownValues, 'mweItemDropdown', itemSourceChanged, '100%');
     tableDropdown.style.marginBottom = '1%';
     menuDivC.appendChild(tableDropdown);
+    */
     wikiDataLoaded = true;
   } catch (error) {
     console.error(error);

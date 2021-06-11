@@ -449,7 +449,7 @@ function formatUpgradeImageLink(upgradeName, size, alignment) {
  * @return {string}
  */
 function formatAsShopCost(cost) {
-  return `[[File:Coins.svg|25px|middle]] ${cost}`;
+  return `{{GP|${cost}}}`;
 }
 
 /**

@@ -292,8 +292,9 @@ function createSpellPages(startIndex) {
  */
 function createCursePages() {
   if (wikiDataLoaded) {
-    const pageData = CURSES.map((_curse, curseID)=>{
-      return {name: wikiPageNames.curses[curseID],
+    const pageData = CURSES.map((_curse, curseID) => {
+      return {
+        name: wikiPageNames.curses[curseID],
         content: createCursePageContent(curseID),
       };
     });
@@ -309,8 +310,9 @@ function createCursePages() {
  */
 function createAuroraPages() {
   if (wikiDataLoaded) {
-    const pageData = AURORAS.map((_aurora, auroraID)=>{
-      return {name: wikiPageNames.auroras[auroraID],
+    const pageData = AURORAS.map((_aurora, auroraID) => {
+      return {
+        name: wikiPageNames.auroras[auroraID],
         content: createAuroraPageContent(auroraID),
       };
     });
@@ -326,8 +328,9 @@ function createAuroraPages() {
  */
 function createAncientMagickPages() {
   if (wikiDataLoaded) {
-    const pageData = ANCIENT.map((_spell, spellID)=>{
-      return {name: wikiPageNames.ancient[spellID],
+    const pageData = ANCIENT.map((_spell, spellID) => {
+      return {
+        name: wikiPageNames.ancient[spellID],
         content: createAncientMagickPageContent(spellID),
       };
     });
@@ -343,8 +346,9 @@ function createAncientMagickPages() {
  */
 function createAltMagicPages() {
   if (wikiDataLoaded) {
-    const pageData = ALTMAGIC.map((_spell, spellID)=>{
-      return {name: wikiPageNames.altmagic[spellID],
+    const pageData = ALTMAGIC.map((_spell, spellID) => {
+      return {
+        name: wikiPageNames.altmagic[spellID],
         content: createAltMagicPageContent(spellID),
       };
     });
@@ -360,8 +364,9 @@ function createAltMagicPages() {
  */
 function createPetPages() {
   if (wikiDataLoaded) {
-    const pageData = PETS.map((_pet, petID)=>{
-      return {name: wikiPageNames.pets[petID],
+    const pageData = PETS.map((_pet, petID) => {
+      return {
+        name: wikiPageNames.pets[petID],
         content: createPetPageContent(petID),
       };
     });
@@ -436,6 +441,52 @@ function createItemSourceTemplates() {
 }
 
 /**
+ * Callback for deleting item source templates.
+ */
+function deleteItemSourceTemplates() {
+  if (wikiDataLoaded) {
+    const startingItem = 891;
+    const endingItem = 902;
+    const deleteTitles = [];
+    for (let i = startingItem; i < endingItem; i++) {
+      deleteTitles.push(`Template:${items[i].name} Sources`);
+    }
+    bulkDeletePages(deleteTitles, 'Removal of unused source template');
+  } else {
+    console.error('Wiki data is not loaded.');
+  }
+}
+/**
+ * Callback for deleting monster drop templates
+ */
+function deleteMonsterDropTemplates() {
+  if (wikiDataLoaded) {
+    const startingMonster = 52;
+    const endingMonster = 112;
+    const deleteTitles = [];
+    for (let i = startingMonster; i < endingMonster; i++) {
+      deleteTitles.push(`Template:${MONSTERS[i].name} Drops`);
+    }
+    bulkDeletePages(deleteTitles, 'Removal of unused drops template');
+  } else {
+    console.error('Wiki data is not loaded.');
+  }
+}
+
+/**
+ * Callback for deleting chest drop templates
+ */
+function deleteChestLootTables() {
+  if (wikiDataLoaded) {
+    const deleteTitles = openableItems.map((itemID) => {
+      return `Template:${items[itemID].name}LootTable`;
+    });
+    bulkDeletePages(deleteTitles, 'Removal of unused loot table template');
+  } else {
+    console.error('Wiki data is not loaded.');
+  }
+}
+/**
  * Callback for uploading all monster images
  */
 function uploadMonsterImages() {
@@ -501,23 +552,23 @@ function uploadSpellImages() {
   if (wikiDataLoaded) {
     const spellImageSources = [];
     const spellImageFilenames = [];
-    SPELLS.forEach((spell)=>{
+    SPELLS.forEach((spell) => {
       spellImageSources.push(GAMEURL + spell.media);
       spellImageFilenames.push(`${spell.name} (spell).svg`);
     });
-    CURSES.forEach((spell)=>{
+    CURSES.forEach((spell) => {
       spellImageSources.push(GAMEURL + spell.media);
       spellImageFilenames.push(`${spell.name} (curse).svg`);
     });
-    AURORAS.forEach((spell)=>{
+    AURORAS.forEach((spell) => {
       spellImageSources.push(GAMEURL + spell.media);
       spellImageFilenames.push(`${spell.name} (aurora).svg`);
     });
-    ANCIENT.forEach((spell)=>{
+    ANCIENT.forEach((spell) => {
       spellImageSources.push(GAMEURL + spell.media);
       spellImageFilenames.push(`${spell.name} (spell).svg`);
     });
-    ALTMAGIC.forEach((spell)=>{
+    ALTMAGIC.forEach((spell) => {
       spellImageSources.push(GAMEURL + spell.media);
       spellImageFilenames.push(`${spell.name} (spell).svg`);
     });
@@ -534,7 +585,7 @@ function uploadPetImages() {
   if (wikiDataLoaded) {
     const petImageSources = [];
     const petImageFilenames = [];
-    PETS.forEach((pet)=>{
+    PETS.forEach((pet) => {
       petImageSources.push(GAMEURL + pet.media);
       petImageFilenames.push(`${pet.name} (pet)${getFileExtension(pet.media)}`);
     });
